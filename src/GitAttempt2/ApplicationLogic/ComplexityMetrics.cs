@@ -28,9 +28,7 @@ namespace ApplicationLogic
         totalWhitespaces += lineIndentation;
       }
 
-      var complexity = (TotalIndentations(totalWhitespaces, currentIndentationLength) + linesInFile.Count) /
-                       linesInFile.Count;
-      return complexity;
+      return TotalIndentations(totalWhitespaces, currentIndentationLength);
     }
 
     private static bool IsBetter(int lineIndentation, Maybe<int> currentIndentationLength)
@@ -45,7 +43,7 @@ namespace ApplicationLogic
 
     private static double TotalIndentations(int totalWhitespaces, Maybe<int> indentationLength)
     {
-      return 1d * totalWhitespaces / indentationLength.Select(i => i + 1).OrElse(1);
+      return indentationLength.Select(il => (1d * totalWhitespaces) / il).OrElse(0);
     }
 
     private static int IndentationOf(string line)

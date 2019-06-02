@@ -29,7 +29,7 @@ namespace ApplicationLogic
         public string PathOfCurrentVersion() => Entries.Last().Path;
         public int ChangesCount() => Entries.Count;
         public double ComplexityOfCurrentVersion() => Entries.Last().Complexity;
-        public double HotSpotRank() => (_changeCountRank + _complexityRank) / 3d; //ChangesCount() * ComplexityOfCurrentVersion();
+        public double HotSpotRank() => (2 * _changeCountRank + _complexityRank) / 2d;
         public DateTimeOffset CreationDate() => Entries.First().ChangeDate;
         public DateTimeOffset LastChangeDate() => Entries.Last().ChangeDate;
         public TimeSpan ActivityPeriod() => LastChangeDate() - CreationDate();
@@ -44,10 +44,6 @@ namespace ApplicationLogic
         public void AssignChangeCountRank(int changeCountRank)
         {
           _changeCountRank = changeCountRank;
-        }
-
-        public void AssignActivityPeriodRank()
-        {
         }
     }
 }
