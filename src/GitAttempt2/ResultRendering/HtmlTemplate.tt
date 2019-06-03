@@ -1,5 +1,5 @@
 ﻿<#@ template language="C#" #>
-doctype html>
+<doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -86,13 +86,24 @@ doctype html>
 
 	<h2><#= hotSpot.Rank #>. <#=hotSpot.Path #></h2>
 
-	<p>COMPLEXITY: <#= hotSpot.Complexity #></p>
-	<p>CHANGES: <#= hotSpot.ChangesCount #></p>
-	<p>CREATED: <#= hotSpot.Age #> ago</p>
-	<p>LAST CHANGED: <#= hotSpot.TimeSinceLastChanged #> ago</p>
-	<p>ACTIVE FOR: <#= hotSpot.ActivePeriod #> (First commit: <#= hotSpot.CreationDate #>, Last: <#= hotSpot.LastChangedDate #>)</p>
-
-
+	<table>
+		<tr>
+			<td>Complexity</td><td><#= hotSpot.Complexity #></td>		
+		</tr>
+		<tr>
+			<td>Changes</td><td><#= hotSpot.ChangesCount #></td>
+		</tr>
+		<tr>
+			<td>Created</td><td><#= hotSpot.Age #> ago</td>
+		</tr>
+		<tr>
+			<td>Last Changed</td><td><#= hotSpot.TimeSinceLastChanged #> ago</td>
+		</tr>
+		<tr>
+			<td>Active for</td><td><#= hotSpot.ActivePeriod #> (First commit: <#= hotSpot.CreationDate #>, Last: <#= hotSpot.LastChangedDate #>)</td>
+		</tr>
+	</table>
+	
 	<div class="container">
 	    <canvas id="myChart<#= hotSpot.Rank #>" height="40"></canvas>
 	</div>
