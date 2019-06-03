@@ -25,223 +25,266 @@ namespace ResultRendering
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("doctype html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <style>\r" +
-                    "\n        p {\r\n            padding: 0;\r\n            margin: 0;\r\n        }\r\n\r\n    " +
-                    "    ol {\r\n            -ms-columns: 2;\r\n            -webkit-columns: 2;\r\n        " +
-                    "    -moz-columns: 2;\r\n            columns: 2;\r\n            font-weight: normal\r\n" +
-                    "        }\r\n\r\n        body {\r\n            font-family: Arial !important;\r\n       " +
-                    " }\r\n\r\n\r\n\r\n\r\n        .fold {\r\n            background: -webkit-linear-gradient(top" +
-                    ", #e5e5e5, #ccc);\r\n            padding: 10px;\r\n            width: 280px;\r\n      " +
-                    "      height: 80px;\r\n            color: #999;\r\n            -webkit-transition: a" +
-                    "ll 0.3s linear;\r\n            -moz-transition: all 0.3s linear;\r\n            -ms-" +
-                    "transition: all 0.3s linear;\r\n            -o-transition: all 0.3s linear;\r\n     " +
-                    "       transition: all 0.3s linear;\r\n        }\r\n\r\n        .unfolder { display: n" +
-                    "one; }\r\n\r\n        .toggle-label {\r\n            display: inline-block;\r\n         " +
-                    "   cursor: pointer;\r\n            font-size: 11px;\r\n            border-radius: 5p" +
-                    "x;\r\n            padding: 5px;\r\n        }\r\n        .unfold-icon, .fold-icon {\r\n  " +
-                    "          color: #999;\r\n            width: 10px;\r\n            display: inline-bl" +
-                    "ock;\r\n        }\r\n        .unfolder ~ .fold {\r\n            display: none;\r\n      " +
-                    "  }\r\n        .unfolder ~ label .fold-icon {\r\n            display: none;\r\n       " +
-                    " }\r\n\r\n        .unfolder:checked ~ .fold {\r\n            display: block;\r\n        " +
-                    "}\r\n        .unfolder:checked ~ label .fold-icon {\r\n            display: inline-b" +
-                    "lock;\r\n        }\r\n        .unfolder:checked ~ label .unfold-icon {\r\n            " +
-                    "display: none;\r\n        }\r\n    </style>\r\n    <title>Line Chart Test</title>\r\n   " +
-                    " <script src=\"https://cdn.jsdelivr.net/npm/chart.js@2.8.0\"></script>\r\n    <meta " +
-                    "charset=\"UTF-8\">\r\n</head>\r\n<body>\r\n<h1>Analysis of ");
+            this.Write(@"doctype html>
+<html lang=""en"">
+<head>
+    <meta charset=""UTF-8"">
+    <style>
+        p {
+            padding: 0;
+            margin: 0;
+        }
+
+        ol {
+            -ms-columns: 2;
+            -webkit-columns: 2;
+            -moz-columns: 2;
+            columns: 2;
+            font-weight: normal
+        }
+
+        body {
+            font-family: Arial !important;
+        }
+
+		
+        .unfolder { display: none; }
+
+        .toggle-label {
+            display: inline-block;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 5px;
+            padding: 5px;
+        }
+        .unfold-icon, .fold-icon {
+            color: #999;
+            width: 10px;
+            display: inline-block;
+        }
+        .unfolder ~ .fold {
+            display: none;
+        }
+        .unfolder ~ label .fold-icon {
+            display: none;
+        }
+
+        .unfolder:checked ~ .fold {
+            display: block;
+        }
+        .unfolder:checked ~ label .fold-icon {
+            display: inline-block;
+        }
+        .unfolder:checked ~ label .unfold-icon {
+            display: none;
+        }
+    </style>
+    <title>Line Chart Test</title>
+    <script src=""https://cdn.jsdelivr.net/npm/chart.js@2.8.0""></script>
+    <meta charset=""UTF-8"">
+</head>
+<body>
+<h1>Analysis of ");
             
-            #line 76 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 61 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_viewModel.RepoName));
             
             #line default
             #line hidden
-            this.Write(@"</h1>
-    
-<div>
-    <input type=""checkbox"" id=""toggle"" class=""unfolder""/> 
-    <label for=""toggle"" class=""toggle-label""><span class=""unfold-icon"">&#9654;</span><span class=""fold-icon"">&#9660;</span> Title</label>
-    		
-    <div class=""fold"">
-        Content
-    </div>
-</div>
-
-<h1>Rankings</h1>
-
-");
+            this.Write("</h1>\r\n    \r\n<h1>Rankings</h1>\r\n\r\n");
             
-            #line 89 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
- foreach(var ranking in _viewModel.Rankings) 
-   {
+            #line 65 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+ for(int i = 0 ; i < _viewModel.Rankings.Count ; ++i) {
             
             #line default
             #line hidden
-            this.Write("\t\r\n\r\n<h2>");
+            this.Write("\t\r\n");
             
-            #line 92 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 66 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+ var ranking = _viewModel.Rankings[i]; 
+            
+            #line default
+            #line hidden
+            this.Write("<div>\r\n    <input type=\"checkbox\" id=\"toggle");
+            
+            #line 68 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(i));
+            
+            #line default
+            #line hidden
+            this.Write("\" class=\"unfolder\"/> \r\n    <label for=\"toggle");
+            
+            #line 69 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(i));
+            
+            #line default
+            #line hidden
+            this.Write("\" class=\"toggle-label\"><h2>");
+            
+            #line 69 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ranking.Title));
             
             #line default
             #line hidden
-            this.Write("</h2>\r\n\t<ol>\r\n    ");
+            this.Write("</h2><span class=\"unfold-icon\">&#9654;</span><span class=\"fold-icon\">&#9660;</spa" +
+                    "n></label>\r\n    \t\t\r\n    <div class=\"fold\">\r\n\t\t<ol>\r\n\t    ");
             
-            #line 94 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
-  foreach(var entry in ranking.Entries)
-	    { 
+            #line 73 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+  foreach(var entry in ranking.Entries) { 
             
             #line default
             #line hidden
-            this.Write("\t\t\t<li>");
+            this.Write("\t\t\t\t<li>");
             
-            #line 96 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 74 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(entry.Name));
             
             #line default
             #line hidden
             this.Write(" (");
             
-            #line 96 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 74 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(entry.Value));
             
             #line default
             #line hidden
-            this.Write(")</li>\r\n\t");
+            this.Write(")</li>\r\n\t\t");
             
-            #line 97 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 75 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
 	} 
             
             #line default
             #line hidden
-            this.Write("    </ol>\r\n");
+            this.Write("\t    </ol>\r\n    </div>\r\n");
             
-            #line 99 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 78 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
  }
             
             #line default
             #line hidden
-            this.Write("\r\n<h1>Hot Spots</h1>\r\n\r\n");
+            this.Write("</div>\r\n\r\n\r\n\r\n<h1>Hot Spots</h1>\r\n\r\n");
             
-            #line 103 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
-  foreach(var hotSpot in _viewModel.HotSpots) 
-    {
+            #line 85 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+  foreach(var hotSpot in _viewModel.HotSpots) {
             
             #line default
             #line hidden
-            this.Write("\r\n<h2>");
+            this.Write("\r\n\t<h2>");
             
-            #line 106 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 87 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.Rank));
             
             #line default
             #line hidden
             this.Write(". ");
             
-            #line 106 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 87 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.Path));
             
             #line default
             #line hidden
-            this.Write("</h2>\r\n\r\n<p>COMPLEXITY: ");
+            this.Write("</h2>\r\n\r\n\t<p>COMPLEXITY: ");
             
-            #line 108 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 89 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.Complexity));
             
             #line default
             #line hidden
-            this.Write("</p>\r\n<p>CHANGES: ");
+            this.Write("</p>\r\n\t<p>CHANGES: ");
             
-            #line 109 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 90 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.ChangesCount));
             
             #line default
             #line hidden
-            this.Write("</p>\r\n<p>CREATED: ");
+            this.Write("</p>\r\n\t<p>CREATED: ");
             
-            #line 110 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 91 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.Age));
             
             #line default
             #line hidden
-            this.Write(" ago</p>\r\n<p>LAST CHANGED: ");
+            this.Write(" ago</p>\r\n\t<p>LAST CHANGED: ");
             
-            #line 111 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 92 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.TimeSinceLastChanged));
             
             #line default
             #line hidden
-            this.Write(" ago</p>\r\n<p>ACTIVE FOR: ");
+            this.Write(" ago</p>\r\n\t<p>ACTIVE FOR: ");
             
-            #line 112 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 93 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.ActivePeriod));
             
             #line default
             #line hidden
             this.Write(" (First commit: ");
             
-            #line 112 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 93 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.CreationDate));
             
             #line default
             #line hidden
             this.Write(", Last: ");
             
-            #line 112 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 93 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.LastChangedDate));
             
             #line default
             #line hidden
-            this.Write(")</p>\r\n\r\n\r\n<div class=\"container\">\r\n    <canvas id=\"myChart");
+            this.Write(")</p>\r\n\r\n\r\n\t<div class=\"container\">\r\n\t    <canvas id=\"myChart");
             
-            #line 116 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 97 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.Rank));
             
             #line default
             #line hidden
-            this.Write("\" height=\"40\"></canvas>\r\n</div>\r\n<script>\r\n    var ctx = document.getElementById(" +
-                    "\'myChart");
+            this.Write("\" height=\"40\"></canvas>\r\n\t</div>\r\n\t<script>\r\n\t    var ctx = document.getElementBy" +
+                    "Id(\'myChart");
             
-            #line 119 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 100 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.Rank));
             
             #line default
             #line hidden
             this.Write(@"').getContext('2d');
-    var chart = new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'line',
-        options: {
-            elements: {
-                line: {
-                    tension: 0 // disables bezier curves
-                }
-            }
-        },
-        // The data for our dataset
-        data: {
-            labels: [");
+	    var chart = new Chart(ctx, {
+	        // The type of chart we want to create
+	        type: 'line',
+	        options: {
+	            elements: {
+	                line: {
+	                    tension: 0 // disables bezier curves
+	                }
+	            }
+	        },
+	        // The data for our dataset
+	        data: {
+	            labels: [");
             
-            #line 132 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 113 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.Labels));
             
             #line default
             #line hidden
-            this.Write("], //example \'1\', \'2\', \'3\'\r\n            datasets: [{\r\n                label: \'");
+            this.Write("], //example \'1\', \'2\', \'3\'\r\n\t            datasets: [{\r\n\t                label: \'");
             
-            #line 134 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 115 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.ChartValueDescription));
             
             #line default
             #line hidden
-            this.Write("\',\r\n                fill: false,\r\n                borderColor: \'rgb(255, 99, 132)" +
-                    "\',\r\n                data: [");
+            this.Write("\',\r\n\t                fill: false,\r\n\t                borderColor: \'rgb(255, 99, 13" +
+                    "2)\',\r\n\t                data: [");
             
-            #line 137 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 118 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(hotSpot.Data));
             
             #line default
             #line hidden
-            this.Write("]\r\n            }]\r\n        },\r\n\r\n    });\r\n</script>\r\n    \r\n");
+            this.Write("]\r\n\t            }]\r\n\t        },\r\n\r\n\t    });\r\n\t</script>\r\n    \r\n");
             
-            #line 144 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+            #line 125 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
   } 
             
             #line default
@@ -250,7 +293,7 @@ namespace ResultRendering
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 149 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
+        #line 130 "C:\Users\grzes\Documents\GitHub\nhotspot\src\GitAttempt2\ResultRendering\HtmlTemplate.tt"
 private ViewModel _viewModel; 
         
         #line default

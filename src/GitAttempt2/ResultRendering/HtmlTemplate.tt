@@ -21,22 +21,7 @@ doctype html>
             font-family: Arial !important;
         }
 
-
-
-
-        .fold {
-            background: -webkit-linear-gradient(top, #e5e5e5, #ccc);
-            padding: 10px;
-            width: 280px;
-            height: 80px;
-            color: #999;
-            -webkit-transition: all 0.3s linear;
-            -moz-transition: all 0.3s linear;
-            -ms-transition: all 0.3s linear;
-            -o-transition: all 0.3s linear;
-            transition: all 0.3s linear;
-        }
-
+		
         .unfolder { display: none; }
 
         .toggle-label {
@@ -75,71 +60,67 @@ doctype html>
 <body>
 <h1>Analysis of <#=_viewModel.RepoName #></h1>
     
-<div>
-    <input type="checkbox" id="toggle" class="unfolder"/> 
-    <label for="toggle" class="toggle-label"><span class="unfold-icon">&#9654;</span><span class="fold-icon">&#9660;</span> Title</label>
-    		
-    <div class="fold">
-        Content
-    </div>
-</div>
-
 <h1>Rankings</h1>
 
-<# foreach(var ranking in _viewModel.Rankings) 
-   {#>	
-
-<h2><#= ranking.Title #></h2>
-	<ol>
-    <#  foreach(var entry in ranking.Entries)
-	    { #>
-			<li><#= entry.Name #> (<#= entry.Value #>)</li>
-	<#	} #>
-    </ol>
+<# for(int i = 0 ; i < _viewModel.Rankings.Count ; ++i) {#>	
+<# var ranking = _viewModel.Rankings[i]; #>
+<div>
+    <input type="checkbox" id="toggle<#=i #>" class="unfolder"/> 
+    <label for="toggle<#=i #>" class="toggle-label"><h2><#= ranking.Title #></h2><span class="unfold-icon">&#9654;</span><span class="fold-icon">&#9660;</span></label>
+    		
+    <div class="fold">
+		<ol>
+	    <#  foreach(var entry in ranking.Entries) { #>
+				<li><#= entry.Name #> (<#= entry.Value #>)</li>
+		<#	} #>
+	    </ol>
+    </div>
 <# }#>
+</div>
+
+
 
 <h1>Hot Spots</h1>
 
-<#  foreach(var hotSpot in _viewModel.HotSpots) 
-    {#>
+<#  foreach(var hotSpot in _viewModel.HotSpots) {#>
 
-<h2><#= hotSpot.Rank #>. <#=hotSpot.Path #></h2>
+	<h2><#= hotSpot.Rank #>. <#=hotSpot.Path #></h2>
 
-<p>COMPLEXITY: <#= hotSpot.Complexity #></p>
-<p>CHANGES: <#= hotSpot.ChangesCount #></p>
-<p>CREATED: <#= hotSpot.Age #> ago</p>
-<p>LAST CHANGED: <#= hotSpot.TimeSinceLastChanged #> ago</p>
-<p>ACTIVE FOR: <#= hotSpot.ActivePeriod #> (First commit: <#= hotSpot.CreationDate #>, Last: <#= hotSpot.LastChangedDate #>)</p>
+	<p>COMPLEXITY: <#= hotSpot.Complexity #></p>
+	<p>CHANGES: <#= hotSpot.ChangesCount #></p>
+	<p>CREATED: <#= hotSpot.Age #> ago</p>
+	<p>LAST CHANGED: <#= hotSpot.TimeSinceLastChanged #> ago</p>
+	<p>ACTIVE FOR: <#= hotSpot.ActivePeriod #> (First commit: <#= hotSpot.CreationDate #>, Last: <#= hotSpot.LastChangedDate #>)</p>
 
 
-<div class="container">
-    <canvas id="myChart<#= hotSpot.Rank #>" height="40"></canvas>
-</div>
-<script>
-    var ctx = document.getElementById('myChart<#= hotSpot.Rank #>').getContext('2d');
-    var chart = new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'line',
-        options: {
-            elements: {
-                line: {
-                    tension: 0 // disables bezier curves
-                }
-            }
-        },
-        // The data for our dataset
-        data: {
-            labels: [<#= hotSpot.Labels #>], //example '1', '2', '3'
-            datasets: [{
-                label: '<#= hotSpot.ChartValueDescription #>',
-                fill: false,
-                borderColor: 'rgb(255, 99, 132)',
-                data: [<#= hotSpot.Data #>]
-            }]
-        },
+	<div class="container">
+	    <canvas id="myChart<#= hotSpot.Rank #>" height="40"></canvas>
+	</div>
+	<script>
+	    var ctx = document.getElementById('myChart<#= hotSpot.Rank #>').getContext('2d');
+	    var chart = new Chart(ctx, {
+	        // The type of chart we want to create
+	        type: 'line',
+	        options: {
+	            elements: {
+	                line: {
+	                    tension: 0 // disables bezier curves
+	                }
+	            }
+	        },
+	        // The data for our dataset
+	        data: {
+	            labels: [<#= hotSpot.Labels #>], //example '1', '2', '3'
+	            datasets: [{
+	                label: '<#= hotSpot.ChartValueDescription #>',
+	                fill: false,
+	                borderColor: 'rgb(255, 99, 132)',
+	                data: [<#= hotSpot.Data #>]
+	            }]
+	        },
 
-    });
-</script>
+	    });
+	</script>
     
 <#  } #>
 
