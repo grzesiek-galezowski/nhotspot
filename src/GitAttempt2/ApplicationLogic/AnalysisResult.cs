@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,72 +6,62 @@ namespace ApplicationLogic
   public class AnalysisResult
   {
     public string Path { get; }
-    private readonly IEnumerable<ChangeLog> _changeLogs;
+    private readonly IEnumerable<FileChangeLog> _changeLogs;
 
-    public AnalysisResult(IEnumerable<ChangeLog> changeLogs, string path)
+    private readonly Dictionary<string, IPackageChangeLog> _packageChangeLogsByPath = new Dictionary<string, IPackageChangeLog>();
+
+    public AnalysisResult(
+      IEnumerable<FileChangeLog> changeLogs, 
+      Dictionary<string, IPackageChangeLog> packageMetricsByPath, 
+      string normalizedPath)
     {
-      Path = path.Replace("\\", "/");
+      Path = normalizedPath;
       _changeLogs = changeLogs;
-      UpdateChangeCountRanking();
-      UpdateComplexityRanking();
+      _packageChangeLogsByPath = packageMetricsByPath;
     }
 
-    public IEnumerable<ChangeLog> EntriesByHotSpotRank()
+    public IEnumerable<FileChangeLog> EntriesByHotSpotRank()
     {
       return _changeLogs.OrderByDescending(h => h.HotSpotRank());
     }
 
-    private void UpdateComplexityRanking()
-    {
-      EntriesByRisingComplexity()
-        .Select(WithIndex())
-        .ToList().ForEach(tuple => tuple.entry.AssignComplexityRank(tuple.index));
-    }
-
-    private static Func<ChangeLog, int, (ChangeLog entry, int index)> WithIndex()
-    {
-      return (entry, index) => (entry, index: index + 1);
-    }
-
-    public IEnumerable<ChangeLog> EntriesByRisingComplexity()
+    private IEnumerable<IFileChangeLog> EntriesByRisingComplexity()
     {
       return _changeLogs.OrderBy(h => h.ComplexityOfCurrentVersion());
     }
 
-    public IEnumerable<ChangeLog> EntriesByDiminishingComplexity()
+    public IEnumerable<IFileChangeLog> EntriesByDiminishingComplexity()
     {
       return EntriesByRisingComplexity().Reverse();
     }
 
-    private void UpdateChangeCountRanking()
-    {
-      EntriesByRisingChangesCount()
-        .Select(WithIndex())
-        .ToList().ForEach(tuple => tuple.entry.AssignChangeCountRank(tuple.index));
-    }
-
-    public IEnumerable<ChangeLog> EntriesByRisingChangesCount()
+    public IEnumerable<IFileChangeLog> EntriesByRisingChangesCount()
     {
       return _changeLogs.OrderBy(h => h.ChangesCount());
     }
 
-    public IEnumerable<ChangeLog> EntriesByDiminishingChangesCount()
+    public IEnumerable<IFileChangeLog> EntriesByDiminishingChangesCount()
     {
       return _changeLogs.OrderByDescending(h => h.ChangesCount());
     }
 
-    public IEnumerable<ChangeLog> EntriesByDiminishingActivityPeriod()
+    public IEnumerable<IFileChangeLog> EntriesByDiminishingActivityPeriod()
     {
       return _changeLogs.OrderByDescending(h => h.ActivityPeriod());
     }
 
-    public IEnumerable<ChangeLog> EntriesFromMostRecentlyChanged()
+    public IEnumerable<IFileChangeLog> EntriesFromMostRecentlyChanged()
     {
       return _changeLogs.OrderByDescending(h => h.LastChangeDate());
     }
-    public IEnumerable<ChangeLog> EntriesFromMostAncientlyChanged()
+    public IEnumerable<IFileChangeLog> EntriesFromMostAncientlyChanged()
     {
       return EntriesFromMostRecentlyChanged().Reverse();
+    }
+
+    public IEnumerable<IPackageChangeLog> PackagesByDiminishingHotSpotRank()
+    {
+      return _packageChangeLogsByPath.Select(kv => kv.Value).OrderByDescending(cl => cl.HotSpotRank());
     }
   }
 }

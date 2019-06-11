@@ -1,6 +1,4 @@
-using System;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using ApplicationLogic;
 
@@ -8,7 +6,7 @@ namespace ResultRendering
 {
   public static class HtmlChartSingleResultTemplate
   {
-    public static HotSpotViewModel InstantiateWith(int elementNum, ChangeLog analysisResult)
+    public static HotSpotViewModel InstantiateWith(int elementNum, FileChangeLog analysisResult)
     {
       var hotSpotViewModel = new HotSpotViewModel
       {
@@ -29,15 +27,15 @@ namespace ResultRendering
       return hotSpotViewModel;
     }
 
-    private static string Data(ChangeLog changeLog)
+    private static string Data(FileChangeLog fileChangeLog)
     {
-      var data = changeLog.Entries.Select(change => "'" + change.Complexity.ToString(CultureInfo.InvariantCulture) + "'");
+      var data = fileChangeLog.Entries.Select(change => "'" + change.Complexity.ToString(CultureInfo.InvariantCulture) + "'");
       return string.Join(", ", data);
     }
 
-    private static string Labels(ChangeLog changeLog)
+    private static string Labels(FileChangeLog fileChangeLog)
     {
-      var data = changeLog.Entries.Select(change => 
+      var data = fileChangeLog.Entries.Select(change => 
         "'" + change.ChangeDate.ToString("dd mm yyyy", CultureInfo.InvariantCulture) + "'");
       return string.Join(", ", data);
     }

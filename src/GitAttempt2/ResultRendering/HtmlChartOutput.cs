@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Security;
-using System.Text;
-using System.Web;
 using ApplicationLogic;
 
 namespace ResultRendering
@@ -21,6 +18,7 @@ namespace ResultRendering
       AddRanking(analysisResults.EntriesByDiminishingActivityPeriod(), cl => cl.ActivityPeriod(), "Longest active", rankings);
       AddRanking(analysisResults.EntriesFromMostRecentlyChanged(), cl => cl.LastChangeDate().ToString("d"), "Most recently changed (possible breeding grounds)", rankings);
       AddRanking(analysisResults.EntriesFromMostAncientlyChanged(), cl => cl.LastChangeDate().ToString("d"), "Most anciently changed (extract a library?)", rankings);
+      AddRanking(analysisResults.PackagesByDiminishingHotSpotRank(), cl => cl.HotSpotRank(), "Package hot spots (flat)", rankings);
 
       var charts = viewModel.HotSpots;
       AddCharts(analysisResults, charts);
@@ -30,15 +28,14 @@ namespace ResultRendering
       File.WriteAllText("output.html", new HtmlTemplate(viewModel).TransformText());
     }
 
-    private void AddRanking<T>(
-      IEnumerable<ChangeLog> entries, 
-      Func<ChangeLog, T> valueFun, 
+    private void AddRanking<TValue, TChangeLog>(
+      IEnumerable<TChangeLog> entries, 
+      Func<TChangeLog, TValue> valueFun, 
       string heading,
-      List<RankingViewModel> result)
+      ICollection<RankingViewModel> result) where TChangeLog : IItemWithPath
     {
-      var rankingViewModel = new RankingViewModel();
-      rankingViewModel.Title = heading;
-      foreach (var changeLog in entries.Take(20))
+      var rankingViewModel = new RankingViewModel {Title = heading};
+      foreach (var changeLog in entries)
       {
         rankingViewModel.Entries.Add(new RankingEntryViewModel()
         {
@@ -67,5 +64,4 @@ namespace ResultRendering
     }
 
   }
-
 }

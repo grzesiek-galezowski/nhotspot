@@ -10,9 +10,9 @@ namespace ApplicationLogic
 
   public class CollectFileChangeRateFromCommitVisitor : ITreeVisitor
   {
-    private readonly Dictionary<string, ChangeLog> _commitsPerPath;
+    private readonly Dictionary<string, FileChangeLog> _commitsPerPath;
 
-    public CollectFileChangeRateFromCommitVisitor(Dictionary<string, ChangeLog> commitsPerPath)
+    public CollectFileChangeRateFromCommitVisitor(Dictionary<string, FileChangeLog> commitsPerPath)
     {
       _commitsPerPath = commitsPerPath;
     }
@@ -21,7 +21,7 @@ namespace ApplicationLogic
     {
       if (!_commitsPerPath.ContainsKey(filePath))
       {
-        _commitsPerPath[filePath] = new ChangeLog();
+        _commitsPerPath[filePath] = new FileChangeLog();
       }
       AddChange(filePath, fileContent, changeDate);
     }
@@ -44,13 +44,13 @@ namespace ApplicationLogic
 
     public void OnCopied(string filePath, string fileContent, DateTimeOffset changeDate)
     {
-      _commitsPerPath[filePath] = new ChangeLog();
+      _commitsPerPath[filePath] = new FileChangeLog();
       AddChange(filePath, fileContent, changeDate);
     }
 
     public void OnAdded(string filePath, string fileContent, DateTimeOffset changeDate)
     {
-      _commitsPerPath[filePath] = new ChangeLog();
+      _commitsPerPath[filePath] = new FileChangeLog();
       AddChange(filePath, fileContent, changeDate);
     }
   }

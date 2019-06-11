@@ -4,8 +4,16 @@ using System.Linq;
 
 namespace ApplicationLogic
 {
-    public class ChangeLog
-    {
+  public interface IFileChangeLog : IChangeLog
+  {
+    DateTimeOffset CreationDate();
+    DateTimeOffset LastChangeDate();
+    TimeSpan ActivityPeriod();
+    TimeSpan TimeSinceLastChange();
+  }
+
+  public class FileChangeLog : IFileChangeLog
+  {
         private readonly List<Change> _entries = new List<Change>();
         private int _complexityRank = -1; //bug handle another way
         private int _changeCountRank = -1; //bug handle another way
@@ -29,7 +37,8 @@ namespace ApplicationLogic
         public string PathOfCurrentVersion() => Entries.Last().Path;
         public int ChangesCount() => Entries.Count;
         public double ComplexityOfCurrentVersion() => Entries.Last().Complexity;
-        public double HotSpotRank() => (2 * _changeCountRank + _complexityRank) / 2d;
+        public double HotSpotRank() => ComplexityMetrics.CalculateHotSpotRank(_complexityRank, _changeCountRank);
+
         public DateTimeOffset CreationDate() => Entries.First().ChangeDate;
         public DateTimeOffset LastChangeDate() => Entries.Last().ChangeDate;
         public TimeSpan ActivityPeriod() => LastChangeDate() - CreationDate();
@@ -45,5 +54,10 @@ namespace ApplicationLogic
         {
           _changeCountRank = changeCountRank;
         }
-    }
+
+        public string PackagePath()
+        {
+          return System.IO.Path.GetDirectoryName(PathOfCurrentVersion());
+        }
+  }
 }

@@ -21,6 +21,9 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>HtmlTemplate.cs</LastGenOutput>
     </None>
+    <None Update="styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

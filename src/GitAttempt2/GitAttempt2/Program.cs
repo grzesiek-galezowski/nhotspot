@@ -10,14 +10,15 @@ namespace GitAttempt2
 {
   public class Program
   {
-    //TODO calculate age of code (1st commit to now)
-    //TODO calculate age of code (1st commit to last commit)
-    //TODO calculate time since last commit
-    //TODO histogram of age
-    //TODO unfolding https://codepen.io/crucialfelix/pen/jiztn
+    //TODO histogram of age (how many files live each number of months)
+    //TODO package metrics as tree instead of plain list!!!
+    //TODO count complexity increase/decrease numbers and increase ratio (how many complexity drops vs complexity increases)
+    //TODO add per package calculations (both flat and nested, which includes complexity from nested modules)
+    //TODO add contributors count to hot spot description
+    //TODO add percentage of all commits to hot spot description
+    //TODO add trend - fastest increasing complexity (not no. of changes)
     static void Main(string[] args)
     {
-      Console.WriteLine(TimeSpan.FromDays(12));
       var analysisResult = RepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\nscan\", "master");
 
       new ConsoleRendering().Show(analysisResult);

@@ -16,21 +16,41 @@ namespace GitAttempt2
 
       using var repo = new Repository(repositoryPath);
       var commits = repo.Branches[branchName].Commits.Reverse().ToArray();
-      var analysisMetadata = new Dictionary<string, ChangeLog>();
+      var analysisMetadata = new Dictionary<string, FileChangeLog>();
       var pathsInTrunk = new List<string>();
       
       CollectPathsFrom(commits.Last().Tree, pathsInTrunk);
       CollectResults(repo, commits, analysisMetadata);
 
-      var trunkFiles = analysisMetadata.Where(am => pathsInTrunk.Contains(am.Key)).Select(x => x.Value);
-      var analysisResult = new AnalysisResult(trunkFiles, repo.Info.Path);
+      var trunkFiles = analysisMetadata.Where(am => pathsInTrunk.Contains(am.Key)).Select(x => x.Value).ToList();
+      var analysisResult = CreateAnalysisResult(trunkFiles, repo);
       return analysisResult;
+    }
+
+    private static AnalysisResult CreateAnalysisResult(IReadOnlyList<FileChangeLog> trunkFiles, IRepository repo)
+    {
+      Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
+      Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
+
+      return new AnalysisResult(trunkFiles, 
+        Rankings.GatherPackageMetricsByPath(trunkFiles), 
+        repo.Info.Path.Replace("\\", "/"));
+    }
+
+    private static IOrderedEnumerable<IChangeLog> OrderByChangesCount(IEnumerable<FileChangeLog> trunkFiles)
+    {
+      return trunkFiles.ToList().OrderBy(h => h.ChangesCount());
+    }
+
+    private static IOrderedEnumerable<IChangeLog> OrderByComplexity(IEnumerable<FileChangeLog> trunkFiles)
+    {
+      return trunkFiles.ToList().OrderBy(h => h.ComplexityOfCurrentVersion());
     }
 
     private static void CollectResults(
       IRepository repo, 
       IReadOnlyList<Commit> commits,
-      Dictionary<string, ChangeLog> analysisResults)
+      Dictionary<string, FileChangeLog> analysisResults)
     {
       var treeVisitor = new CollectFileChangeRateFromCommitVisitor(analysisResults);
       TreeNavigation.Traverse(commits.First().Tree, commits.First(), treeVisitor);
