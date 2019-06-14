@@ -35,6 +35,7 @@
 <h1>Hot Spot rating per package (nested)</h1>
 
 <#= PackageListView.RenderFrom(_viewModel.PackageTreeTree) #>
+<script><#= PackageListView.GetJavaScript() #></script>
 
 
 <h1>Hot Spots</h1>
