@@ -1,32 +1,62 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Functional.Maybe;
 
 namespace ApplicationLogic
 {
   public static class Rankings
   {
-    public static Dictionary<string, IPackageChangeLog> GatherPackageMetricsByPath(
-      IEnumerable<FileChangeLog> fileChangeLogs) //bug make this a function
+    public static Dictionary<string, IFlatPackageChangeLog> GatherFlatPackageMetricsByPath(IEnumerable<FileChangeLog> fileChangeLogs)
     {
-      var packageChangeLogsByPath = new Dictionary<string, IPackageChangeLog>();
+      var packageChangeLogsByPath = new Dictionary<string, IFlatPackageChangeLog>();
       foreach (var fileChangeLog in fileChangeLogs)
       {
         string packagePath = fileChangeLog.PackagePath();
         if (!packageChangeLogsByPath.ContainsKey(packagePath))
         {
-          packageChangeLogsByPath[packagePath] = new PackageChangeLog(packagePath);
+          packageChangeLogsByPath[packagePath] = new FlatPackageChangeLog(packagePath);
         }
 
-        packageChangeLogsByPath[packagePath].AddMetricsFrom(fileChangeLog);
+        packageChangeLogsByPath[packagePath].Add(fileChangeLog);
       }
 
-      UpdateChangeCountRankingBasedOnOrderOf(packageChangeLogsByPath.Values.OrderBy(v => v.ChangesCount()));
-      UpdateComplexityRankingBasedOnOrderOf(
-        packageChangeLogsByPath.Values.OrderBy(v => v.ComplexityOfCurrentVersion()));
-
-
       return packageChangeLogsByPath;
+    }
+
+    public static PackageChangeLogNode GatherPackageTreeMetricsByPath(IEnumerable<FileChangeLog> fileChangeLogs)
+    {
+      var nodes = new Dictionary<string, PackageChangeLogNode>();
+      var flatPackageMetricsByPath = GatherFlatPackageMetricsByPath(fileChangeLogs);
+      foreach (var packageChangeLogEntry in flatPackageMetricsByPath.ToList().OrderBy(kvp => kvp.Key))
+      {
+        var path = packageChangeLogEntry.Key;
+        var packageChangeLog = packageChangeLogEntry.Value;
+
+        var newNode = new PackageChangeLogNode(packageChangeLog, packageChangeLog.Files.Select(f => new FileChangeLogNode(f)));
+        nodes[path] = newNode;
+
+        AddToParent(nodes, newNode, path);
+      }
+
+      return nodes.Values.Single(n => !n.HasParent());
+    }
+
+    private static void AddToParent(Dictionary<string, PackageChangeLogNode> nodes, PackageChangeLogNode newNode, string path)
+    {
+      var parentPath = Path.GetDirectoryName(path).ToMaybe();
+      if (parentPath.HasValue)
+      {
+        if (nodes.ContainsKey(parentPath.Value))
+        {
+          nodes[parentPath.Value].AddChild(newNode);
+        }
+        else
+        {
+          AddToParent(nodes, newNode, parentPath.Value);
+        }
+      }
     }
 
     private static Func<TEntry, int, (TEntry entry, int index)> WithIndex<TEntry>()
@@ -35,21 +65,36 @@ namespace ApplicationLogic
     }
 
 
-    public static void UpdateChangeCountRankingBasedOnOrderOf(IEnumerable<IChangeLog> entriesToRank)
+    public static void UpdateChangeCountRankingBasedOnOrderOf(IEnumerable<IFileChangeLog> entriesToRank)
     {
       entriesToRank
-        .Select(WithIndex<IChangeLog>())
+        .Select(WithIndex<IFileChangeLog>())
         .ToList().ForEach(
           tuple => tuple.entry.AssignChangeCountRank(tuple.index));
     }
 
-    public static void UpdateComplexityRankingBasedOnOrderOf(IEnumerable<IChangeLog> entriesToRank)
+    public static void UpdateComplexityRankingBasedOnOrderOf(IEnumerable<IFileChangeLog> entriesToRank)
     {
       entriesToRank
-        .Select(WithIndex<IChangeLog>())
+        .Select(WithIndex<IFileChangeLog>())
         .ToList().ForEach(
           tuple => tuple.entry.AssignComplexityRank(tuple.index));
     }
 
+  }
+
+  public class FileChangeLogNode
+  {
+    private readonly IFileChangeLog _fileChangeLog;
+
+    public FileChangeLogNode(IFileChangeLog fileChangeLog)
+    {
+      _fileChangeLog = fileChangeLog;
+    }
+
+    public void Accept(INodeVisitor visitor)
+    {
+      visitor.Visit(_fileChangeLog);
+    }
   }
 }

@@ -10,6 +10,8 @@ namespace ApplicationLogic
     DateTimeOffset LastChangeDate();
     TimeSpan ActivityPeriod();
     TimeSpan TimeSinceLastChange();
+    void AssignChangeCountRank(int rank);
+    void AssignComplexityRank(int rank);
   }
 
   public class FileChangeLog : IFileChangeLog
@@ -37,7 +39,7 @@ namespace ApplicationLogic
         public string PathOfCurrentVersion() => Entries.Last().Path;
         public int ChangesCount() => Entries.Count;
         public double ComplexityOfCurrentVersion() => Entries.Last().Complexity;
-        public double HotSpotRank() => ComplexityMetrics.CalculateHotSpotRank(_complexityRank, _changeCountRank);
+        public double HotSpotRating() => ComplexityMetrics.CalculateHotSpotRating(_complexityRank, _changeCountRank);
 
         public DateTimeOffset CreationDate() => Entries.First().ChangeDate;
         public DateTimeOffset LastChangeDate() => Entries.Last().ChangeDate;

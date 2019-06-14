@@ -32,17 +32,21 @@ namespace GitAttempt2
       Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
       Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
 
+      //bug remove
+      var packageChangeLogNode = Rankings.GatherPackageTreeMetricsByPath(trunkFiles);
+
       return new AnalysisResult(trunkFiles, 
-        Rankings.GatherPackageMetricsByPath(trunkFiles), 
-        repo.Info.Path.Replace("\\", "/"));
+        Rankings.GatherFlatPackageMetricsByPath(trunkFiles), 
+        repo.Info.Path.Replace("\\", "/"),
+        packageChangeLogNode);
     }
 
-    private static IOrderedEnumerable<IChangeLog> OrderByChangesCount(IEnumerable<FileChangeLog> trunkFiles)
+    private static IOrderedEnumerable<IFileChangeLog> OrderByChangesCount(IEnumerable<FileChangeLog> trunkFiles)
     {
       return trunkFiles.ToList().OrderBy(h => h.ChangesCount());
     }
 
-    private static IOrderedEnumerable<IChangeLog> OrderByComplexity(IEnumerable<FileChangeLog> trunkFiles)
+    private static IOrderedEnumerable<IFileChangeLog> OrderByComplexity(IEnumerable<FileChangeLog> trunkFiles)
     {
       return trunkFiles.ToList().OrderBy(h => h.ComplexityOfCurrentVersion());
     }

@@ -18,7 +18,9 @@ namespace ResultRendering
       AddRanking(analysisResults.EntriesByDiminishingActivityPeriod(), cl => cl.ActivityPeriod(), "Longest active", rankings);
       AddRanking(analysisResults.EntriesFromMostRecentlyChanged(), cl => cl.LastChangeDate().ToString("d"), "Most recently changed (possible breeding grounds)", rankings);
       AddRanking(analysisResults.EntriesFromMostAncientlyChanged(), cl => cl.LastChangeDate().ToString("d"), "Most anciently changed (extract a library?)", rankings);
-      AddRanking(analysisResults.PackagesByDiminishingHotSpotRank(), cl => cl.HotSpotRank(), "Package hot spots (flat)", rankings);
+      AddRanking(analysisResults.PackagesByDiminishingHotSpotRating(), cl => cl.HotSpotRating(), "Package hot spots (flat)", rankings);
+
+      AddTree(analysisResults.PackageTree(), viewModel);
 
       var charts = viewModel.HotSpots;
       AddCharts(analysisResults, charts);
@@ -26,6 +28,13 @@ namespace ResultRendering
       viewModel.RepoName = analysisResults.Path;
 
       File.WriteAllText("output.html", new HtmlTemplate(viewModel).TransformText());
+    }
+
+    private void AddTree(PackageChangeLogNode packageTree, ViewModel viewModel)
+    {
+      var packageNodeViewModelVisitor = new PackageNodeViewModelVisitor();
+      packageTree.Accept(packageNodeViewModelVisitor);
+      viewModel.PackageTreeTree = packageNodeViewModelVisitor.ToPackageNodeViewModel();
     }
 
     private void AddRanking<TValue, TChangeLog>(
@@ -50,7 +59,7 @@ namespace ResultRendering
     private static void AddCharts(AnalysisResult analysisResults, List<HotSpotViewModel> charts)
     {
       var elementNum = 0;
-      foreach (var analysisResult in analysisResults.EntriesByHotSpotRank())
+      foreach (var analysisResult in analysisResults.EntriesByHotSpotRating())
       {
         elementNum++;
         var singleFileChart = HtmlChartSingleResultTemplate.InstantiateWith(elementNum, analysisResult);

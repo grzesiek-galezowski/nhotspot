@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <style>
 	<#@ include file="styles.css" once="true" #>
+<#@ import namespace="System.Security.Cryptography.X509Certificates" #>
     </style>
     <title>Line Chart Test</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -31,6 +32,9 @@
 <# }#>
 </div>
 
+<h1>Hot Spot rating per package (nested)</h1>
+
+<#= PackageListView.RenderFrom(_viewModel.PackageTreeTree) #>
 
 
 <h1>Hot Spots</h1>

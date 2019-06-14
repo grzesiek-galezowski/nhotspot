@@ -6,23 +6,31 @@ namespace ApplicationLogic
   public class AnalysisResult
   {
     public string Path { get; }
+
+    public PackageChangeLogNode PackageTree()
+    {
+      return _packageChangeLogNode;
+    }
+
     private readonly IEnumerable<FileChangeLog> _changeLogs;
 
-    private readonly Dictionary<string, IPackageChangeLog> _packageChangeLogsByPath = new Dictionary<string, IPackageChangeLog>();
+    private readonly Dictionary<string, IFlatPackageChangeLog> _packageChangeLogsByPath = new Dictionary<string, IFlatPackageChangeLog>();
+    private readonly PackageChangeLogNode _packageChangeLogNode;
 
-    public AnalysisResult(
-      IEnumerable<FileChangeLog> changeLogs, 
-      Dictionary<string, IPackageChangeLog> packageMetricsByPath, 
-      string normalizedPath)
+    public AnalysisResult(IEnumerable<FileChangeLog> changeLogs,
+      Dictionary<string, IFlatPackageChangeLog> packageMetricsByPath,
+      string normalizedPath, 
+      PackageChangeLogNode packageChangeLogNode)
     {
       Path = normalizedPath;
       _changeLogs = changeLogs;
       _packageChangeLogsByPath = packageMetricsByPath;
+      _packageChangeLogNode = packageChangeLogNode;
     }
 
-    public IEnumerable<FileChangeLog> EntriesByHotSpotRank()
+    public IEnumerable<FileChangeLog> EntriesByHotSpotRating()
     {
-      return _changeLogs.OrderByDescending(h => h.HotSpotRank());
+      return _changeLogs.OrderByDescending(h => h.HotSpotRating());
     }
 
     private IEnumerable<IFileChangeLog> EntriesByRisingComplexity()
@@ -59,9 +67,11 @@ namespace ApplicationLogic
       return EntriesFromMostRecentlyChanged().Reverse();
     }
 
-    public IEnumerable<IPackageChangeLog> PackagesByDiminishingHotSpotRank()
+    public IEnumerable<IFlatPackageChangeLog> PackagesByDiminishingHotSpotRating()
     {
-      return _packageChangeLogsByPath.Select(kv => kv.Value).OrderByDescending(cl => cl.HotSpotRank());
+      return _packageChangeLogsByPath.Select(kv => kv.Value).OrderByDescending(cl => cl.HotSpotRating());
     }
+
+    
   }
 }

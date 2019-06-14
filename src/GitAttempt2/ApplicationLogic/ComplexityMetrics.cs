@@ -51,7 +51,7 @@ namespace ApplicationLogic
       return line.TakeWhile(char.IsWhiteSpace).Count();
     }
 
-    public static double CalculateHotSpotRank(int complexityRank, int changeCountRank)
+    public static double CalculateHotSpotRating(int complexityRank, int changeCountRank)
     {
       return (2 * changeCountRank + complexityRank) / 2d;
     }
