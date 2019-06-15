@@ -10,7 +10,7 @@ namespace ResultRendering
 
     public PackageTreeNodeViewModel(double hotSpotRating, string pathOfCurrentVersion)
     {
-      Name = Path.GetFileName(pathOfCurrentVersion);
+      Name = pathOfCurrentVersion;//Path.GetFileName(pathOfCurrentVersion);
       _hotSpotRating = hotSpotRating;
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ApplicationLogic
 {
@@ -37,9 +38,10 @@ namespace ApplicationLogic
         ChangeFactory.CreateChange(filePath, fileContent, changeDate));
     }
 
-    public void OnRenamed(string oldPath, string newPath)
+    public void OnRenamed(string oldPath, string newPath, string fileContent, DateTimeOffset changeDate)
     {
       _commitsPerPath[oldPath] = _commitsPerPath[newPath];
+      AddChange(newPath, fileContent, changeDate);
     }
 
     public void OnCopied(string filePath, string fileContent, DateTimeOffset changeDate)
@@ -52,6 +54,11 @@ namespace ApplicationLogic
     {
       _commitsPerPath[filePath] = new FileChangeLog();
       AddChange(filePath, fileContent, changeDate);
+    }
+
+    public void OnRemoved(string treeEntryPath)
+    {
+      _commitsPerPath.Remove(treeEntryPath);
     }
   }
 }

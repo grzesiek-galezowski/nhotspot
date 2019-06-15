@@ -18,10 +18,10 @@ namespace ResultRendering
 
     public static string RenderFrom(PackageTreeNodeViewModel packageTree)
     {
-      string result = string.Empty;
 
       if (packageTree.Children.Any())
       {
+        string result = string.Empty;
         result += "<ul>";
         foreach (var childPackage in packageTree.Children.OrderByDescending(c => c.HotSpotRating))
         {
@@ -40,9 +40,12 @@ namespace ResultRendering
         }
 
         result += "</ul>";
+        return result;
       }
-
-      return result;
+      else
+      {
+        return string.Empty;
+      }
     }
   }
 }

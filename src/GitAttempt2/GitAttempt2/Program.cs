@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ApplicationLogic;
-using ResultRendering;
+﻿using ResultRendering;
 
 
 
@@ -10,6 +6,7 @@ namespace GitAttempt2
 {
   public class Program
   {
+    //TODO coupling metrics (should not be that hard)
     //TODO histogram of age (how many files live each number of months)
     //TODO package metrics as tree instead of plain list!!!
     //TODO count complexity increase/decrease numbers and increase ratio (how many complexity drops vs complexity increases)

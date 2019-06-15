@@ -92,7 +92,10 @@ namespace GitAttempt2
             break;
           }
           case ChangeKind.Deleted:
+          {
+            treeVisitor.OnRemoved(treeEntry.Path);
             break;
+          }
           case ChangeKind.Modified:
           {
             var blob = BlobFrom(treeEntry, currentCommit);
@@ -108,7 +111,7 @@ namespace GitAttempt2
             var blob = BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnRenamed(treeEntry.Path, treeEntry.OldPath);
+              treeVisitor.OnRenamed(treeEntry.Path, treeEntry.OldPath, blob.GetContentText(), currentCommit.Author.When);
             } 
             break;
           }

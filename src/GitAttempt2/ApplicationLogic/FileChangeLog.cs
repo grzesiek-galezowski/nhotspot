@@ -24,17 +24,8 @@ namespace ApplicationLogic
 
         public void AddDataFrom(Change change)
         {
-            if (!_entries.Any())
-            {
-                _entries.Add(change);
-            }
-            else if (!HasTheSameContent(change))
-            {
-                _entries.Add(change);
-            }
+            _entries.Add(change);
         }
-
-        private bool HasTheSameContent(Change change) => _entries.Last().TextWithoutWhitespaces.Equals(change.TextWithoutWhitespaces);
 
         public string PathOfCurrentVersion() => Entries.Last().Path;
         public int ChangesCount() => Entries.Count;
