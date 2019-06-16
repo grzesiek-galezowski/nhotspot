@@ -11,18 +11,21 @@ namespace ApplicationLogic
 
   public class CollectFileChangeRateFromCommitVisitor : ITreeVisitor
   {
-    private readonly Dictionary<string, FileChangeLog> _commitsPerPath;
+    private readonly List<string> _pathsInTrunk;
 
-    public CollectFileChangeRateFromCommitVisitor(Dictionary<string, FileChangeLog> commitsPerPath)
+    public CollectFileChangeRateFromCommitVisitor(List<string> pathsInTrunk)
     {
-      _commitsPerPath = commitsPerPath;
+      _pathsInTrunk = pathsInTrunk;
+      AnalysisMetadata = new Dictionary<string, FileChangeLog>();
     }
+
+    private Dictionary<string, FileChangeLog> AnalysisMetadata { get; }
 
     public void OnBlob(string filePath, string fileContent, DateTimeOffset changeDate)
     {
-      if (!_commitsPerPath.ContainsKey(filePath))
+      if (!AnalysisMetadata.ContainsKey(filePath))
       {
-        _commitsPerPath[filePath] = new FileChangeLog();
+        AnalysisMetadata[filePath] = new FileChangeLog();
       }
       AddChange(filePath, fileContent, changeDate);
     }
@@ -34,31 +37,36 @@ namespace ApplicationLogic
 
     private void AddChange(string filePath, string fileContent, DateTimeOffset changeDate)
     {
-      _commitsPerPath[filePath].AddDataFrom(
+      AnalysisMetadata[filePath].AddDataFrom(
         ChangeFactory.CreateChange(filePath, fileContent, changeDate));
     }
 
     public void OnRenamed(string oldPath, string newPath, string fileContent, DateTimeOffset changeDate)
     {
-      _commitsPerPath[oldPath] = _commitsPerPath[newPath];
+      AnalysisMetadata[oldPath] = AnalysisMetadata[newPath];
       AddChange(newPath, fileContent, changeDate);
     }
 
     public void OnCopied(string filePath, string fileContent, DateTimeOffset changeDate)
     {
-      _commitsPerPath[filePath] = new FileChangeLog();
+      AnalysisMetadata[filePath] = new FileChangeLog();
       AddChange(filePath, fileContent, changeDate);
     }
 
     public void OnAdded(string filePath, string fileContent, DateTimeOffset changeDate)
     {
-      _commitsPerPath[filePath] = new FileChangeLog();
+      AnalysisMetadata[filePath] = new FileChangeLog();
       AddChange(filePath, fileContent, changeDate);
     }
 
     public void OnRemoved(string treeEntryPath)
     {
-      _commitsPerPath.Remove(treeEntryPath);
+      AnalysisMetadata.Remove(treeEntryPath);
+    }
+
+    public List<FileChangeLog> Result()
+    {
+      return AnalysisMetadata.Where(am => _pathsInTrunk.Contains(am.Key)).Select(x => x.Value).ToList();
     }
   }
 }

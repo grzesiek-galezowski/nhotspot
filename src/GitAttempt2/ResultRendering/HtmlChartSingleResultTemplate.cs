@@ -18,7 +18,7 @@ namespace ResultRendering
         ActivePeriod = (int)analysisResult.ActivityPeriod().TotalDays + " days",
         Age = (int)analysisResult.Age().TotalDays + " days",
         Path = analysisResult.PathOfCurrentVersion(),
-        Rank = elementNum.ToString(),
+        Rating = elementNum.ToString(),
         ChartValueDescription = "Complexity per change",
         Data = Data(analysisResult),
         Labels = Labels(analysisResult)

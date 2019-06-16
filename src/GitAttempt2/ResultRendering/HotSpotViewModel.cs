@@ -2,7 +2,7 @@
 {
   public class HotSpotViewModel
   {
-    public string Rank { get; set; }
+    public string Rating { get; set; }
     public string Path { get; set; }
     public string Complexity { get; set; }
     public string ChangesCount { get; set; }
