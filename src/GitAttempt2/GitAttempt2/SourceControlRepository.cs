@@ -21,7 +21,7 @@ namespace GitAttempt2
     {
       var treeVisitor = collectFileChangeRateFromCommitVisitor;
       TreeNavigation.Traverse(Commits.First().Tree, Commits.First(), treeVisitor);
-      for (var i = 1; i < Commits.Count(); ++i)
+      for (var i = 1; i < Commits.Count; ++i)
       {
         var previousCommit = Commits.ElementAt(i - 1);
         var currentCommit = Commits.ElementAt(i);
@@ -93,7 +93,7 @@ namespace GitAttempt2
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnAdded(treeEntry.Path, blob.GetContentText(), currentCommit.Author.When);
+              treeVisitor.OnAdded(treeEntry.Path, ChangeFactory.CreateChange(treeEntry.Path, blob.GetContentText(), currentCommit.Author.When));
             }
             break;
           }
@@ -107,7 +107,7 @@ namespace GitAttempt2
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnModified(treeEntry.Path, blob.GetContentText(), currentCommit.Author.When);
+              treeVisitor.OnModified(treeEntry.Path, ChangeFactory.CreateChange(treeEntry.Path, blob.GetContentText(), currentCommit.Author.When));
             }
 
             break;
@@ -117,7 +117,7 @@ namespace GitAttempt2
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnRenamed(treeEntry.Path, treeEntry.OldPath, blob.GetContentText(), currentCommit.Author.When);
+              treeVisitor.OnRenamed(treeEntry.Path, treeEntry.OldPath, ChangeFactory.CreateChange(treeEntry.OldPath, blob.GetContentText(), currentCommit.Author.When));
             } 
             break;
           }
@@ -126,7 +126,7 @@ namespace GitAttempt2
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnCopied(treeEntry.Path, blob.GetContentText(), currentCommit.Author.When);
+              treeVisitor.OnCopied(treeEntry.Path, ChangeFactory.CreateChange(treeEntry.Path, blob.GetContentText(), currentCommit.Author.When));
             }
 
             break;

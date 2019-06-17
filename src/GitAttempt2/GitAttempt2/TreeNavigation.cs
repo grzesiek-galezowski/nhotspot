@@ -17,7 +17,7 @@ namespace GitAttempt2
             var blob = (Blob) treeEntry.Target;
             if (!blob.IsBinary)
             {
-              visitor.OnBlob(treeEntry.Path, blob.GetContentText(), commit.Author.When);
+              visitor.OnBlob(treeEntry.Path, ChangeFactory.CreateChange(treeEntry.Path, blob.GetContentText(), commit.Author.When));
             }
 
             break;

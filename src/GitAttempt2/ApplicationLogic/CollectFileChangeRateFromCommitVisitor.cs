@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +5,7 @@ namespace ApplicationLogic
 {
   public interface ITreeVisitor
   {
-    void OnBlob(string filePath, string fileContent, DateTimeOffset changeDate);
+    void OnBlob(string filePath, Change change);
   }
 
   public class CollectFileChangeRateFromCommitVisitor : ITreeVisitor
@@ -21,42 +20,42 @@ namespace ApplicationLogic
 
     private Dictionary<string, FileChangeLog> AnalysisMetadata { get; }
 
-    public void OnBlob(string filePath, string fileContent, DateTimeOffset changeDate)
+    public void OnBlob(string filePath, Change change)
     {
       if (!AnalysisMetadata.ContainsKey(filePath))
       {
         AnalysisMetadata[filePath] = new FileChangeLog();
       }
-      AddChange(filePath, fileContent, changeDate);
+      AddChange(filePath, change);
     }
 
-    public void OnModified(string filePath, string fileContent, DateTimeOffset changeDate)
+    public void OnModified(string filePath, Change change)
     {
-      AddChange(filePath, fileContent, changeDate);
+      AddChange(filePath, change);
     }
 
-    private void AddChange(string filePath, string fileContent, DateTimeOffset changeDate)
+    private void AddChange(string filePath, Change change)
     {
       AnalysisMetadata[filePath].AddDataFrom(
-        ChangeFactory.CreateChange(filePath, fileContent, changeDate));
+        change);
     }
 
-    public void OnRenamed(string oldPath, string newPath, string fileContent, DateTimeOffset changeDate)
+    public void OnRenamed(string oldPath, string newPath, Change change)
     {
       AnalysisMetadata[oldPath] = AnalysisMetadata[newPath];
-      AddChange(newPath, fileContent, changeDate);
+      AddChange(newPath, change);
     }
 
-    public void OnCopied(string filePath, string fileContent, DateTimeOffset changeDate)
+    public void OnCopied(string filePath, Change change)
     {
       AnalysisMetadata[filePath] = new FileChangeLog();
-      AddChange(filePath, fileContent, changeDate);
+      AddChange(filePath, change);
     }
 
-    public void OnAdded(string filePath, string fileContent, DateTimeOffset changeDate)
+    public void OnAdded(string filePath, Change change)
     {
       AnalysisMetadata[filePath] = new FileChangeLog();
-      AddChange(filePath, fileContent, changeDate);
+      AddChange(filePath, change);
     }
 
     public void OnRemoved(string treeEntryPath)
