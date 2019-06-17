@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <style>
-	<#@ include file="styles.css" once="true" #>
-<#@ import namespace="System.Security.Cryptography.X509Certificates" #>
-    </style>
+		<#@ include file="styles.css" once="true" #>
+	</style>
     <title>Line Chart Test</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <meta charset="UTF-8">
@@ -60,6 +59,21 @@
 		</tr>
 		<tr>
 			<td>Active for</td><td><#= hotSpot.ActivePeriod #> (First commit: <#= hotSpot.CreationDate #>, Last: <#= hotSpot.LastChangedDate #>)</td>
+		</tr>
+		<tr>
+			<td>
+				<details>
+					<summary>History</summary>
+					<table style="display: block">
+						<# foreach (var change in hotSpot.Changes) { #>
+							<tr>
+								<td style="width: 15%; border-bottom: 1pt solid gray"><#=change.ChangeDate#></td>
+								<td style="border-bottom: 1pt solid gray"><pre><#=change.Comment#></pre></td>
+							</tr>	
+						<#} #>
+					</table>
+				</details>
+			</td>
 		</tr>
 	</table>
 	

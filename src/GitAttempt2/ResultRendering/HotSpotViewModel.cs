@@ -1,4 +1,6 @@
-﻿namespace ResultRendering
+﻿using System.Collections.Generic;
+
+namespace ResultRendering
 {
   public class HotSpotViewModel
   {
@@ -14,7 +16,6 @@
     public string Labels { get; set; }
     public string ChartValueDescription { get; set; }
     public string Data { get; set; }
-
-
+    public IReadOnlyList<ChangeViewModel> Changes { get; set; }
   }
 }

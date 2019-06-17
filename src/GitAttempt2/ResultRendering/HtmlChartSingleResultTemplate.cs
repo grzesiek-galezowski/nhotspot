@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Globalization;
 using System.Linq;
 using ApplicationLogic;
@@ -21,10 +23,16 @@ namespace ResultRendering
         Rating = elementNum.ToString(),
         ChartValueDescription = "Complexity per change",
         Data = Data(analysisResult),
-        Labels = Labels(analysisResult)
+        Labels = Labels(analysisResult),
+        Changes = Changes(analysisResult)
       };
 
       return hotSpotViewModel;
+    }
+
+    private static IReadOnlyList<ChangeViewModel> Changes(FileChangeLog analysisResult)
+    {
+      return analysisResult.Entries.Select(c => new ChangeViewModel(c.ChangeDate, c.Comment)).Reverse().ToList();
     }
 
     private static string Data(FileChangeLog fileChangeLog)

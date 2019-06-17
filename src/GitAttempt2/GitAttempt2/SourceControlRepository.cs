@@ -84,6 +84,10 @@ namespace GitAttempt2
     {
       foreach (var treeEntry in treeChanges)
       {
+        var treeEntryPath = treeEntry.Path;
+        var changeDate = currentCommit.Author.When;
+        var changeComment = currentCommit.Message;
+
         switch (treeEntry.Status)
         {
           case ChangeKind.Unmodified:
@@ -93,13 +97,13 @@ namespace GitAttempt2
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnAdded(treeEntry.Path, ChangeFactory.CreateChange(treeEntry.Path, blob.GetContentText(), currentCommit.Author.When));
+              treeVisitor.OnAdded(treeEntryPath, ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
             }
             break;
           }
           case ChangeKind.Deleted:
           {
-            treeVisitor.OnRemoved(treeEntry.Path);
+            treeVisitor.OnRemoved(treeEntryPath);
             break;
           }
           case ChangeKind.Modified:
@@ -107,7 +111,7 @@ namespace GitAttempt2
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnModified(treeEntry.Path, ChangeFactory.CreateChange(treeEntry.Path, blob.GetContentText(), currentCommit.Author.When));
+              treeVisitor.OnModified(treeEntryPath, ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
             }
 
             break;
@@ -117,7 +121,7 @@ namespace GitAttempt2
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnRenamed(treeEntry.Path, treeEntry.OldPath, ChangeFactory.CreateChange(treeEntry.OldPath, blob.GetContentText(), currentCommit.Author.When));
+              treeVisitor.OnRenamed(treeEntryPath, treeEntry.OldPath, ChangeFactory.CreateChange(treeEntry.OldPath, blob.GetContentText(), changeDate, changeComment));
             } 
             break;
           }
@@ -126,7 +130,7 @@ namespace GitAttempt2
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnCopied(treeEntry.Path, ChangeFactory.CreateChange(treeEntry.Path, blob.GetContentText(), currentCommit.Author.When));
+              treeVisitor.OnCopied(treeEntryPath, ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
             }
 
             break;

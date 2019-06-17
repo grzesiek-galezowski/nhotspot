@@ -10,16 +10,18 @@ namespace ApplicationLogic
         public string Text { get; }
         public double Complexity { get; }
 
-        public Change(string path, string text, double complexity, DateTimeOffset changeDate)
+        public Change(string path, string text, double complexity, DateTimeOffset changeDate, string comment)
         {
             Path = path;
             ChangeDate = changeDate;
+            Comment = comment;
             Text = text;
             Complexity = complexity;
             TextWithoutWhitespaces = Regex.Replace(Text, @"\s+", "");
         }
 
         public string TextWithoutWhitespaces { get; }
+        public string Comment { get; }
     }
 }
     
