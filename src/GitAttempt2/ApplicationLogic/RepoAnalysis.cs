@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using ApplicationLogic;
 
-namespace GitAttempt2
+namespace ApplicationLogic
 {
   public static class RepoAnalysis
   {
@@ -30,14 +29,14 @@ namespace GitAttempt2
       return trunkFiles.ToList().OrderBy(h => h.ComplexityOfCurrentVersion());
     }
 
-    public static AnalysisResult ExecuteOn(ISourceControlRepository sourceControlRepository, string repoPath)
+    public static AnalysisResult ExecuteOn(ISourceControlRepository sourceControlRepository)
     {
       var pathsInTrunk = sourceControlRepository.CollectTrunkPaths();
       var visitor = new CollectFileChangeRateFromCommitVisitor(pathsInTrunk);
       sourceControlRepository.CollectResults(visitor);
 
       var trunkFiles = visitor.Result();
-      var analysisResult = CreateAnalysisResult(trunkFiles, repoPath);
+      var analysisResult = CreateAnalysisResult(trunkFiles, sourceControlRepository.Path);
       return analysisResult;
     }
   }

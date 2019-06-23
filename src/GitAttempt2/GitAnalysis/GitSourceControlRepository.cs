@@ -4,14 +4,15 @@ using System.Linq;
 using ApplicationLogic;
 using LibGit2Sharp;
 
-namespace GitAttempt2
+namespace GitAnalysis
 {
-  public class SourceControlRepository : ISourceControlRepository
+  public class GitSourceControlRepository : ISourceControlRepository
   {
-    public SourceControlRepository(IRepository repo, IReadOnlyCollection<Commit> commits)
+    public GitSourceControlRepository(IRepository repo, IReadOnlyCollection<Commit> commits)
     {
       Repo = repo;
       Commits = commits;
+      Path = repo.Info.Path.Replace("\\", "/");
     }
 
     private IRepository Repo { get; }
@@ -56,6 +57,8 @@ namespace GitAttempt2
 
       return pathsInTrunk;
     }
+
+    public string Path { get; }
 
     private static void CollectPathsFrom(Tree tree, ICollection<string> pathsByOid)
     {
@@ -140,6 +143,13 @@ namespace GitAttempt2
             throw new ArgumentOutOfRangeException();
         }
       }
+    }
+
+    public static GitSourceControlRepository FromBranch(string branchName, Repository repo)
+    {
+      var commits = repo.Branches[branchName].Commits.Reverse().ToList();
+      var sourceControlRepository = new GitSourceControlRepository(repo, commits);
+      return sourceControlRepository;
     }
   }
 }

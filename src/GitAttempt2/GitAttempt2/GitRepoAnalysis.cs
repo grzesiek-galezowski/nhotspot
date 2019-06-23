@@ -1,5 +1,5 @@
-using System.Linq;
 using ApplicationLogic;
+using GitAnalysis;
 using LibGit2Sharp;
 
 namespace GitAttempt2
@@ -10,11 +10,9 @@ namespace GitAttempt2
     {
       using (var repo = new Repository(repositoryPath))
       {
-        var repoPath = repo.Info.Path.Replace("\\", "/");
-        var commits = repo.Branches[branchName].Commits.Reverse().ToList();
-        var sourceControlRepository = new SourceControlRepository(repo, commits);
+        var sourceControlRepository = GitSourceControlRepository.FromBranch(branchName, repo);
 
-        return RepoAnalysis.ExecuteOn(sourceControlRepository, repoPath);
+        return RepoAnalysis.ExecuteOn(sourceControlRepository);
       }
     }
   }

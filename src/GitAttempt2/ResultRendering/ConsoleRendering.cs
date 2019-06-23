@@ -1,14 +1,14 @@
-using System;
 using ApplicationLogic;
-using GitAttempt2;
 
-internal class ConsoleRendering
+namespace ResultRendering
 {
-  public void Show(AnalysisResult result)
+  public class ConsoleRendering
   {
-    //result.EntriesByHotSpotRank()
+    public void Show(AnalysisResult result)
+    {
+      //result.EntriesByHotSpotRank()
 
-    /*
+      /*
     foreach (var changeLog in changeLogs)
     {
       Console.WriteLine(
@@ -16,5 +16,6 @@ internal class ConsoleRendering
         changeLog.ChangesCount() + ":" +
         changeLog.ComplexityOfCurrentVersion());
     }*/
+    }
   }
 }

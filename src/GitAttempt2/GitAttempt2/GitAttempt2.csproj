@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApplicationLogic\ApplicationLogic.csproj" />
+    <ProjectReference Include="..\GitAnalysis\GitAnalysis.csproj" />
     <ProjectReference Include="..\ResultRendering\ResultRendering.csproj" />
   </ItemGroup>
 

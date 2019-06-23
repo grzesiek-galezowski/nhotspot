@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using ApplicationLogic;
 
-namespace GitAttempt2
+namespace ApplicationLogic
 {
   public interface ISourceControlRepository
   {
     void CollectResults(CollectFileChangeRateFromCommitVisitor collectFileChangeRateFromCommitVisitor);
     List<string> CollectTrunkPaths();
+    string Path { get; }
   }
 }

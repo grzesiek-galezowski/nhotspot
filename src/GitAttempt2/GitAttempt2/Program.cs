@@ -1,4 +1,5 @@
-﻿using ResultRendering;
+﻿using ApplicationLogic;
+using ResultRendering;
 
 
 
@@ -19,10 +20,7 @@ namespace GitAttempt2
       var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\NSubstitute\", "master");
 
       new ConsoleRendering().Show(analysisResult);
-
-      var htmlChartRendering = new HtmlChartOutput();
-      htmlChartRendering.InstantiateTemplate(analysisResult);
-      htmlChartRendering.Show();
+      new HtmlChartOutput().Show(analysisResult);
     }
   }
 }

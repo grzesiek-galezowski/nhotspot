@@ -72,5 +72,10 @@ namespace ResultRendering
       Browser.Open("output.html");
     }
 
+    public void Show(AnalysisResult analysisResult)
+    {
+      InstantiateTemplate(analysisResult);
+      Show();
+    }
   }
 }

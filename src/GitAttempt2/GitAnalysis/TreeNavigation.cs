@@ -2,7 +2,7 @@ using System;
 using ApplicationLogic;
 using LibGit2Sharp;
 
-namespace GitAttempt2
+namespace GitAnalysis
 {
   public static class TreeNavigation
   {
