@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using ApplicationLogic;
 using NUnit.Framework;
 using TddXt.AnyRoot.Strings;
@@ -20,12 +19,7 @@ namespace ApplicationLogicSpecification
   {
     public void CollectResults(CollectFileChangeRateFromCommitVisitor collectFileChangeRateFromCommitVisitor)
     {
-      collectFileChangeRateFromCommitVisitor.
-    }
-
-    public List<string> CollectTrunkPaths()
-    {
-      return new List<string>();
+      
     }
 
     public string Path { get; } = Any.String();

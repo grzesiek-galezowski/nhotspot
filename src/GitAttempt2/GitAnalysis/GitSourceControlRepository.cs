@@ -35,50 +35,7 @@ namespace GitAnalysis
       }
     }
 
-    public List<string> CollectTrunkPaths()
-    {
-      var pathsInTrunk = new List<string>();
-      foreach (var treeEntry in Commits.Last().Tree)
-      {
-        switch (treeEntry.TargetType)
-        {
-          case TreeEntryTargetType.Blob:
-            pathsInTrunk.Add(treeEntry.Path);
-            break;
-          case TreeEntryTargetType.Tree:
-            CollectPathsFrom((Tree) treeEntry.Target, pathsInTrunk);
-            break;
-          case TreeEntryTargetType.GitLink:
-            throw new ArgumentException(treeEntry.Path);
-          default:
-            throw new ArgumentOutOfRangeException();
-        }
-      }
-
-      return pathsInTrunk;
-    }
-
     public string Path { get; }
-
-    private static void CollectPathsFrom(Tree tree, ICollection<string> pathsByOid)
-    {
-      foreach (var treeEntry in tree)
-      {
-        switch (treeEntry.TargetType)
-        {
-          case TreeEntryTargetType.Blob:
-            pathsByOid.Add(treeEntry.Path);
-            break;
-          case TreeEntryTargetType.Tree:
-            CollectPathsFrom((Tree) treeEntry.Target, pathsByOid);
-            break;
-          case TreeEntryTargetType.GitLink:
-            throw new ArgumentException(treeEntry.Path);
-          default:
-            throw new ArgumentOutOfRangeException();
-        }
-      }
-    }
 
     private static void AnalyzeChanges(
       TreeChanges treeChanges,
@@ -124,7 +81,7 @@ namespace GitAnalysis
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnRenamed(treeEntryPath, treeEntry.OldPath, ChangeFactory.CreateChange(treeEntry.OldPath, blob.GetContentText(), changeDate, changeComment));
+              treeVisitor.OnRenamed(treeEntry.OldPath, treeEntryPath, ChangeFactory.CreateChange(treeEntry.OldPath, blob.GetContentText(), changeDate, changeComment));
             } 
             break;
           }

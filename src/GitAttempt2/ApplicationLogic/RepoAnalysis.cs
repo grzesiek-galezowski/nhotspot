@@ -31,8 +31,7 @@ namespace ApplicationLogic
 
     public static AnalysisResult ExecuteOn(ISourceControlRepository sourceControlRepository)
     {
-      var pathsInTrunk = sourceControlRepository.CollectTrunkPaths();
-      var visitor = new CollectFileChangeRateFromCommitVisitor(pathsInTrunk);
+      var visitor = new CollectFileChangeRateFromCommitVisitor();
       sourceControlRepository.CollectResults(visitor);
 
       var trunkFiles = visitor.Result();

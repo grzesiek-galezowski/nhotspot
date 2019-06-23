@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,11 +11,8 @@ namespace ApplicationLogic
 
   public class CollectFileChangeRateFromCommitVisitor : ITreeVisitor
   {
-    private readonly List<string> _pathsInTrunk;
-
-    public CollectFileChangeRateFromCommitVisitor(List<string> pathsInTrunk)
+    public CollectFileChangeRateFromCommitVisitor()
     {
-      _pathsInTrunk = pathsInTrunk;
       AnalysisMetadata = new Dictionary<string, FileChangeLog>();
     }
 
@@ -42,7 +40,8 @@ namespace ApplicationLogic
 
     public void OnRenamed(string oldPath, string newPath, Change change)
     {
-      AnalysisMetadata[oldPath] = AnalysisMetadata[newPath];
+      AnalysisMetadata[newPath] = AnalysisMetadata[oldPath];
+      AnalysisMetadata.Remove(oldPath);
       AddChange(newPath, change);
     }
 
@@ -65,7 +64,7 @@ namespace ApplicationLogic
 
     public List<FileChangeLog> Result()
     {
-      return AnalysisMetadata.Where(am => _pathsInTrunk.Contains(am.Key)).Select(x => x.Value).ToList();
+      return AnalysisMetadata.Select(x => x.Value).ToList();
     }
   }
 }
