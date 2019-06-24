@@ -16,9 +16,12 @@ namespace ApplicationLogic
 
   public class CollectFileChangeRateFromCommitVisitor : ITreeVisitor
   {
-    public CollectFileChangeRateFromCommitVisitor()
+    private readonly IClock _clock;
+
+    public CollectFileChangeRateFromCommitVisitor(IClock clock)
     {
       AnalysisMetadata = new Dictionary<string, FileChangeLog>();
+      _clock = clock;
     }
 
     private Dictionary<string, FileChangeLog> AnalysisMetadata { get; }
@@ -27,7 +30,7 @@ namespace ApplicationLogic
     {
       if (!AnalysisMetadata.ContainsKey(change.Path))
       {
-        AnalysisMetadata[change.Path] = new FileChangeLog();
+        AnalysisMetadata[change.Path] = new FileChangeLog(_clock);
       }
       AddChange(change);
     }
@@ -52,13 +55,13 @@ namespace ApplicationLogic
 
     public void OnCopied(Change change)
     {
-      AnalysisMetadata[change.Path] = new FileChangeLog();
+      AnalysisMetadata[change.Path] = new FileChangeLog(_clock);
       AddChange(change);
     }
 
     public void OnAdded(Change change)
     {
-      AnalysisMetadata[change.Path] = new FileChangeLog();
+      AnalysisMetadata[change.Path] = new FileChangeLog(_clock);
       AddChange(change);
     }
 

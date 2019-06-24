@@ -3,8 +3,25 @@ using System.Linq;
 
 namespace ApplicationLogic
 {
-  public static class RepoAnalysis
+  public class RepoAnalysis
   {
+    private readonly IClock _clock;
+
+    public RepoAnalysis(IClock clock)
+    {
+      _clock = clock;
+    }
+    
+    public AnalysisResult ExecuteOn(ISourceControlRepository sourceControlRepository)
+    {
+      var visitor = new CollectFileChangeRateFromCommitVisitor(_clock);
+      sourceControlRepository.CollectResults(visitor);
+
+      var trunkFiles = visitor.Result();
+      var analysisResult = CreateAnalysisResult(trunkFiles, sourceControlRepository.Path);
+      return analysisResult;
+    }
+
     private static AnalysisResult CreateAnalysisResult(IReadOnlyList<FileChangeLog> trunkFiles, string repositoryPath)
     {
       Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
@@ -29,14 +46,5 @@ namespace ApplicationLogic
       return trunkFiles.ToList().OrderBy(h => h.ComplexityOfCurrentVersion());
     }
 
-    public static AnalysisResult ExecuteOn(ISourceControlRepository sourceControlRepository)
-    {
-      var visitor = new CollectFileChangeRateFromCommitVisitor();
-      sourceControlRepository.CollectResults(visitor);
-
-      var trunkFiles = visitor.Result();
-      var analysisResult = CreateAnalysisResult(trunkFiles, sourceControlRepository.Path);
-      return analysisResult;
-    }
   }
 }

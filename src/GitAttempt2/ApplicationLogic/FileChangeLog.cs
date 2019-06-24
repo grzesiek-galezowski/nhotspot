@@ -19,6 +19,12 @@ namespace ApplicationLogic
         private readonly List<Change> _entries = new List<Change>();
         private int _complexityRank = -1; //bug handle another way
         private int _changeCountRank = -1; //bug handle another way
+        private readonly IClock _clock;
+
+        public FileChangeLog(IClock clock)
+        {
+          _clock = clock;
+        }
 
         public IReadOnlyList<Change> Entries => _entries;
 
@@ -35,8 +41,8 @@ namespace ApplicationLogic
         public DateTimeOffset CreationDate() => Entries.First().ChangeDate;
         public DateTimeOffset LastChangeDate() => Entries.Last().ChangeDate;
         public TimeSpan ActivityPeriod() => LastChangeDate() - CreationDate();
-        public TimeSpan Age() => DateTime.UtcNow - CreationDate();
-        public TimeSpan TimeSinceLastChange() => DateTime.UtcNow - LastChangeDate(); //bug introduce Clock
+        public TimeSpan Age() => _clock.Now() - CreationDate();
+        public TimeSpan TimeSinceLastChange() => _clock.Now() - LastChangeDate();
 
         public void AssignComplexityRank(int complexityRank)
         {

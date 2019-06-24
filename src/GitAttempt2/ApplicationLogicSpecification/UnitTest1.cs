@@ -15,7 +15,8 @@ namespace ApplicationLogicSpecification
     {
       string file1 = Any.String();
       var changeDate1 = Any.Instance<DateTimeOffset>();
-      var analysisResult = RepoAnalysis.ExecuteOn(new MockSourceControlRepository("REPO", v => v.OnAdded(new ChangeBuilder()
+      var clock = Any.Instance<IClock>();
+      var analysisResult = new RepoAnalysis(clock).ExecuteOn(new MockSourceControlRepository("REPO", v => v.OnAdded(new ChangeBuilder()
       {
         Path = file1,
         ChangeDate = changeDate1
@@ -26,7 +27,7 @@ namespace ApplicationLogicSpecification
       analysisResult.EntriesByDiminishingActivityPeriod().First().ActivityPeriod().Should().Be(TimeSpan.Zero);
       analysisResult.EntriesByDiminishingActivityPeriod().First().CreationDate().Should().Be(changeDate1);
       analysisResult.EntriesByDiminishingActivityPeriod().First().LastChangeDate().Should().Be(changeDate1);
-      analysisResult.EntriesByDiminishingActivityPeriod().First().TimeSinceLastChange().Should().Be(changeDate1);
+      analysisResult.EntriesByDiminishingActivityPeriod().First().TimeSinceLastChange().Should().Be(clock.Now() - changeDate1);
     }
   }
 
