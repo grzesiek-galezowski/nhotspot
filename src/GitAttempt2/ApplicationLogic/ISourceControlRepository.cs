@@ -2,7 +2,7 @@ namespace ApplicationLogic
 {
   public interface ISourceControlRepository
   {
-    void CollectResults(CollectFileChangeRateFromCommitVisitor collectFileChangeRateFromCommitVisitor);
+    void CollectResults(ITreeVisitor visitor);
     string Path { get; }
   }
 }

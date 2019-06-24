@@ -18,9 +18,9 @@ namespace GitAnalysis
     private IRepository Repo { get; }
     private IReadOnlyCollection<Commit> Commits { get; }
 
-    public void CollectResults(CollectFileChangeRateFromCommitVisitor collectFileChangeRateFromCommitVisitor)
+    public void CollectResults(ITreeVisitor visitor)
     {
-      var treeVisitor = collectFileChangeRateFromCommitVisitor;
+      var treeVisitor = visitor;
       TreeNavigation.Traverse(Commits.First().Tree, Commits.First(), treeVisitor);
       for (var i = 1; i < Commits.Count; ++i)
       {
@@ -39,7 +39,7 @@ namespace GitAnalysis
 
     private static void AnalyzeChanges(
       TreeChanges treeChanges,
-      CollectFileChangeRateFromCommitVisitor treeVisitor, 
+      ITreeVisitor treeVisitor, 
       Commit currentCommit)
     {
       foreach (var treeEntry in treeChanges)
@@ -57,7 +57,7 @@ namespace GitAnalysis
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnAdded(treeEntryPath, ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
+              treeVisitor.OnAdded(ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
             }
             break;
           }
@@ -71,7 +71,7 @@ namespace GitAnalysis
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnModified(treeEntryPath, ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
+              treeVisitor.OnModified(ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
             }
 
             break;
@@ -81,7 +81,7 @@ namespace GitAnalysis
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnRenamed(treeEntry.OldPath, treeEntryPath, ChangeFactory.CreateChange(treeEntry.OldPath, blob.GetContentText(), changeDate, changeComment));
+              treeVisitor.OnRenamed(treeEntry.OldPath, ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
             } 
             break;
           }
@@ -90,7 +90,7 @@ namespace GitAnalysis
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnCopied(treeEntryPath, ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
+              treeVisitor.OnCopied(ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
             }
 
             break;

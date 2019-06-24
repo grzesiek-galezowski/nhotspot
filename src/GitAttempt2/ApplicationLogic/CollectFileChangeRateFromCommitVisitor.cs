@@ -6,7 +6,12 @@ namespace ApplicationLogic
 {
   public interface ITreeVisitor
   {
-    void OnBlob(string filePath, Change change);
+    void OnBlob(Change change);
+    void OnModified(Change change);
+    void OnRenamed(string oldPath, Change change);
+    void OnCopied(Change change);
+    void OnAdded(Change change);
+    void OnRemoved(string removedEntryPath);
   }
 
   public class CollectFileChangeRateFromCommitVisitor : ITreeVisitor
@@ -18,48 +23,48 @@ namespace ApplicationLogic
 
     private Dictionary<string, FileChangeLog> AnalysisMetadata { get; }
 
-    public void OnBlob(string filePath, Change change)
+    public void OnBlob(Change change)
     {
-      if (!AnalysisMetadata.ContainsKey(filePath))
+      if (!AnalysisMetadata.ContainsKey(change.Path))
       {
-        AnalysisMetadata[filePath] = new FileChangeLog();
+        AnalysisMetadata[change.Path] = new FileChangeLog();
       }
-      AddChange(filePath, change);
+      AddChange(change);
     }
 
-    public void OnModified(string filePath, Change change)
+    public void OnModified(Change change)
     {
-      AddChange(filePath, change);
+      AddChange(change);
     }
 
-    private void AddChange(string filePath, Change change)
+    private void AddChange(Change change)
     {
-      AnalysisMetadata[filePath].AddDataFrom(
+      AnalysisMetadata[change.Path].AddDataFrom(
         change);
     }
 
-    public void OnRenamed(string oldPath, string newPath, Change change)
+    public void OnRenamed(string oldPath, Change change)
     {
-      AnalysisMetadata[newPath] = AnalysisMetadata[oldPath];
+      AnalysisMetadata[change.Path] = AnalysisMetadata[oldPath];
       AnalysisMetadata.Remove(oldPath);
-      AddChange(newPath, change);
+      AddChange(change);
     }
 
-    public void OnCopied(string filePath, Change change)
+    public void OnCopied(Change change)
     {
-      AnalysisMetadata[filePath] = new FileChangeLog();
-      AddChange(filePath, change);
+      AnalysisMetadata[change.Path] = new FileChangeLog();
+      AddChange(change);
     }
 
-    public void OnAdded(string filePath, Change change)
+    public void OnAdded(Change change)
     {
-      AnalysisMetadata[filePath] = new FileChangeLog();
-      AddChange(filePath, change);
+      AnalysisMetadata[change.Path] = new FileChangeLog();
+      AddChange(change);
     }
 
-    public void OnRemoved(string treeEntryPath)
+    public void OnRemoved(string removedEntryPath)
     {
-      AnalysisMetadata.Remove(treeEntryPath);
+      AnalysisMetadata.Remove(removedEntryPath);
     }
 
     public List<FileChangeLog> Result()
