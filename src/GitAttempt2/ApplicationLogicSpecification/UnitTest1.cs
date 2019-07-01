@@ -28,6 +28,10 @@ namespace ApplicationLogicSpecification
       analysisResult.EntriesByDiminishingActivityPeriod().First().CreationDate().Should().Be(changeDate1);
       analysisResult.EntriesByDiminishingActivityPeriod().First().LastChangeDate().Should().Be(changeDate1);
       analysisResult.EntriesByDiminishingActivityPeriod().First().TimeSinceLastChange().Should().Be(clock.Now() - changeDate1);
+      analysisResult.EntriesByDiminishingActivityPeriod().First().ChangesCount().Should().Be(1);
+      analysisResult.EntriesByDiminishingActivityPeriod().First().ComplexityOfCurrentVersion().Should().Be(0);
+      analysisResult.EntriesByDiminishingActivityPeriod().First().HotSpotRating().Should().Be((1 + 2) / 2d);
+      //TODO
     }
   }
 
