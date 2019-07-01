@@ -12,7 +12,7 @@ namespace GitAttempt2
       {
         var sourceControlRepository = GitSourceControlRepository.FromBranch(branchName, repo);
 
-        return RepoAnalysis.ExecuteOn(sourceControlRepository);
+        return new RepoAnalysis(new RealClock()).ExecuteOn(sourceControlRepository);
       }
     }
   }
