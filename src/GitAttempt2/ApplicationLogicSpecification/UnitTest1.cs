@@ -16,23 +16,36 @@ namespace ApplicationLogicSpecification
       string file1 = Any.String();
       var changeDate1 = Any.Instance<DateTimeOffset>();
       var clock = Any.Instance<IClock>();
-      var analysisResult = new RepoAnalysis(clock).ExecuteOn(new MockSourceControlRepository("REPO", v => v.OnAdded(new ChangeBuilder()
+      var repoPath = "REPO";
+      var change1 = new ChangeBuilder()
       {
         Path = file1,
         ChangeDate = changeDate1
-      }.Build())));
+      }.Build();
 
-      analysisResult.Path.Should().Be("REPO");
+      var analysisResult = new RepoAnalysis(clock).ExecuteOn(new MockSourceControlRepository(repoPath, v =>
+      {
+        v.OnAdded(change1);
+      }));
+
+      analysisResult.Path.Should().Be(repoPath);
       analysisResult.EntriesByDiminishingActivityPeriod().Should().HaveCount(1);
-      analysisResult.EntriesByDiminishingActivityPeriod().First().ActivityPeriod().Should().Be(TimeSpan.Zero);
-      analysisResult.EntriesByDiminishingActivityPeriod().First().CreationDate().Should().Be(changeDate1);
-      analysisResult.EntriesByDiminishingActivityPeriod().First().LastChangeDate().Should().Be(changeDate1);
-      analysisResult.EntriesByDiminishingActivityPeriod().First().TimeSinceLastChange().Should().Be(clock.Now() - changeDate1);
-      analysisResult.EntriesByDiminishingActivityPeriod().First().ChangesCount().Should().Be(1);
-      analysisResult.EntriesByDiminishingActivityPeriod().First().ComplexityOfCurrentVersion().Should().Be(0);
-      analysisResult.EntriesByDiminishingActivityPeriod().First().HotSpotRating().Should().Be((1 + 2) / 2d);
-      //TODO
+      var fileChangeLog = (FileChangeLog)analysisResult.EntriesByDiminishingActivityPeriod().First();
+      fileChangeLog.ActivityPeriod().Should().Be(TimeSpan.Zero);
+      fileChangeLog.CreationDate().Should().Be(changeDate1);
+      fileChangeLog.LastChangeDate().Should().Be(changeDate1);
+      fileChangeLog.TimeSinceLastChange().Should().Be(clock.Now() - changeDate1);
+      fileChangeLog.ChangesCount().Should().Be(1);
+      fileChangeLog.ComplexityOfCurrentVersion().Should().Be(0);
+      fileChangeLog.HotSpotRating().Should().Be((1 + 2) / 2d);
+      fileChangeLog.Entries.Should().HaveCount(1);
+      fileChangeLog.Entries.Should().BeEquivalentTo(change1);
+      fileChangeLog.Age().Should().Be(clock.Now() - changeDate1);
+      fileChangeLog.PathOfCurrentVersion().Should().Be(file1);
+      fileChangeLog.PackagePath().Should().Be(string.Empty);
     }
+
+    //TODO test package tree
   }
 
   public class MockSourceControlRepository : ISourceControlRepository

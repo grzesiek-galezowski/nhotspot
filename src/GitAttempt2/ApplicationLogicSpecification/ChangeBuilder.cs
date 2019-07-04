@@ -1,7 +1,7 @@
 using System;
 using ApplicationLogic;
-using TddXt.AnyRoot;
 using TddXt.AnyRoot.Strings;
+using static TddXt.AnyRoot.Root;
 
 namespace ApplicationLogicSpecification
 {
@@ -10,16 +10,15 @@ namespace ApplicationLogicSpecification
 
     public Change Build()
     {
-      Path = Root.Any.String();
       return ChangeFactory.CreateChange(Path, FileText, ChangeDate, ChangeComment);
     }
 
-    public string Path { private get; set; }
+    public string Path { private get; set; } = Any.Instance<string>();
 
-    public string ChangeComment { set; private get; } = Root.Any.String();
+    public string ChangeComment { set; private get; } = Any.String();
 
-    public DateTimeOffset ChangeDate { set; private get; } = Root.Any.Instance<DateTimeOffset>();
+    public DateTimeOffset ChangeDate { set; private get; } = Any.Instance<DateTimeOffset>();
 
-    public string FileText { set; private get; } = Root.Any.String();
+    public string FileText { set; private get; } = Any.String();
   }
 }

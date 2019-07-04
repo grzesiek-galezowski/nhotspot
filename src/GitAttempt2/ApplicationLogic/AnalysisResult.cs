@@ -14,7 +14,7 @@ namespace ApplicationLogic
 
     private readonly IEnumerable<FileChangeLog> _changeLogs;
 
-    private readonly Dictionary<string, IFlatPackageChangeLog> _packageChangeLogsByPath = new Dictionary<string, IFlatPackageChangeLog>();
+    private readonly Dictionary<string, IFlatPackageChangeLog> _packageChangeLogsByPath;
     private readonly PackageChangeLogNode _packageChangeLogNode;
 
     public AnalysisResult(IEnumerable<FileChangeLog> changeLogs,
