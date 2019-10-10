@@ -10,7 +10,8 @@ namespace ApplicationLogicSpecification
 
     public Change Build()
     {
-      return ChangeFactory.CreateChange(Path, FileText, ChangeDate, ChangeComment);
+      string fileText = FileText;
+      return ChangeFactory.CreateChange(Path, fileText, ChangeDate, ChangeComment);
     }
 
     public string Path { private get; set; } = Any.Instance<string>();

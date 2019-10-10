@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 
 namespace ApplicationLogic
 {
@@ -6,13 +7,9 @@ namespace ApplicationLogic
   {
     public static Change CreateChange(string path, string fileText, DateTimeOffset changeDate, string changeComment)
     {
-      var contentText = fileText;
       return new Change(
         path, 
-        contentText, 
-        ComplexityMetrics.CalculateComplexityFor(contentText),
-        changeDate,
-        changeComment);
+        fileText, ComplexityMetrics.CalculateComplexityFor(fileText), changeDate, changeComment);
     }
   }
 }

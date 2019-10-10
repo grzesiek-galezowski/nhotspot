@@ -17,7 +17,8 @@ namespace GitAnalysis
             var blob = (Blob) treeEntry.Target;
             if (!blob.IsBinary)
             {
-              visitor.OnBlob(ChangeFactory.CreateChange(treeEntry.Path, blob.GetContentText(), commit.Author.When, commit.Message));
+              string fileText = blob.GetContentText();
+              visitor.OnBlob(ChangeFactory.CreateChange(treeEntry.Path, fileText, commit.Author.When, commit.Message));
             }
 
             break;

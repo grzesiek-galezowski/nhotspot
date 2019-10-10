@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using ApplicationLogic;
 using LibGit2Sharp;
 
@@ -20,19 +23,37 @@ namespace GitAnalysis
 
     public void CollectResults(ITreeVisitor visitor)
     {
+      var sw = new Stopwatch();
+      sw.Start();
       var treeVisitor = visitor;
       TreeNavigation.Traverse(Commits.First().Tree, Commits.First(), treeVisitor);
+
+      var changesPerIndex = CalculateDiffsPerCommittIndex();
+
       for (var i = 1; i < Commits.Count; ++i)
       {
-        var previousCommit = Commits.ElementAt(i - 1);
         var currentCommit = Commits.ElementAt(i);
 
         AnalyzeChanges(
-          Repo.Diff.Compare<TreeChanges>(previousCommit.Tree, currentCommit.Tree), 
+          changesPerIndex[i],
           treeVisitor,
           currentCommit
         );
       }
+      sw.Stop();
+      Console.WriteLine(sw.ElapsedMilliseconds);
+    }
+
+    private ConcurrentDictionary<int, TreeChanges> CalculateDiffsPerCommittIndex()
+    {
+      ConcurrentDictionary<int, TreeChanges> changesPerIndex = new ConcurrentDictionary<int, TreeChanges>();
+      Parallel.For(1, Commits.Count, i =>
+      {
+        var previousCommit = Commits.ElementAt(i - 1);
+        var currentCommit = Commits.ElementAt(i);
+        changesPerIndex[i] = Repo.Diff.Compare<TreeChanges>(previousCommit.Tree, currentCommit.Tree);
+      });
+      return changesPerIndex;
     }
 
     public string Path { get; }
@@ -57,8 +78,15 @@ namespace GitAnalysis
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnAdded(ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
+              string fileText = blob.GetContentText();
+              treeVisitor.OnAdded(
+                ChangeFactory.CreateChange(
+                  treeEntryPath,
+                  fileText,
+                  changeDate,
+                  changeComment));
             }
+
             break;
           }
           case ChangeKind.Deleted:
@@ -71,7 +99,13 @@ namespace GitAnalysis
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnModified(ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
+              string fileText = blob.GetContentText();
+              treeVisitor.OnModified(
+                ChangeFactory.CreateChange(
+                  treeEntryPath,
+                  fileText,
+                  changeDate,
+                  changeComment));
             }
 
             break;
@@ -81,8 +115,16 @@ namespace GitAnalysis
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnRenamed(treeEntry.OldPath, ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
-            } 
+              string fileText = blob.GetContentText();
+              treeVisitor.OnRenamed(
+                treeEntry.OldPath,
+                ChangeFactory.CreateChange(
+                  treeEntryPath,
+                  fileText,
+                  changeDate,
+                  changeComment));
+            }
+
             break;
           }
           case ChangeKind.Copied:
@@ -90,7 +132,13 @@ namespace GitAnalysis
             var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
             if (!blob.IsBinary)
             {
-              treeVisitor.OnCopied(ChangeFactory.CreateChange(treeEntryPath, blob.GetContentText(), changeDate, changeComment));
+              string fileText = blob.GetContentText();
+              treeVisitor.OnCopied(
+                ChangeFactory.CreateChange(
+                  treeEntryPath,
+                  fileText,
+                  changeDate,
+                  changeComment));
             }
 
             break;
