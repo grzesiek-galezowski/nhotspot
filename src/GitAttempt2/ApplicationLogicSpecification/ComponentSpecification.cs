@@ -8,7 +8,7 @@ using static TddXt.AnyRoot.Root;
 
 namespace ApplicationLogicSpecification
 {
-  public class Tests
+  public class ComponentSpecification
   {
     [Test] 
     public void METHOD()
@@ -17,7 +17,7 @@ namespace ApplicationLogicSpecification
       var changeDate1 = Any.Instance<DateTimeOffset>();
       var clock = Any.Instance<IClock>();
       var repoPath = "REPO";
-      var change1 = new ChangeBuilder()
+      var change1 = new ChangeBuilder
       {
         Path = file1,
         ChangeDate = changeDate1
