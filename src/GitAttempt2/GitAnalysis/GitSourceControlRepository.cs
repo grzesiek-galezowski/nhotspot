@@ -63,7 +63,7 @@ namespace GitAnalysis
       ITreeVisitor treeVisitor, 
       Commit currentCommit)
     {
-      foreach (var treeEntry in treeChanges)
+      foreach (var treeEntry in treeChanges) //TODO can be made async?
       {
         var treeEntryPath = treeEntry.Path;
         var changeDate = currentCommit.Author.When;

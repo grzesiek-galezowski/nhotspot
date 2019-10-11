@@ -13,39 +13,38 @@ namespace ResultRendering
 
   public class PackageListView
   {
-    public static string GetJavaScript() => 
-      @"";
-
     public static string RenderFrom(PackageTreeNodeViewModel packageTree)
     {
-
       if (packageTree.Children.Any())
       {
-        string result = string.Empty;
-        result += "<ul>";
-        foreach (var childPackage in packageTree.Children.OrderByDescending(c => c.HotSpotRating))
-        {
-          result += "<li>";
-          if (childPackage.Children.Any())
-          {
-            result += "<details>" + "<summary>" + childPackage.Name + " (" + childPackage.HotSpotRating + ")" + "</summary>";
-            result += RenderFrom(childPackage);
-            result += "</details>";
-          }
-          else
-          {
-            result += $"<span>" + childPackage.Name + " (" + childPackage.HotSpotRating + ")" + "</span>";
-          }
-          result += "</li>";
-        }
-
-        result += "</ul>";
-        return result;
+        return Tag("ul", packageTree.Children.OrderByDescending(c => c.HotSpotRating)
+          .Select(childPackage => Tag("li", RenderChildPackage(childPackage))).ToArray());
       }
       else
       {
         return string.Empty;
       }
     }
+
+    private static string RenderChildPackage(PackageTreeNodeViewModel childPackage)
+    {
+      if (childPackage.Children.Any())
+      {
+        return
+          Tag("details",
+            Tag("summary", childPackage.Name + " (" + childPackage.HotSpotRating + ")"),
+            RenderFrom(childPackage));
+      }
+      else
+      {
+        return Tag("span", childPackage.Name + " (" + childPackage.HotSpotRating + ")");
+      }
+    }
+
+    private static string Tag(string tagName, params string[] inside)
+    {
+      return $"<{tagName}>" + string.Join(" ", inside) + $"</{tagName}>";
+    }
   }
+
 }
