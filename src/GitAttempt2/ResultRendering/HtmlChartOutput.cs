@@ -34,7 +34,7 @@ namespace ResultRendering
     {
       var packageNodeViewModelVisitor = new PackageNodeViewModelVisitor();
       packageTree.Accept(packageNodeViewModelVisitor);
-      viewModel.PackageTreeTree = packageNodeViewModelVisitor.ToPackageNodeViewModel();
+      viewModel.PackageTree = packageNodeViewModelVisitor.ToPackageNodeViewModel();
     }
 
     private void AddRanking<TValue, TChangeLog>(
