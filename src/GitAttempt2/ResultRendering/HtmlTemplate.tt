@@ -15,21 +15,7 @@
     
 <h1>Rankings</h1>
 
-<# for(int i = 0 ; i < _viewModel.Rankings.Count ; ++i) {#>	
-<# var ranking = _viewModel.Rankings[i]; #>
-<div>
-    <input type="checkbox" id="toggle<#=i #>" class="unfolder"/> 
-    <label for="toggle<#=i #>" class="toggle-label"><h2><#= ranking.Title #></h2><span class="unfold-icon">&#9654;</span><span class="fold-icon">&#9660;</span></label>
-    		
-    <div class="fold">
-		<ol>
-	    <#  foreach(var entry in ranking.Entries) { #>
-				<li><#= entry.Name #> (<#= entry.Value #>)</li>
-		<#	} #>
-	    </ol>
-    </div>
-<# }#>
-</div>
+<#= RankingsView.RenderFrom(_viewModel.Rankings) #>
 
 <h1>Hot Spot rating per package (nested)</h1>
 
