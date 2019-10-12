@@ -23,7 +23,9 @@ namespace ResultRendering
           Tr(Td(Text("Changes")), Td(Text(hotSpot.ChangesCount))),
           Tr(Td(Text("Created")), Td(Text(hotSpot.Age + " ago"))),
           Tr(Td(Text("Last Changed")), Td(Text(hotSpot.TimeSinceLastChanged + " ago"))),
-          Tr(Td(Text("Active for")), Td(Text($"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})"))),
+          Tr(Td(Text("Active for")), Td(Text($"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})")))
+          ),
+        Tag("table",
           Tr(Td(Tag("details", 
             Tag("summary", Text("History")), 
             Tag("table", Attribute("style", "display: block"), HistoryRows(hotSpot)))))
