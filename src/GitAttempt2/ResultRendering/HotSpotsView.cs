@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using static ResultRendering.Html;
 
 namespace ResultRendering
 {
-  public class HotSpotsView
+  public static class HotSpotsView
   {
-    public static IHtmlContent RenderFrom(List<HotSpotViewModel> viewModelHotSpots)
+    public static IHtmlContent RenderFrom(IEnumerable<HotSpotViewModel> viewModelHotSpots)
     {
-      return Tag("div", viewModelHotSpots.Select(RenderHotSpot).ToArray());
+      return Tag("div", 
+        Tag("h1", VerbatimText("Hot Spots")).Concat(
+        viewModelHotSpots.Select(RenderHotSpot)));
     }
 
     private static IHtmlContent RenderHotSpot(HotSpotViewModel hotSpot)

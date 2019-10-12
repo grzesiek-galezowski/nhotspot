@@ -7,14 +7,16 @@ namespace ResultRendering
   {
     public static IHtmlContent RenderFrom(PackageTreeNodeViewModel packageTree)
     {
+      var header = Tag("h1", VerbatimText("Hot Spot rating per package(nested)"));
+
       if (packageTree.Children.Any())
       {
-        return Tag("ul", packageTree.Children.OrderByDescending(c => c.HotSpotRating)
-          .Select(childPackage => Tag("li", RenderChildPackage(childPackage))).ToArray());
+        return Tag("div", header, Tag("ul", packageTree.Children.OrderByDescending(c => c.HotSpotRating)
+          .Select(childPackage => Tag("li", RenderChildPackage(childPackage))).ToArray()));
       }
       else
       {
-        return Text(string.Empty);
+        return header;
       }
     }
 

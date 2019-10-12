@@ -8,10 +8,13 @@ namespace ResultRendering
   {
     public static IHtmlContent RenderFrom(IEnumerable<RankingViewModel> viewModelRankings)
     {
-      return Tag("div", viewModelRankings.Select(ranking => Tag("details",
-        RenderRankingHeader(ranking),
-        RenderRankingEntries(ranking)
-      )).ToArray());
+      return Tag("div", 
+        Tag("h1", VerbatimText("Rankings")).Concat(
+          viewModelRankings.Select(ranking => 
+            Tag("details",
+              RenderRankingHeader(ranking),
+              RenderRankingEntries(ranking)
+      ))));
     }
 
     private static IHtmlContent RenderRankingHeader(RankingViewModel ranking)

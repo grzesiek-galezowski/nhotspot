@@ -11,18 +11,11 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<h1>Analysis of <#=_viewModel.RepoName #></h1>
     
-<h1>Rankings</h1>
+<h1> Analysis of <#=_viewModel.RepoName #></h1>
 
 <#= RankingsView.RenderFrom(_viewModel.Rankings) #>
-
-<h1>Hot Spot rating per package (nested)</h1>
-
 <#= PackageListView.RenderFrom(_viewModel.PackageTree) #>
-
-<h1>Hot Spots</h1>
-
 <#= HotSpotsView.RenderFrom(_viewModel.HotSpots) #>
 
 </body>
