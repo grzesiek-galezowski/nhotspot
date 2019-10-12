@@ -37,77 +37,7 @@
 
 <h1>Hot Spots</h1>
 
-<#  foreach(var hotSpot in _viewModel.HotSpots) {#>
-
-	<h2><#= hotSpot.Rating #>. <#=hotSpot.Path #></h2>
-
-	<table>
-		<tr>
-			<td>Rating</td><td><#= hotSpot.Rating #></td>		
-		</tr>
-		<tr>
-			<td>Complexity</td><td><#= hotSpot.Complexity #></td>		
-		</tr>
-		<tr>
-			<td>Changes</td><td><#= hotSpot.ChangesCount #></td>
-		</tr>
-		<tr>
-			<td>Created</td><td><#= hotSpot.Age #> ago</td>
-		</tr>
-		<tr>
-			<td>Last Changed</td><td><#= hotSpot.TimeSinceLastChanged #> ago</td>
-		</tr>
-		<tr>
-			<td>Active for</td><td><#= hotSpot.ActivePeriod #> (First commit: <#= hotSpot.CreationDate #>, Last: <#= hotSpot.LastChangedDate #>)</td>
-		</tr>
-		<tr>
-			<td>
-				<details>
-					<summary>History</summary>
-					<table style="display: block">
-						<# foreach (var change in hotSpot.Changes) { #>
-							<tr>
-								<td style="width: 15%; border-bottom: 1pt solid gray"><#=change.ChangeDate#></td>
-								<td style="border-bottom: 1pt solid gray"><pre><#=change.Comment#></pre></td>
-							</tr>	
-						<#} #>
-					</table>
-				</details>
-			</td>
-		</tr>
-	</table>
-	
-	<div class="container">
-	    <canvas id="myChart<#= hotSpot.Rating #>" height="40"></canvas>
-	</div>
-	<script>
-	    var ctx = document.getElementById('myChart<#= hotSpot.Rating #>').getContext('2d');
-	    var chart = new Chart(ctx, {
-	        // The type of chart we want to create
-	        type: 'line',
-	        options: {
-	            elements: {
-	                line: {
-	                    tension: 0 // disables bezier curves
-	                }
-	            }
-	        },
-	        // The data for our dataset
-	        data: {
-	            labels: [<#= hotSpot.Labels #>], //example '1', '2', '3'
-	            datasets: [{
-	                label: '<#= hotSpot.ChartValueDescription #>',
-	                fill: false,
-	                borderColor: 'rgb(255, 99, 132)',
-	                data: [<#= hotSpot.Data #>]
-	            }]
-	        },
-
-	    });
-	</script>
-    
-<#  } #>
-
+<#= HotSpotsView.RenderFrom(_viewModel.HotSpots) #>
 
 </body>
 </html>

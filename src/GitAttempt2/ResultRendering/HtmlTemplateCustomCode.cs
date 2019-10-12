@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using static ResultRendering.Html;
 
 namespace ResultRendering
 {
@@ -28,18 +29,57 @@ namespace ResultRendering
     public string Render(int nesting)
     {
       //bug add nesting support
-      return nesting.Spaces() + $"<{_tagName}>" + Environment.NewLine + 
-             string.Join(" ", _children.Select(i => i.Render(nesting + 1) + Environment.NewLine)) 
+      return nesting.Spaces() + $"<{_tagName} {RenderAttributes()}>" + Environment.NewLine + 
+             RenderChildren(nesting) 
              + nesting.Spaces() + $"</{_tagName}>";
     }
 
+    private string RenderAttributes()
+    {
+      return string.Join(" ", _attributes.Select(a => a.Render()));
+    }
+
+    private string RenderChildren(int nesting)
+    {
+      return string.Join(" ", _children.Select(i => i.Render(nesting + 1) + Environment.NewLine));
+    }
+
     private readonly string _tagName;
+    private readonly HtmlAttribute[] _attributes;
     private readonly IHtmlContent[] _children;
 
     public HtmlTag(string tagName, IHtmlContent[] children)
+    : this(tagName, new HtmlAttribute[] { }, children)
+    {
+    }
+
+    public HtmlTag(string tagName, HtmlAttribute[] attributes, IHtmlContent[] children)
     {
       _tagName = tagName;
+      _attributes = attributes;
       _children = children;
+    }
+  }
+
+  public class HtmlAttribute
+  {
+    private readonly string _name;
+    private readonly string _content;
+
+    public HtmlAttribute(string name, string content)
+    {
+      _name = name;
+      _content = content;
+    }
+
+    public string Render()
+    {
+      return $"{_name}=\"{_content}\"";
+    }
+
+    public override string ToString()
+    {
+      return Render();
     }
   }
 
@@ -90,23 +130,12 @@ namespace ResultRendering
     {
       if (childPackage.Children.Any())
       {
-        return
-          Tag("details", Tag("summary", Text(childPackage.Name + " (" + childPackage.HotSpotRating + ")")), RenderFrom(childPackage));
+        return Tag("details", Tag("summary", Text(childPackage.Name + " (" + childPackage.HotSpotRating + ")")), RenderFrom(childPackage));
       }
       else
       {
         return Tag("span", Text(childPackage.Name + " (" + childPackage.HotSpotRating + ")"));
       }
-    }
-
-    private static IHtmlContent Text(string text)
-    {
-      return new HtmlString(text);
-    }
-
-    private static IHtmlContent Tag(string tagName, params IHtmlContent[] children)
-    {
-      return new HtmlTag(tagName, children);
     }
   }
 
