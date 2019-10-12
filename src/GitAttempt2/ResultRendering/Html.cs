@@ -6,17 +6,27 @@ namespace ResultRendering
   {
     public static IHtmlContent Text<T>(T obj)
     {
-      return new HtmlString(obj.ToString());
+      return new HtmlString(obj.ToString(), new PrettyFormat());
+    }
+
+    public static IHtmlContent VerbatimText<T>(T obj)
+    {
+      return new HtmlString(obj.ToString(), new VerbatimFormat());
     }
 
     public static IHtmlContent Tag(string tagName, params IHtmlContent[] children)
     {
-      return new HtmlTag(tagName, children);
+      return HtmlTag.PrettyPrinted(tagName, children);
     }
 
     public static IHtmlContent Tag(string tagName, HtmlAttribute[] attributes, params IHtmlContent[] children)
     {
-      return new HtmlTag(tagName, attributes, children);
+      return HtmlTag.PrettyPrinted(tagName, attributes, children);
+    }
+
+    public static IHtmlContent Pre(IHtmlContent content)
+    {
+      return HtmlTag.VerbatimPrinted("pre", content);
     }
 
     public static IHtmlContent Td(params IHtmlContent[] children)

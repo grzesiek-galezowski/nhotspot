@@ -69,7 +69,7 @@ namespace ResultRendering
     {
       return hotSpot.Changes.Select(change =>
         Tr(Td(Attribute("style", "width: 15 %; border - bottom: 1pt solid gray"), Text(change.ChangeDate)),
-          Td(Attribute("style", "border - bottom: 1pt solid gray"), Tag("pre", Text(change.Comment))))).ToArray();
+          Td(Attribute("style", "border - bottom: 1pt solid gray"), Pre(VerbatimText(change.Comment))))).ToArray();
     }
 
   }
