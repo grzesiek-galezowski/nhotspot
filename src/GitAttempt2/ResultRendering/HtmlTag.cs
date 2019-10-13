@@ -54,5 +54,23 @@ namespace ResultRendering
       _children = children;
       _renderingFormat = renderingFormat;
     }
+
+    public static IHtmlContent VerbatimPrinted(string tagName, IHtmlContent[] children)
+    {
+      return new HtmlTag(
+        tagName, 
+        new HtmlAttribute[] { }, 
+        children, 
+        new VerbatimFormat());
+    }
+
+    public static IHtmlContent VerbatimPrinted(string tagName, HtmlAttribute[] attributes, IHtmlContent[] children)
+    {
+      return new HtmlTag(
+        tagName, 
+        attributes, 
+        children, 
+        new VerbatimFormat());
+    }
   }
 }

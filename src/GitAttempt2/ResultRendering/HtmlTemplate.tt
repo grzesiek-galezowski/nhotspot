@@ -1,15 +1,7 @@
 ﻿<#@ template language="C#" #>
 <doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <style>
-		<#@ include file="styles.css" once="true" #>
-	</style>
-    <title>Line Chart Test</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <meta charset="UTF-8">
-</head>
+<#= DocumentHeaderView.Render() #>
 <body>
     
 <h1> Analysis of <#=_viewModel.RepoName #></h1>

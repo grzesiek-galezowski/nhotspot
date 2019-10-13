@@ -19,9 +19,19 @@ namespace ResultRendering
       return HtmlTag.PrettyPrinted(tagName, children);
     }
 
+    public static IHtmlContent VerbatimTag(string tagName, params IHtmlContent[] children)
+    {
+      return HtmlTag.VerbatimPrinted(tagName, children);
+    }
+
     public static IHtmlContent Tag(string tagName, HtmlAttribute[] attributes, params IHtmlContent[] children)
     {
       return HtmlTag.PrettyPrinted(tagName, attributes, children);
+    }
+
+    public static IHtmlContent VerbatimTag(string tagName, HtmlAttribute[] attributes, params IHtmlContent[] children)
+    {
+      return HtmlTag.VerbatimPrinted(tagName, attributes, children);
     }
 
     public static IHtmlContent Pre(IHtmlContent content)
