@@ -32,12 +32,10 @@ namespace GitAnalysis
 
       for (var i = 1; i < Commits.Count; ++i)
       {
-        var currentCommit = Commits.ElementAt(i);
-
         AnalyzeChanges(
           changesPerIndex[i],
           treeVisitor,
-          currentCommit
+          Commits.ElementAt(i)
         );
       }
       sw.Stop();
@@ -75,17 +73,8 @@ namespace GitAnalysis
             break;
           case ChangeKind.Added:
           {
-            var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
-            if (!blob.IsBinary)
-            {
-              string fileText = blob.GetContentText();
-              treeVisitor.OnAdded(
-                ChangeFactory.CreateChange(
-                  treeEntryPath,
-                  fileText,
-                  changeDate,
-                  changeComment));
-            }
+            var blob = Extract.BlobFrom(treeEntry, currentCommit);
+            blob.OnAdded(treeVisitor, treeEntryPath, changeDate, changeComment);
 
             break;
           }
@@ -96,54 +85,22 @@ namespace GitAnalysis
           }
           case ChangeKind.Modified:
           {
-            var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
-            if (!blob.IsBinary)
-            {
-              string fileText = blob.GetContentText();
-              treeVisitor.OnModified(
-                ChangeFactory.CreateChange(
-                  treeEntryPath,
-                  fileText,
-                  changeDate,
-                  changeComment));
-            }
-
+            var blob = Extract.BlobFrom(treeEntry, currentCommit);
+            blob.OnModified(treeVisitor, treeEntryPath, changeDate, changeComment);
             break;
           }
           case ChangeKind.Renamed:
           {
-            var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
-            if (!blob.IsBinary)
-            {
-              string fileText = blob.GetContentText();
-              treeVisitor.OnRenamed(
-                treeEntry.OldPath,
-                ChangeFactory.CreateChange(
-                  treeEntryPath,
-                  fileText,
-                  changeDate,
-                  changeComment));
-            }
-
+            var blob = Extract.BlobFrom(treeEntry, currentCommit);
+            blob.OnRenamed(treeVisitor, treeEntry, treeEntryPath, changeDate, changeComment);
             break;
           }
           case ChangeKind.Copied:
           {
-            var blob = LibSpecificExtractions.BlobFrom(treeEntry, currentCommit);
-            if (!blob.IsBinary)
-            {
-              string fileText = blob.GetContentText();
-              treeVisitor.OnCopied(
-                ChangeFactory.CreateChange(
-                  treeEntryPath,
-                  fileText,
-                  changeDate,
-                  changeComment));
-            }
-
+            var blob = Extract.BlobFrom(treeEntry, currentCommit);
+            blob.OnCopied(treeVisitor, treeEntryPath, changeDate, changeComment);
             break;
           }
-
           default:
             throw new ArgumentOutOfRangeException();
         }
