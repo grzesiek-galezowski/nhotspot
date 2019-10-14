@@ -27,7 +27,7 @@ namespace ResultRendering
 
       viewModel.RepoName = analysisResults.Path;
 
-      File.WriteAllText("output.html", new HtmlTemplate(viewModel).TransformText());
+      File.WriteAllText("output.html", ResultsView.Render(viewModel));
     }
 
     private void AddTree(PackageChangeLogNode packageTree, ViewModel viewModel)
