@@ -9,14 +9,14 @@ namespace ResultRendering
     public static IHtmlContent RenderFrom(IEnumerable<HotSpotViewModel> viewModelHotSpots)
     {
       return Tag("div", 
-        Tag("h1", VerbatimText("Hot Spots")).Concat(
+        H(1,"Hot Spots").Concat(
         viewModelHotSpots.Select(RenderHotSpot)));
     }
 
     private static IHtmlContent RenderHotSpot(HotSpotViewModel hotSpot)
     {
       return Tag("div",
-        Tag("h2", Text($"{hotSpot.Rating}. {hotSpot.Path}")),
+        H(2, $"{hotSpot.Rating}. {hotSpot.Path}"),
         Tag("table",
           Tr(Td(Text("Rating")), Td(Text(hotSpot.Rating))),
           Tr(Td(Text("Complexity")), Td(Text(hotSpot.Complexity))),

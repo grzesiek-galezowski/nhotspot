@@ -68,5 +68,15 @@ namespace ResultRendering
     {
       return args.Select(arg => new HtmlAttribute(arg.name, arg.value)).ToArray();
     }
+
+    public static IHtmlContent H(int i, string text)
+    {
+        return H(i, new HtmlAttribute[]{ }, text);
+    }
+
+    public static IHtmlContent H(int i, HtmlAttribute[] attribute, string text)
+    {
+        return VerbatimTag("h"+i, attribute, VerbatimText(text));
+    }
   }
 }

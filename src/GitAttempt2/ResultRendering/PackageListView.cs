@@ -7,7 +7,7 @@ namespace ResultRendering
   {
     public static IHtmlContent RenderFrom(PackageTreeNodeViewModel packageTree)
     {
-      var header = Tag("h1", VerbatimText("Hot Spot rating per package(nested)"));
+      var header = H(1, "Hot Spot rating per package(nested)");
 
       if (packageTree.Children.Any())
       {

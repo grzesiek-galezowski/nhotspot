@@ -9,7 +9,7 @@ namespace ResultRendering
     public static IHtmlContent RenderFrom(IEnumerable<RankingViewModel> viewModelRankings)
     {
       return Tag("div", 
-        Tag("h1", VerbatimText("Rankings")).Concat(
+        H(1, "Rankings").Concat(
           viewModelRankings.Select(ranking => 
             Tag("details",
               RenderRankingHeader(ranking),
@@ -19,7 +19,7 @@ namespace ResultRendering
 
     private static IHtmlContent RenderRankingHeader(RankingViewModel ranking)
     {
-      return Tag("summary", Tag("h2", Attribute("style", "display: inline"), VerbatimText(ranking.Title)));
+      return Tag("summary", H(2, Attribute("style", "display: inline"), ranking.Title));
     }
 
     private static IHtmlContent RenderRankingEntries(RankingViewModel ranking)

@@ -12,7 +12,7 @@ namespace ResultRendering
         DocumentHeaderView.Render(),
         Tag("html", Attribute("lang", "en"),
           Tag("body", 
-            VerbatimTag("h1", VerbatimText($"Analysis of {viewModel.RepoName}")), 
+            H(1, $"Analysis of {viewModel.RepoName}"), 
             RankingsView.RenderFrom(viewModel.Rankings), 
             PackageListView.RenderFrom(viewModel.PackageTree), 
             HotSpotsView.RenderFrom(viewModel.HotSpots)
