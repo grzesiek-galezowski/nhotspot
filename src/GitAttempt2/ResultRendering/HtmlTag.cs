@@ -64,7 +64,7 @@ namespace ResultRendering
         new VerbatimFormat());
     }
 
-    public static IHtmlContent VerbatimPrinted(string tagName, HtmlAttribute[] attributes, IHtmlContent[] children)
+    public static IHtmlContent VerbatimPrinted(string tagName, HtmlAttribute[] attributes, params IHtmlContent[] children)
     {
       return new HtmlTag(
         tagName, 

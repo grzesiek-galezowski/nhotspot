@@ -26,10 +26,9 @@ namespace ResultRendering
           Tr(Td(Text("Last Changed")), Td(Text(hotSpot.TimeSinceLastChanged + " ago"))),
           Tr(Td(Text("Active for")), Td(Text($"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})")))
           ),
-        Tag("table",
-          Tr(Td(Tag("details", 
+        Tag("details", 
             Tag("summary", Text("History")), 
-            Tag("table", Attribute("style", "display: block"), HistoryRows(hotSpot)))))
+            Tag("table", Attribute("style", "display: block;table-layout:fixed;"), HistoryRows(hotSpot))
         ),
         Tag("div", Attribute("class", "container"),
           Tag("canvas", Attributes(("id", $"myChart{hotSpot.Rating}"), ("height", "40")))
@@ -71,8 +70,10 @@ namespace ResultRendering
     private static IHtmlContent[] HistoryRows(HotSpotViewModel hotSpot)
     {
       return hotSpot.Changes.Select(change =>
-        Tr(Td(Attributes(("style", "border-bottom: 1pt solid gray;"), ("width", "20%")), Text(change.ChangeDate.ToString(Constants.CommittDateFormat, CultureInfo.InvariantCulture))),
-          Td(Attribute("style", "border-bottom: 1pt solid gray"), Pre(VerbatimText(change.Comment))))).ToArray();
+        Tr(Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
+                Pre(change.ChangeDate.ToString(Constants.CommittDateFormat, CultureInfo.InvariantCulture))),
+          Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
+              Pre(change.Comment)))).ToArray();
     }
 
   }

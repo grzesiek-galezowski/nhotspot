@@ -34,9 +34,9 @@ namespace ResultRendering
       return HtmlTag.VerbatimPrinted(tagName, attributes, children);
     }
 
-    public static IHtmlContent Pre(IHtmlContent content)
+    public static IHtmlContent Pre(string content)
     {
-      return HtmlTag.VerbatimPrinted("pre", content);
+      return HtmlTag.VerbatimPrinted("pre", VerbatimText(content));
     }
 
     public static IHtmlContent Td(params IHtmlContent[] children)
