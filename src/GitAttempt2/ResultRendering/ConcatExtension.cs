@@ -7,7 +7,7 @@ namespace ResultRendering
   {
     public static T[] Concat<T>(this T element, IEnumerable<T> rest)
     {
-      return new[] {element}.Concat(rest).ToArray();
+      return Enumerable.Concat(new[] { element }, rest).ToArray();
     }
   }
 }

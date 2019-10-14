@@ -1,4 +1,6 @@
-﻿<#@ template language="C#" #>
+﻿
+<#= ResultsView.Render(_viewModel) #>
+<#@ template language="C#" #>
 <doctype html>
 <html lang="en">
 <#= DocumentHeaderView.Render() #>
