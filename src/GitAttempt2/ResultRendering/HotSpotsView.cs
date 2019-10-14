@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using static ResultRendering.Html;
 
@@ -70,8 +71,8 @@ namespace ResultRendering
     private static IHtmlContent[] HistoryRows(HotSpotViewModel hotSpot)
     {
       return hotSpot.Changes.Select(change =>
-        Tr(Td(Attribute("style", "width: 15 %; border - bottom: 1pt solid gray"), Text(change.ChangeDate)),
-          Td(Attribute("style", "border - bottom: 1pt solid gray"), Pre(VerbatimText(change.Comment))))).ToArray();
+        Tr(Td(Attributes(("style", "border-bottom: 1pt solid gray;"), ("width", "20%")), Text(change.ChangeDate.ToString(Constants.CommittDateFormat, CultureInfo.InvariantCulture))),
+          Td(Attribute("style", "border-bottom: 1pt solid gray"), Pre(VerbatimText(change.Comment))))).ToArray();
     }
 
   }

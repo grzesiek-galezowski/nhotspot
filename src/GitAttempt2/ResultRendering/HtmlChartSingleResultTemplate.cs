@@ -8,7 +8,7 @@ namespace ResultRendering
 {
   public static class HtmlChartSingleResultTemplate
   {
-    public static HotSpotViewModel InstantiateWith(int elementNum, FileChangeLog analysisResult)
+      public static HotSpotViewModel InstantiateWith(int elementNum, FileChangeLog analysisResult)
     {
       var hotSpotViewModel = new HotSpotViewModel
       {
@@ -44,7 +44,7 @@ namespace ResultRendering
     private static string Labels(FileChangeLog fileChangeLog)
     {
       var data = fileChangeLog.Entries.Select(change => 
-        "'" + change.ChangeDate.ToString("dd mm yyyy", CultureInfo.InvariantCulture) + "'");
+        "'" + change.ChangeDate.ToString(Constants.CommittDateFormat, CultureInfo.InvariantCulture) + "'");
       return string.Join(", ", data);
     }
   }
