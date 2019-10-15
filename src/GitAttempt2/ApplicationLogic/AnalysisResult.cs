@@ -5,7 +5,7 @@ namespace ApplicationLogic
 {
   public class AnalysisResult
   {
-    private const int ArbitraryLimit = 10; //bug make that a percentage?
+    private const int ArbitraryLimit = 0; //bug make that a percentage?
     public string Path { get; }
 
     public PackageChangeLogNode PackageTree()
@@ -37,7 +37,11 @@ namespace ApplicationLogic
       {
         for (int j = i+1 ; j < _changeLogs.Count(); j++)
         {
-          couplingMetric.Add(_changeLogs.ElementAt(i).CalculateCouplingTo(_changeLogs.ElementAt(j)));
+          var coupling = _changeLogs.ElementAt(i).CalculateCouplingTo(_changeLogs.ElementAt(j));
+          if(coupling.CouplingCount != 0)
+          {
+            couplingMetric.Add(coupling);
+          }
         }
       }
       return couplingMetric.Where(c => c.CouplingCount > ArbitraryLimit).OrderByDescending(c => c.CouplingCount);

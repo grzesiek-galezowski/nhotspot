@@ -2,6 +2,6 @@ namespace ResultRendering
 {
     public static class Constants
     {
-        public const string CommittDateFormat = "dd-MM-yyyy hh:mm";
+        public const string CommitDateFormat = "dd-MM-yyyy hh:mm";
     }
 }

@@ -11,7 +11,7 @@ namespace ResultRendering
     {
       return Tag("div", 
         H(1,"Hot Spots").Concat(
-        viewModelHotSpots.Select(RenderHotSpot)));
+        viewModelHotSpots.AsParallel().Select(RenderHotSpot)));
     }
 
     private static IHtmlContent RenderHotSpot(HotSpotViewModel hotSpot)
@@ -28,7 +28,11 @@ namespace ResultRendering
           ),
         Tag("details", 
             Tag("summary", Text("History")), 
-            Tag("table", Attribute("style", "display: block;table-layout:fixed;"), HistoryRows(hotSpot))
+            Tag("table", HistoryRows(hotSpot))
+        ),
+        Tag("details", 
+            Tag("summary", Text("Coupling (Top 20)")), 
+            Tag("table", CouplingRows(hotSpot, 20))
         ),
         Tag("div", Attribute("class", "container"),
           Tag("canvas", Attributes(("id", $"myChart{hotSpot.Rating}"), ("height", "40")))
@@ -71,9 +75,18 @@ namespace ResultRendering
     {
       return hotSpot.Changes.Select(change =>
         Tr(Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
-                Pre(change.ChangeDate.ToString(Constants.CommittDateFormat, CultureInfo.InvariantCulture))),
+                Pre(change.ChangeDate.ToString(Constants.CommitDateFormat, CultureInfo.InvariantCulture))),
           Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
               Pre(change.Comment)))).ToArray();
+    }
+
+    private static IHtmlContent[] CouplingRows(HotSpotViewModel hotSpot, int count)
+    {
+      return hotSpot.ChangeCoupling.Take(count).Select(change =>
+        Tr(Td(Attribute("style", "border-bottom: 1pt solid gray;"),
+            Text(change.CouplingCount),
+          Td(Attribute("style", "border-bottom: 1pt solid gray;"),
+            Text(change.Right))))).ToArray();
     }
 
   }

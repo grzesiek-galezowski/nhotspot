@@ -69,12 +69,20 @@ namespace ApplicationLogic
               couplingCount++;
             }
           }
-          return new Coupling(_entries.Last().Path, otherChangeLog.Entries.Last().Path, couplingCount);
+          return new Coupling(PathOfCurrentVersion(), otherChangeLog.PathOfCurrentVersion(), couplingCount);
         }
 
         private bool WasChangedIn(string changeId)
         {
           return _entries.Select(e => e.Id).Contains(changeId);
+        }
+
+        public IEnumerable<Coupling> Filter(IEnumerable<Coupling> couplingMetrics)
+        {
+          var couplingsLeft = couplingMetrics.Where(c => c.Left == PathOfCurrentVersion());
+          var couplingsRight = couplingMetrics.Where(c => c.Right == PathOfCurrentVersion())
+            .Select(c => new Coupling(c.Right, c.Left, c.CouplingCount));
+          return couplingsLeft.Concat(couplingsRight);
         }
   }
 }

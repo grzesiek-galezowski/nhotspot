@@ -7,16 +7,19 @@ namespace ResultRendering
   {
     public static IHtmlContent RenderFrom(PackageTreeNodeViewModel packageTree)
     {
-      var header = H(1, "Hot Spot rating per package(nested)");
+      return Tag("div", H(1, "Hot Spot rating per package(nested)"), RenderChildFrom(packageTree));
+    }
 
+    private static IHtmlContent RenderChildFrom(PackageTreeNodeViewModel packageTree)
+    {
       if (packageTree.Children.Any())
       {
-        return Tag("div", header, Tag("ul", packageTree.Children.OrderByDescending(c => c.HotSpotRating)
+        return Tag("div", Tag("ul", packageTree.Children.OrderByDescending(c => c.HotSpotRating)
           .Select(childPackage => Tag("li", RenderChildPackage(childPackage))).ToArray()));
       }
       else
       {
-        return header;
+        return VerbatimText("");
       }
     }
 
@@ -24,7 +27,8 @@ namespace ResultRendering
     {
       if (childPackage.Children.Any())
       {
-        return Tag("details", Tag("summary", Text(childPackage.Name + " (" + childPackage.HotSpotRating + ")")), RenderFrom(childPackage));
+        return Tag("details", Tag("summary", Text(childPackage.Name + " (" + childPackage.HotSpotRating + ")")),
+          RenderChildFrom(childPackage));
       }
       else
       {

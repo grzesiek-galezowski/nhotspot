@@ -17,5 +17,6 @@ namespace ResultRendering
     public string ChartValueDescription { get; set; }
     public string Data { get; set; }
     public IReadOnlyList<ChangeViewModel> Changes { get; set; }
+    public IEnumerable<CouplingViewModel> ChangeCoupling { get; set; }
   }
 }

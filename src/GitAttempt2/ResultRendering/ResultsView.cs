@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using static ResultRendering.Html;
 
 namespace ResultRendering
@@ -32,7 +33,7 @@ namespace ResultRendering
       return Tag("div",
         Tag("details",
           Tag("summary", H(2, Attribute("style", "display: inline"), "Coupling")),
-          Tag("table", viewModels.Select(model => Tr(
+          Tag("table", viewModels.Take(100).Select(model => Tr(
             Td(Text(model.CouplingCount)),
             Td(Text(model.Left)),
             Td(Text(model.Right))

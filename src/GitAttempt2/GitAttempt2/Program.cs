@@ -17,7 +17,7 @@ namespace GitAttempt2
     //TODO add trend - fastest increasing complexity (not no. of changes)
     static void Main(string[] args)
     {
-      var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\NSubstitute\", "master");
+      var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\nscan\", "master");
 
       new ConsoleRendering().Show(analysisResult);
       new HtmlChartOutput().Show(analysisResult);

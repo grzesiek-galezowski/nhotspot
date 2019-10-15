@@ -69,11 +69,15 @@ namespace ResultRendering
 
     private static void AddCharts(AnalysisResult analysisResults, List<HotSpotViewModel> charts)
     {
+      var couplingMetrics = analysisResults.CouplingMetrics();
       var elementNum = 0;
-      foreach (var analysisResult in analysisResults.EntriesByHotSpotRating())
+      foreach (var fileChangeLog in analysisResults.EntriesByHotSpotRating())
       {
         elementNum++;
-        var singleFileChart = HtmlChartSingleResultTemplate.FillWith(elementNum, analysisResult);
+        var singleFileChart = HtmlChartSingleResultTemplate.FillWith(
+          elementNum, 
+          fileChangeLog, 
+          fileChangeLog.Filter(couplingMetrics));
         charts.Add(singleFileChart);
       }
     }
