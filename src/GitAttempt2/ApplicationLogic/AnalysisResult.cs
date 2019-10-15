@@ -28,6 +28,23 @@ namespace ApplicationLogic
       _packageChangeLogNode = packageChangeLogNode;
     }
 
+    public IEnumerable<Coupling> CouplingMetrics() //TODO order by 
+    {
+      List<Coupling> couplingMetric = new List<Coupling>();
+
+      foreach (var changeLog in _changeLogs)
+      {
+        foreach (var otherChangeLog in _changeLogs)
+        {
+          if (changeLog != otherChangeLog)
+          {
+            couplingMetric.Add(changeLog.CalculateCouplingTo(otherChangeLog));
+          }
+        }
+      }
+      return couplingMetric;
+    }
+
     public IEnumerable<FileChangeLog> EntriesByHotSpotRating()
     {
       return _changeLogs.OrderByDescending(h => h.HotSpotRating());

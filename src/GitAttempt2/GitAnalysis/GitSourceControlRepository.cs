@@ -32,10 +32,11 @@ namespace GitAnalysis
 
       for (var i = 1; i < Commits.Count; ++i)
       {
+        var currentCommit = Commits.ElementAt(i);
         AnalyzeChanges(
           changesPerIndex[i],
           treeVisitor,
-          Commits.ElementAt(i)
+          currentCommit
         );
       }
       sw.Stop();
@@ -56,7 +57,7 @@ namespace GitAnalysis
 
     public string Path { get; }
 
-    private static void AnalyzeChanges(
+    private static void AnalyzeChanges( //todo make this instance method with commit as a field
       TreeChanges treeChanges,
       ITreeVisitor treeVisitor, 
       Commit currentCommit)
@@ -74,7 +75,7 @@ namespace GitAnalysis
           case ChangeKind.Added:
           {
             var blob = Extract.BlobFrom(treeEntry, currentCommit);
-            blob.OnAdded(treeVisitor, treeEntryPath, changeDate, changeComment);
+            blob.OnAdded(treeVisitor, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
 
             break;
           }
@@ -86,19 +87,19 @@ namespace GitAnalysis
           case ChangeKind.Modified:
           {
             var blob = Extract.BlobFrom(treeEntry, currentCommit);
-            blob.OnModified(treeVisitor, treeEntryPath, changeDate, changeComment);
+            blob.OnModified(treeVisitor, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
             break;
           }
           case ChangeKind.Renamed:
           {
             var blob = Extract.BlobFrom(treeEntry, currentCommit);
-            blob.OnRenamed(treeVisitor, treeEntry, treeEntryPath, changeDate, changeComment);
+            blob.OnRenamed(treeVisitor, treeEntry, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
             break;
           }
           case ChangeKind.Copied:
           {
             var blob = Extract.BlobFrom(treeEntry, currentCommit);
-            blob.OnCopied(treeVisitor, treeEntryPath, changeDate, changeComment);
+            blob.OnCopied(treeVisitor, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
             break;
           }
           default:

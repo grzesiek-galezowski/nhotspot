@@ -58,5 +58,23 @@ namespace ApplicationLogic
         {
           return System.IO.Path.GetDirectoryName(PathOfCurrentVersion());
         }
+
+        public Coupling CalculateCouplingTo(FileChangeLog otherChangeLog)
+        {
+          var couplingCount = 0;
+          foreach (var change in _entries)
+          {
+            if (otherChangeLog.WasChangedIn(change.Id))
+            {
+              couplingCount++;
+            }
+          }
+          return new Coupling(_entries.Last().Path, otherChangeLog.Entries.Last().Path, couplingCount);
+        }
+
+        private bool WasChangedIn(string changeId)
+        {
+          return _entries.Select(e => e.Id).Contains(changeId);
+        }
   }
 }

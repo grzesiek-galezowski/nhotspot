@@ -22,12 +22,19 @@ namespace ResultRendering
 
       AddTree(analysisResults.PackageTree(), viewModel);
 
+      AddCouplingRanking(analysisResults.CouplingMetrics(), viewModel);
+
       var charts = viewModel.HotSpots;
       AddCharts(analysisResults, charts);
 
       viewModel.RepoName = analysisResults.Path;
 
       File.WriteAllText("output.html", ResultsView.Render(viewModel));
+    }
+
+    private void AddCouplingRanking(IEnumerable<Coupling> couplingMetrics, ViewModel viewModel)
+    {
+      throw new NotImplementedException();
     }
 
     private void AddTree(PackageChangeLogNode packageTree, ViewModel viewModel)
@@ -62,7 +69,7 @@ namespace ResultRendering
       foreach (var analysisResult in analysisResults.EntriesByHotSpotRating())
       {
         elementNum++;
-        var singleFileChart = HtmlChartSingleResultTemplate.InstantiateWith(elementNum, analysisResult);
+        var singleFileChart = HtmlChartSingleResultTemplate.FillWith(elementNum, analysisResult);
         charts.Add(singleFileChart);
       }
     }

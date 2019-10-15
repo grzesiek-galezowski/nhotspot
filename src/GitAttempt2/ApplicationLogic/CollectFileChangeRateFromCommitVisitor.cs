@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,8 +41,7 @@ namespace ApplicationLogic
 
     private void AddChange(Change change)
     {
-      AnalysisMetadata[change.Path].AddDataFrom(
-        change);
+      AnalysisMetadata[change.Path].AddDataFrom(change);
     }
 
     public void OnRenamed(string oldPath, Change change)

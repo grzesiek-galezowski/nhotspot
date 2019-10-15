@@ -8,7 +8,7 @@ namespace ResultRendering
 {
   public static class HtmlChartSingleResultTemplate
   {
-      public static HotSpotViewModel InstantiateWith(int elementNum, FileChangeLog analysisResult)
+      public static HotSpotViewModel FillWith(int elementNum, FileChangeLog analysisResult)
     {
       var hotSpotViewModel = new HotSpotViewModel
       {

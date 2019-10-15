@@ -18,7 +18,7 @@ namespace GitAnalysis
             if (!blob.IsBinary)
             {
               string fileText = blob.GetContentText();
-              visitor.OnBlob(ChangeFactory.CreateChange(treeEntry.Path, fileText, commit.Author.When, commit.Message));
+              visitor.OnBlob(ChangeFactory.CreateChange(treeEntry.Path, fileText, commit.Author.When, commit.Message, commit.Sha));
             }
 
             break;

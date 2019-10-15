@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 
 namespace ApplicationLogic
 {
@@ -9,17 +8,20 @@ namespace ApplicationLogic
         public DateTimeOffset ChangeDate { get; }
         public string Text { get; }
         public double Complexity { get; }
+        public string Id { get; }
 
         public Change(
           string path, 
           string text, 
           double complexity,
           DateTimeOffset changeDate, 
-          string comment)
+          string comment, 
+          string id)
         {
             Path = path;
             ChangeDate = changeDate;
             Comment = comment;
+            Id = id;
             Text = text;
             Complexity = complexity;
         }

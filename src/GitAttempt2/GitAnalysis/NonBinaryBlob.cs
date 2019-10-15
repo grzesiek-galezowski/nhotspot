@@ -14,7 +14,7 @@ namespace GitAnalysis
     }
 
     public void OnAdded(ITreeVisitor treeVisitor, string treeEntryPath,
-      DateTimeOffset changeDate, string changeComment)
+      DateTimeOffset changeDate, string changeComment, string id)
     {
       var fileText = _value.GetContentText();
       treeVisitor.OnAdded(
@@ -22,11 +22,12 @@ namespace GitAnalysis
           treeEntryPath,
           fileText,
           changeDate,
-          changeComment));
+          changeComment, 
+          id));
     }
 
     public void OnModified(ITreeVisitor treeVisitor, string treeEntryPath,
-      DateTimeOffset changeDate, string changeComment)
+      DateTimeOffset changeDate, string changeComment, string id)
     {
       string fileText = _value.GetContentText();
       treeVisitor.OnModified(
@@ -34,11 +35,11 @@ namespace GitAnalysis
           treeEntryPath,
           fileText,
           changeDate,
-          changeComment));
+          changeComment, id));
     }
 
     public void OnRenamed(ITreeVisitor treeVisitor, TreeEntryChanges treeEntry,
-      string treeEntryPath, DateTimeOffset changeDate, string changeComment)
+      string treeEntryPath, DateTimeOffset changeDate, string changeComment, string id)
     {
       string fileText = _value.GetContentText();
       treeVisitor.OnRenamed(
@@ -47,11 +48,11 @@ namespace GitAnalysis
           treeEntryPath,
           fileText,
           changeDate,
-          changeComment));
+          changeComment, id));
     }
 
     public void OnCopied(ITreeVisitor treeVisitor, string treeEntryPath,
-      DateTimeOffset changeDate, string changeComment)
+      DateTimeOffset changeDate, string changeComment, string id)
     {
       string fileText = _value.GetContentText();
       treeVisitor.OnCopied(
@@ -59,7 +60,7 @@ namespace GitAnalysis
           treeEntryPath,
           fileText,
           changeDate,
-          changeComment));
+          changeComment, id));
     }
   }
 }
