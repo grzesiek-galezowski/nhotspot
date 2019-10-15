@@ -11,7 +11,7 @@ namespace GitAnalysis
       {
         return new BinaryBlob();
       }
-      return new NonBinaryBlob(blob);
+      return new NonBinaryBlob(blob.GetContentText());
     }
   }
 }

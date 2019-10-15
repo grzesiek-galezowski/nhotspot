@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using ApplicationLogic;
 
 namespace ResultRendering
@@ -34,7 +35,10 @@ namespace ResultRendering
 
     private void AddCouplingRanking(IEnumerable<Coupling> couplingMetrics, ViewModel viewModel)
     {
-      throw new NotImplementedException();
+      foreach (var couplingViewModel in couplingMetrics.Select(c => new CouplingViewModel(c.Left, c.Right, c.CouplingCount)))
+      {
+        viewModel.CouplingViewModels.Add(couplingViewModel);
+      }
     }
 
     private void AddTree(PackageChangeLogNode packageTree, ViewModel viewModel)

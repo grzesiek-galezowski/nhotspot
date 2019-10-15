@@ -5,6 +5,7 @@ namespace ApplicationLogic
 {
   public class AnalysisResult
   {
+    private const int ArbitraryLimit = 10; //bug make that a percentage?
     public string Path { get; }
 
     public PackageChangeLogNode PackageTree()
@@ -30,19 +31,16 @@ namespace ApplicationLogic
 
     public IEnumerable<Coupling> CouplingMetrics() //TODO order by 
     {
-      List<Coupling> couplingMetric = new List<Coupling>();
+      var couplingMetric = new List<Coupling>();
 
-      foreach (var changeLog in _changeLogs)
+      for (int i = 0 ; i < _changeLogs.Count() ; i++)
       {
-        foreach (var otherChangeLog in _changeLogs)
+        for (int j = i+1 ; j < _changeLogs.Count(); j++)
         {
-          if (changeLog != otherChangeLog)
-          {
-            couplingMetric.Add(changeLog.CalculateCouplingTo(otherChangeLog));
-          }
+          couplingMetric.Add(_changeLogs.ElementAt(i).CalculateCouplingTo(_changeLogs.ElementAt(j)));
         }
       }
-      return couplingMetric;
+      return couplingMetric.Where(c => c.CouplingCount > ArbitraryLimit).OrderByDescending(c => c.CouplingCount);
     }
 
     public IEnumerable<FileChangeLog> EntriesByHotSpotRating()
