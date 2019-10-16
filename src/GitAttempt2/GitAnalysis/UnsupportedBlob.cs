@@ -4,7 +4,7 @@ using LibGit2Sharp;
 
 namespace GitAnalysis
 {
-  public class BinaryBlob : IBlob
+  public class UnsupportedBlob : IBlob
   {
     public void OnAdded(ITreeVisitor treeVisitor, string treeEntryPath, DateTimeOffset changeDate, string changeComment,
       string id)
