@@ -18,7 +18,8 @@ namespace GitAttempt2
     static void Main(string[] args)
     {
       //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\nscan\", "master");
-      var analysisResult = GitRepoAnalysis.Analyze(@"c:\Users\ftw637\Documents\GitHub\kafka\", "trunk");
+      //var analysisResult = GitRepoAnalysis.Analyze(@"c:\Users\ftw637\Documents\GitHub\kafka\", "trunk");
+      var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\kafka", "trunk");
 
       new ConsoleRendering().Show(analysisResult);
       new HtmlChartOutput().Show(analysisResult);

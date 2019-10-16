@@ -10,6 +10,34 @@ namespace ApplicationLogicSpecification
 {
   public class ComponentSpecification
   {
+    [Test]
+    public void ShouldCreateRepoTreeWithNesting()
+    {
+      var clock = Any.Instance<IClock>();
+
+      var analysisResult = new RepoAnalysis(clock).ExecuteOn(new MockSourceControlRepository("REPO", v =>
+      {
+        v.OnAdded(File("src/Readme.txt"));
+        v.OnAdded(File("src/Csharp/Project1/lol.cs"));
+        v.OnAdded(File("src/Csharp/Project2/lol.cs"));
+        v.OnAdded(File("src/Java/src/lol.cs"));
+        v.OnAdded(File("src/Java/test/lol.cs"));
+      }));
+
+      var tree = analysisResult.PackageTree();
+
+      tree.Accept(new AssertingVisitor());
+    }
+
+    private static Change File(string file1)
+    {
+      return new ChangeBuilder
+      {
+        Path = file1,
+      }.Build();
+    }
+
+
     [Test] 
     public void METHOD()
     {
@@ -46,6 +74,23 @@ namespace ApplicationLogicSpecification
     }
 
     //TODO test package tree
+  }
+
+  public class AssertingVisitor : INodeVisitor
+  {
+    public void BeginVisiting(IFlatPackageChangeLog value)
+    {
+      Console.WriteLine("|" + value.PathOfCurrentVersion());
+    }
+
+    public void EndVisiting()
+    {
+    }
+
+    public void Visit(IFileChangeLog fileChangeLog)
+    {
+      Console.WriteLine(fileChangeLog.PathOfCurrentVersion());
+    }
   }
 
   public class MockSourceControlRepository : ISourceControlRepository

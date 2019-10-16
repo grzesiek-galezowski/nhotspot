@@ -29,7 +29,7 @@ namespace ApplicationLogic
 
     public bool HasParent()
     {
-      return _parent is object;
+      return !(_parent is null);
     }
 
     public void Accept(INodeVisitor visitor)
