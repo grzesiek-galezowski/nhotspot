@@ -14,15 +14,25 @@ namespace ApplicationLogic
       foreach (var fileChangeLog in fileChangeLogs)
       {
         string packagePath = fileChangeLog.PackagePath();
-        if (!packageChangeLogsByPath.ContainsKey(packagePath))
-        {
-          packageChangeLogsByPath[packagePath] = new FlatPackageChangeLog(packagePath);
-        }
-
+        EnsurePathIsIn(packageChangeLogsByPath, packagePath);
         packageChangeLogsByPath[packagePath].Add(fileChangeLog);
+
+        do
+        {
+          EnsurePathIsIn(packageChangeLogsByPath, packagePath);
+          packagePath = Path.GetDirectoryName(packagePath);
+        } while (packagePath != null);
       }
 
       return packageChangeLogsByPath;
+    }
+
+    private static void EnsurePathIsIn(Dictionary<string, IFlatPackageChangeLog> packageChangeLogsByPath, string packagePath)
+    {
+      if (!packageChangeLogsByPath.ContainsKey(packagePath))
+      {
+        packageChangeLogsByPath[packagePath] = new FlatPackageChangeLog(packagePath);
+      }
     }
 
     public static PackageChangeLogNode GatherPackageTreeMetricsByPath(IEnumerable<FileChangeLog> fileChangeLogs)
@@ -34,7 +44,7 @@ namespace ApplicationLogic
         var path = packageChangeLogEntry.Key;
         var packageChangeLog = packageChangeLogEntry.Value;
 
-        var newNode = new PackageChangeLogNode(packageChangeLog, packageChangeLog.Files.Select(f => new FileChangeLogNode(f)));
+        var newNode = NewPackageNode(packageChangeLog);
         nodes[path] = newNode;
 
         AddToParent(nodes, newNode, path);
@@ -43,6 +53,16 @@ namespace ApplicationLogic
       return nodes.Values.Single(n => !n.HasParent());
     }
 
+    private static PackageChangeLogNode NewPackageNode(IFlatPackageChangeLog packageChangeLog)
+    {
+        return new PackageChangeLogNode(
+            packageChangeLog, 
+            packageChangeLog.Files.Select(
+                f => new FileChangeLogNode(f)));
+    }
+
+
+    ///src/csharp
     private static void AddToParent(Dictionary<string, PackageChangeLogNode> nodes, PackageChangeLogNode newNode, string path)
     {
       var parentPath = Path.GetDirectoryName(path).ToMaybe();

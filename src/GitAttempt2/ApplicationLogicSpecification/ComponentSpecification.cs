@@ -2,8 +2,10 @@ using System;
 using System.Linq;
 using ApplicationLogic;
 using FluentAssertions;
+using NSubstitute;
 using NUnit.Framework;
 using TddXt.AnyRoot.Strings;
+using TddXt.XNSubstitute;
 using static TddXt.AnyRoot.Root;
 
 namespace ApplicationLogicSpecification
@@ -14,6 +16,7 @@ namespace ApplicationLogicSpecification
     public void ShouldCreateRepoTreeWithNesting()
     {
       var clock = Any.Instance<IClock>();
+      var nodeVisitor = Substitute.For<INodeVisitor>();
 
       var analysisResult = new RepoAnalysis(clock).ExecuteOn(new MockSourceControlRepository("REPO", v =>
       {
@@ -26,7 +29,26 @@ namespace ApplicationLogicSpecification
 
       var tree = analysisResult.PackageTree();
 
-      tree.Accept(new AssertingVisitor());
+      tree.Accept(nodeVisitor);
+
+      //THEN
+      Received.InOrder(() =>
+      {
+        nodeVisitor.BeginVisiting(Package("src"));
+        nodeVisitor.BeginVisiting(Package("CSharp"));
+        nodeVisitor.EndVisiting(Package("CSharp"));
+        nodeVisitor.BeginVisiting(Package("Java"));
+        nodeVisitor.EndVisiting(Package("Java"));
+        nodeVisitor.EndVisiting(Package("src"));
+      });
+    }
+
+    private static IFlatPackageChangeLog Package(string expected)
+    {
+      return Arg.Is<IFlatPackageChangeLog>(
+        log => log.PathOfCurrentVersion() == expected
+      //  ,log => log.ChangesCount().Should().Be(1) bug
+      );
     }
 
     private static Change File(string file1)
@@ -83,7 +105,7 @@ namespace ApplicationLogicSpecification
       Console.WriteLine("|" + value.PathOfCurrentVersion());
     }
 
-    public void EndVisiting()
+    public void EndVisiting(IFlatPackageChangeLog value)
     {
     }
 

@@ -5,6 +5,7 @@ namespace ApplicationLogic
   public interface IFlatPackageChangeLog : IChangeLog
   {
     void Add(IFileChangeLog fileChangeLog);
-    IReadOnlyList<IFileChangeLog> Files { get; }
+    IEnumerable<IFileChangeLog> Files { get; }
+    string Name();
   }
 }

@@ -43,7 +43,7 @@ namespace ApplicationLogic
       {
         childPackage.Accept(visitor);
       }
-      visitor.EndVisiting();
+      visitor.EndVisiting(_value);
     }
   }
 }

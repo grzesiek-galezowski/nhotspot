@@ -12,6 +12,7 @@ namespace ResultRendering
 
     public void InstantiateTemplate(AnalysisResult analysisResults)
     {
+        Console.WriteLine(DateTime.Now);
       var viewModel = new ViewModel();
       var rankings = viewModel.Rankings;
       AddRanking(analysisResults.EntriesByDiminishingComplexity(), cl => cl.ComplexityOfCurrentVersion(), "Most complex", rankings);
@@ -20,17 +21,15 @@ namespace ResultRendering
       AddRanking(analysisResults.EntriesFromMostRecentlyChanged(), cl => cl.LastChangeDate().ToString("d"), "Most recently changed (possible breeding grounds)", rankings);
       AddRanking(analysisResults.EntriesFromMostAncientlyChanged(), cl => cl.LastChangeDate().ToString("d"), "Most anciently changed (extract a library?)", rankings);
       AddRanking(analysisResults.PackagesByDiminishingHotSpotRating(), cl => cl.HotSpotRating(), "Package hot spots (flat)", rankings);
-
       AddTree(analysisResults.PackageTree(), viewModel);
-
       AddCouplingRanking(analysisResults.CouplingMetrics(), viewModel);
+      AddCharts(analysisResults, viewModel.HotSpots);
 
-      var charts = viewModel.HotSpots;
-      AddCharts(analysisResults, charts);
-
+        Console.WriteLine(DateTime.Now);
       viewModel.RepoName = analysisResults.Path;
 
       File.WriteAllText("output.html", ResultsView.Render(viewModel));
+        Console.WriteLine(DateTime.Now);
     }
 
     private void AddCouplingRanking(IEnumerable<Coupling> couplingMetrics, ViewModel viewModel)

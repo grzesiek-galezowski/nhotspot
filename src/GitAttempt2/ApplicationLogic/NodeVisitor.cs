@@ -3,7 +3,7 @@ namespace ApplicationLogic
   public interface INodeVisitor
   {
     void BeginVisiting(IFlatPackageChangeLog value);
-    void EndVisiting();
+    void EndVisiting(IFlatPackageChangeLog value);
     void Visit(IFileChangeLog fileChangeLog);
   }
 }

@@ -29,7 +29,7 @@ namespace ApplicationLogic
       _packageChangeLogNode = packageChangeLogNode;
     }
 
-    public IEnumerable<Coupling> CouplingMetrics() //TODO order by 
+    public IEnumerable<Coupling> CouplingMetrics()
     {
       var couplingMetric = new List<Coupling>();
 
@@ -44,7 +44,9 @@ namespace ApplicationLogic
           }
         }
       }
-      return couplingMetric.Where(c => c.CouplingCount > ArbitraryLimit).OrderByDescending(c => c.CouplingCount);
+      return couplingMetric
+          .Where(c => c.CouplingCount > ArbitraryLimit)
+          .OrderByDescending(c => c.CouplingCount);
     }
 
     public IEnumerable<FileChangeLog> EntriesByHotSpotRating()

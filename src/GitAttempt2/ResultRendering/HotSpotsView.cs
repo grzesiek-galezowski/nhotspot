@@ -26,6 +26,9 @@ namespace ResultRendering
           Tr(Td(Text("Last Changed")), Td(Text(hotSpot.TimeSinceLastChanged + " ago"))),
           Tr(Td(Text("Active for")), Td(Text($"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})")))
           ),
+        Tag("div", Attribute("class", "container"),
+          Tag("canvas", Attributes(("id", $"myChart{hotSpot.Rating}"), ("height", "40")))
+        ),
         Tag("details", 
             Tag("summary", Text("History")), 
             Tag("table", HistoryRows(hotSpot))
@@ -33,9 +36,6 @@ namespace ResultRendering
         Tag("details", 
             Tag("summary", Text("Coupling (Top 20)")), 
             Tag("table", CouplingRows(hotSpot, 20))
-        ),
-        Tag("div", Attribute("class", "container"),
-          Tag("canvas", Attributes(("id", $"myChart{hotSpot.Rating}"), ("height", "40")))
         ),
         Tag("script", Text(JavaScriptCanvas(hotSpot)))
       );

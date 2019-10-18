@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace ApplicationLogic
@@ -7,7 +8,7 @@ namespace ApplicationLogic
   public class FlatPackageChangeLog : IFlatPackageChangeLog
   {
     private readonly string _packagePath;
-    private List<IFileChangeLog> _files = new List<IFileChangeLog>();
+    private readonly List<IFileChangeLog> _files = new List<IFileChangeLog>();
 
     public FlatPackageChangeLog(string packagePath)
     {
@@ -19,7 +20,7 @@ namespace ApplicationLogic
       _files.Add(fileChangeLog);
     }
 
-    public IReadOnlyList<IFileChangeLog> Files => _files;
+    public IEnumerable<IFileChangeLog> Files => _files;
 
     public int ChangesCount()
     {
@@ -39,6 +40,16 @@ namespace ApplicationLogic
     public string PathOfCurrentVersion()
     {
       return _packagePath;
+    }
+
+    public string Name()
+    {
+      return Path.GetFileName(_packagePath);
+    }
+
+    public override string ToString()
+    {
+      return $"{nameof(_packagePath)}: {_packagePath}";
     }
   }
 }

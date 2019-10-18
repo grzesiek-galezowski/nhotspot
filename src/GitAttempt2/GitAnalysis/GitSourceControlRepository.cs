@@ -23,8 +23,6 @@ namespace GitAnalysis
 
     public void CollectResults(ITreeVisitor visitor)
     {
-      var sw = new Stopwatch();
-      sw.Start();
       var treeVisitor = visitor;
       TreeNavigation.Traverse(Commits.First().Tree, Commits.First(), treeVisitor);
 
@@ -39,8 +37,6 @@ namespace GitAnalysis
           currentCommit
         );
       }
-      sw.Stop();
-      Console.WriteLine(sw.ElapsedMilliseconds);
     }
 
     private ConcurrentDictionary<int, TreeChanges> CalculateDiffsPerCommittIndex()

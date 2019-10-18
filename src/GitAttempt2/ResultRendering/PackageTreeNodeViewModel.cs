@@ -8,9 +8,11 @@ namespace ResultRendering
   {
     private readonly double _hotSpotRating;
 
-    public PackageTreeNodeViewModel(double hotSpotRating, string pathOfCurrentVersion)
+    public PackageTreeNodeViewModel(
+        double hotSpotRating, 
+        string pathOfCurrentVersion)
     {
-      Name = pathOfCurrentVersion;//Path.GetFileName(pathOfCurrentVersion);
+      Name = Path.GetFileName(pathOfCurrentVersion);
       _hotSpotRating = hotSpotRating;
     }
 

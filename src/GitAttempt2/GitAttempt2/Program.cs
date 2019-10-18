@@ -1,4 +1,6 @@
-﻿using ApplicationLogic;
+﻿using System;
+using System.Diagnostics;
+using ApplicationLogic;
 using ResultRendering;
 
 
@@ -19,10 +21,18 @@ namespace GitAttempt2
     {
       //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\nscan\", "master");
       //var analysisResult = GitRepoAnalysis.Analyze(@"c:\Users\ftw637\Documents\GitHub\kafka\", "trunk");
-      var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\kafka", "trunk");
+      //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\kafka", "trunk");
 
-      new ConsoleRendering().Show(analysisResult);
+      Stopwatch sw = new Stopwatch();
+      sw.Start();
+      var analysisResult = GitRepoAnalysis.Analyze(@"c:\Users\ftw637\source\repos\vp-bots\", "master");
+      sw.Stop();
+      Console.WriteLine(sw.ElapsedMilliseconds);
+      sw.Reset();
+      sw.Start();
       new HtmlChartOutput().Show(analysisResult);
+      sw.Stop();
+      Console.WriteLine(sw.ElapsedMilliseconds);
     }
   }
 }

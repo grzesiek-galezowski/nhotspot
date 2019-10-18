@@ -15,11 +15,12 @@ namespace ResultRendering
 
     public void BeginVisiting(IFlatPackageChangeLog value)
     {
-      var packageNodeViewModel = new PackageTreeNodeViewModel(value.HotSpotRating(), value.PathOfCurrentVersion());
+      var packageNodeViewModel = new PackageTreeNodeViewModel(
+          value.HotSpotRating(), 
+          value.PathOfCurrentVersion());
       if (_currentTreeNode != null)
       {
         _currentTreeNode.Children.Add(packageNodeViewModel);
-
       }
       else
       {
@@ -30,7 +31,7 @@ namespace ResultRendering
       _currentTreeNode = packageNodeViewModel;
     }
 
-    public void EndVisiting()
+    public void EndVisiting(IFlatPackageChangeLog value)
     {
       _currentTreeNode = _currentTreeNode.Parent;
     }
