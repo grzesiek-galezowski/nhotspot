@@ -11,7 +11,9 @@ namespace ResultRendering
     {
       return Tag("div", 
         H(1,"Hot Spots").Concat(
-        viewModelHotSpots.AsParallel().Select(RenderHotSpot)));
+        viewModelHotSpots
+          .Take(100 /* bug make this configurable */).AsParallel().AsOrdered()
+          .Select(RenderHotSpot)));
     }
 
     private static IHtmlContent RenderHotSpot(HotSpotViewModel hotSpot)
@@ -71,22 +73,22 @@ namespace ResultRendering
       return script;
     }
 
-    private static IHtmlContent[] HistoryRows(HotSpotViewModel hotSpot)
+    private static IEnumerable<IHtmlContent> HistoryRows(HotSpotViewModel hotSpot)
     {
       return hotSpot.Changes.Select(change =>
         Tr(Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
                 Pre(change.ChangeDate.ToString(Constants.CommitDateFormat, CultureInfo.InvariantCulture))),
           Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
-              Pre(change.Comment)))).ToArray();
+              Pre(change.Comment))));
     }
 
-    private static IHtmlContent[] CouplingRows(HotSpotViewModel hotSpot, int count)
+    private static IEnumerable<IHtmlContent> CouplingRows(HotSpotViewModel hotSpot, int count)
     {
       return hotSpot.ChangeCoupling.Take(count).Select(change =>
         Tr(Td(Attribute("style", "border-bottom: 1pt solid gray;"),
             Text(change.CouplingCount),
           Td(Attribute("style", "border-bottom: 1pt solid gray;"),
-            Text(change.Right))))).ToArray();
+            Text(change.Right)))));
     }
 
   }

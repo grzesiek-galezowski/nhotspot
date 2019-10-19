@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ResultRendering
@@ -19,12 +20,27 @@ namespace ResultRendering
       return HtmlTag.PrettyPrinted(tagName, children);
     }
 
+    public static IHtmlContent Body(params IHtmlContent[] children)
+    {
+      return Tag("body", children);
+    }
+
+    public static IHtmlContent Tag(string tagName, IEnumerable<IHtmlContent> children)
+    {
+      return HtmlTag.PrettyPrinted(tagName, children);
+    }
+
     public static IHtmlContent VerbatimTag(string tagName, params IHtmlContent[] children)
     {
       return HtmlTag.VerbatimPrinted(tagName, children);
     }
 
     public static IHtmlContent Tag(string tagName, HtmlAttribute[] attributes, params IHtmlContent[] children)
+    {
+      return HtmlTag.PrettyPrinted(tagName, attributes, children);
+    }
+
+    public static IHtmlContent Tag(string tagName, IEnumerable<HtmlAttribute> attributes, params IHtmlContent[] children)
     {
       return HtmlTag.PrettyPrinted(tagName, attributes, children);
     }
@@ -64,9 +80,9 @@ namespace ResultRendering
       return new[] { new HtmlAttribute(name, value)};
     }
 
-    public static HtmlAttribute[] Attributes(params (string name, string value)[] args)
+    public static IEnumerable<HtmlAttribute> Attributes(params (string name, string value)[] args)
     {
-      return args.Select(arg => new HtmlAttribute(arg.name, arg.value)).ToArray();
+      return args.Select(arg => new HtmlAttribute(arg.name, arg.value));
     }
 
     public static IHtmlContent H(int i, string text)

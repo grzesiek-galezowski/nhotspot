@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ApplicationLogic;
 
 namespace ResultRendering
@@ -12,61 +13,76 @@ namespace ResultRendering
 
     public void InstantiateTemplate(AnalysisResult analysisResults)
     {
-        Console.WriteLine(DateTime.Now);
+      Console.WriteLine("START" + DateTime.Now);
       var viewModel = new ViewModel();
-      var rankings = viewModel.Rankings;
-      AddRanking(analysisResults.EntriesByDiminishingComplexity(), cl => cl.ComplexityOfCurrentVersion(), "Most complex", rankings);
-      AddRanking(analysisResults.EntriesByDiminishingChangesCount(), cl => cl.ChangesCount(), "Most often changed", rankings);
-      AddRanking(analysisResults.EntriesByDiminishingActivityPeriod(), cl => cl.ActivityPeriod(), "Longest active", rankings);
-      AddRanking(analysisResults.EntriesFromMostRecentlyChanged(), cl => cl.LastChangeDate().ToString("d"), "Most recently changed (possible breeding grounds)", rankings);
-      AddRanking(analysisResults.EntriesFromMostAncientlyChanged(), cl => cl.LastChangeDate().ToString("d"), "Most anciently changed (extract a library?)", rankings);
-      AddRanking(analysisResults.PackagesByDiminishingHotSpotRating(), cl => cl.HotSpotRating(), "Package hot spots (flat)", rankings);
-      AddTree(analysisResults.PackageTree(), viewModel);
-      AddCouplingRanking(analysisResults.CouplingMetrics(), viewModel);
-      AddCharts(analysisResults, viewModel.HotSpots);
+      AddCouplingRanking(analysisResults.CouplingMetrics(), viewModel.CouplingViewModels);
+      AddChartsAsync(analysisResults, viewModel.HotSpots);
+      var rankingTasks = new List<Task<RankingViewModel>>
+      {
+        GetRankingAsync(analysisResults.EntriesByDiminishingComplexity(), cl => cl.ComplexityOfCurrentVersion(),
+          "Most complex"),
+        GetRankingAsync(analysisResults.EntriesByDiminishingChangesCount(), cl => cl.ChangesCount(), "Most often changed"),
+        GetRankingAsync(analysisResults.EntriesByDiminishingActivityPeriod(), cl => cl.ActivityPeriod(), "Longest active"),
+        GetRankingAsync(analysisResults.EntriesFromMostRecentlyChanged(), cl => cl.LastChangeDate().ToString("d"),
+          "Most recently changed (possible breeding grounds)"),
+        GetRankingAsync(analysisResults.EntriesFromMostAncientlyChanged(), cl => cl.LastChangeDate().ToString("d"),
+          "Most anciently changed (extract a library?)"),
+        GetRankingAsync(analysisResults.PackagesByDiminishingHotSpotRating(), cl => cl.HotSpotRating(),
+          "Package hot spots (flat)")
+      };
+      var getTreeTask = GetTree(analysisResults.PackageTree(), viewModel);
+
+      viewModel.Rankings = Task.WhenAll(rankingTasks).Result;
+      viewModel.PackageTree = getTreeTask.Result;
 
         Console.WriteLine(DateTime.Now);
       viewModel.RepoName = analysisResults.Path;
 
-      File.WriteAllText("output.html", ResultsView.Render(viewModel));
-        Console.WriteLine(DateTime.Now);
+      var contents = ResultsView.Render(viewModel);
+        Console.WriteLine("END" + DateTime.Now);
+      File.WriteAllText("output.html", contents);
     }
 
-    private void AddCouplingRanking(IEnumerable<Coupling> couplingMetrics, ViewModel viewModel)
+    private void AddCouplingRanking(IEnumerable<Coupling> couplingMetrics, ICollection<CouplingViewModel> couplings)
     {
       foreach (var couplingViewModel in couplingMetrics.Select(c => new CouplingViewModel(c.Left, c.Right, c.CouplingCount)))
       {
-        viewModel.CouplingViewModels.Add(couplingViewModel);
+        couplings.Add(couplingViewModel);
       }
     }
 
-    private void AddTree(PackageChangeLogNode packageTree, ViewModel viewModel)
+    private Task<PackageTreeNodeViewModel> GetTree(PackageChangeLogNode packageTree, ViewModel viewModel)
     {
-      var packageNodeViewModelVisitor = new PackageNodeViewModelVisitor();
-      packageTree.Accept(packageNodeViewModelVisitor);
-      viewModel.PackageTree = packageNodeViewModelVisitor.ToPackageNodeViewModel();
+      return Task.Run(() =>
+      {
+        var packageNodeViewModelVisitor = new PackageNodeViewModelVisitor();
+        packageTree.Accept(packageNodeViewModelVisitor);
+        return packageNodeViewModelVisitor.ToPackageNodeViewModel();
+      });
     }
 
-    private void AddRanking<TValue, TChangeLog>(
+    private Task<RankingViewModel> GetRankingAsync<TValue, TChangeLog>(
       IEnumerable<TChangeLog> entries, 
       Func<TChangeLog, TValue> valueFun, 
-      string heading,
-      ICollection<RankingViewModel> result) where TChangeLog : IItemWithPath
+      string heading) where TChangeLog : IItemWithPath
     {
-      var rankingViewModel = new RankingViewModel {Title = heading};
-      foreach (var changeLog in entries)
+      return Task.Run(() =>
       {
-        rankingViewModel.Entries.Add(new RankingEntryViewModel()
+        var rankingViewModel = new RankingViewModel { Title = heading };
+        foreach (var changeLog in entries)
         {
-          Name = changeLog.PathOfCurrentVersion(),
-          Value = valueFun(changeLog).ToString()
-        });
-      }
+          rankingViewModel.Entries.Add(new RankingEntryViewModel()
+          {
+            Name = changeLog.PathOfCurrentVersion(),
+            Value = valueFun(changeLog).ToString()
+          });
+        }
 
-      result.Add(rankingViewModel);
+        return rankingViewModel;
+      });
     }
 
-    private static void AddCharts(AnalysisResult analysisResults, List<HotSpotViewModel> charts)
+    private static void AddChartsAsync(AnalysisResult analysisResults, IList<HotSpotViewModel> charts)
     {
       var couplingMetrics = analysisResults.CouplingMetrics();
       var elementNum = 0;

@@ -25,7 +25,7 @@ namespace ResultRendering
     private static IHtmlContent RenderRankingEntries(RankingViewModel ranking)
     {
       return Tag("ol", 
-        ranking.Entries.Select(e => Tag("li", VerbatimText(e.Name + " " + e.Value))).ToArray());
+        ranking.Entries.Select(e => Tag("li", VerbatimText(e.Name + " " + e.Value))));
     }
   }
 }

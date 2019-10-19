@@ -12,6 +12,7 @@ namespace ApplicationLogic
     TimeSpan TimeSinceLastChange();
     void AssignChangeCountRank(int rank);
     void AssignComplexityRank(int rank);
+    IEnumerable<string> ChangeIds();
   }
 
   public class FileChangeLog : IFileChangeLog
@@ -47,6 +48,11 @@ namespace ApplicationLogic
         public void AssignComplexityRank(int complexityRank)
         {
           _complexityRank = complexityRank;
+        }
+
+        public IEnumerable<string> ChangeIds()
+        {
+          return _entries.Select(e => e.Id);
         }
 
         public void AssignChangeCountRank(int changeCountRank)

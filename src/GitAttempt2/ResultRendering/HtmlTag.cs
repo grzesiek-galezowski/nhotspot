@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ResultRendering
 {
   public class HtmlTag : IHtmlContent
   {
-    public static HtmlTag PrettyPrinted(string tagName, HtmlAttribute[] attributes, IHtmlContent[] children)
+    public static HtmlTag PrettyPrinted(string tagName, IEnumerable<HtmlAttribute> attributes, IEnumerable<IHtmlContent> children)
     {
       return new HtmlTag(tagName, attributes, children, new PrettyFormat());
     }
 
-    public static HtmlTag PrettyPrinted(string tagName, IHtmlContent[] children)
+    public static HtmlTag PrettyPrinted(string tagName, IEnumerable<IHtmlContent> children)
     {
       return PrettyPrinted(tagName, new HtmlAttribute[] { }, children);
     }
@@ -34,20 +35,24 @@ namespace ResultRendering
 
     private string RenderAttributes()
     {
-      return string.Join(" ", _attributes.Select(a => a.Render()));
+      return String.Join(" ", _attributes.Select(a => a.Render()));
     }
 
     private string RenderChildren(int nesting)
     {
-      return string.Join(" ", _children.Select(i => i.Render(nesting + 1) + _renderingFormat.AfterChild()));
+      return String.Join(" ", _children.Select(i => i.Render(nesting + 1) + _renderingFormat.AfterChild()));
     }
 
     private readonly string _tagName;
-    private readonly HtmlAttribute[] _attributes;
-    private readonly IHtmlContent[] _children;
+    private readonly IEnumerable<HtmlAttribute> _attributes;
+    private readonly IEnumerable<IHtmlContent> _children;
     private readonly IRenderingFormat _renderingFormat;
 
-    private HtmlTag(string tagName, HtmlAttribute[] attributes, IHtmlContent[] children, IRenderingFormat renderingFormat)
+    private HtmlTag(
+      string tagName, 
+      IEnumerable<HtmlAttribute> attributes, 
+      IEnumerable<IHtmlContent> children, 
+      IRenderingFormat renderingFormat)
     {
       _tagName = tagName;
       _attributes = attributes;
@@ -71,6 +76,11 @@ namespace ResultRendering
         attributes, 
         children, 
         new VerbatimFormat());
+    }
+
+    public static HtmlTag AsyncTag(IEnumerable<IHtmlContent> children)
+    {
+      return new HtmlTag("body", new HtmlAttribute[] { }, children, new PrettyFormat());
     }
   }
 }

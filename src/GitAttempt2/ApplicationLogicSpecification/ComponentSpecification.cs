@@ -1,15 +1,18 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using ApplicationLogic;
 using FluentAssertions;
+using GitAttempt2;
 using NSubstitute;
 using NUnit.Framework;
+using ResultRendering;
 using TddXt.AnyRoot.Strings;
 using TddXt.XNSubstitute;
 using static TddXt.AnyRoot.Root;
 
 namespace ApplicationLogicSpecification
-{
+{ 
   public class ComponentSpecification
   {
     [Test]
@@ -93,6 +96,23 @@ namespace ApplicationLogicSpecification
       fileChangeLog.Age().Should().Be(clock.Now() - changeDate1);
       fileChangeLog.PathOfCurrentVersion().Should().Be(file1);
       fileChangeLog.PackagePath().Should().Be(string.Empty);
+    }
+
+    [Test, Ignore("lol")]
+    public void METHOD123()
+    {
+      Stopwatch sw = new Stopwatch();
+      sw.Start();
+      //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\kafka", "trunk");
+      var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\NSubstitute\", "master");
+      sw.Stop();
+      Console.WriteLine(sw.ElapsedMilliseconds);
+      sw.Reset();
+      sw.Start();
+      new HtmlChartOutput().Show(analysisResult);
+      sw.Stop();
+      Console.WriteLine(sw.ElapsedMilliseconds);
+
     }
 
     //TODO test package tree

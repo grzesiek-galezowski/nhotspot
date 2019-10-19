@@ -10,18 +10,21 @@ namespace ResultRendering
   {
     public static string Render(ViewModel viewModel)
     {
+      var htmlContent = DocumentHeaderView.Render();
+      var content = Tag("html", Attribute("lang", "en"),
+        Body( 
+          H(1, $"Analysis of {viewModel.RepoName}"), 
+          RankingsView.RenderFrom(viewModel.Rankings), 
+          CouplingView.RenderFrom(viewModel.CouplingViewModels),
+          PackageListView.RenderFrom(viewModel.PackageTree), 
+          HotSpotsView.RenderFrom(viewModel.HotSpots)
+        )
+      );
+      var contentString = content.ToString();
       return string.Join(Environment.NewLine,
         "<doctype html>",
-        DocumentHeaderView.Render(),
-        Tag("html", Attribute("lang", "en"),
-          Tag("body", 
-            H(1, $"Analysis of {viewModel.RepoName}"), 
-            RankingsView.RenderFrom(viewModel.Rankings), 
-            CouplingView.RenderFrom(viewModel.CouplingViewModels),
-            PackageListView.RenderFrom(viewModel.PackageTree), 
-            HotSpotsView.RenderFrom(viewModel.HotSpots)
-          )
-        )
+        htmlContent.ToString(),
+        contentString
     );
     }
   }
@@ -37,7 +40,7 @@ namespace ResultRendering
             Td(Text(model.CouplingCount)),
             Td(Text(model.Left)),
             Td(Text(model.Right))
-          )).ToArray())));
+          )))));
     }
   }
 }

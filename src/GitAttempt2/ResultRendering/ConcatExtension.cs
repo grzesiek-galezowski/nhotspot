@@ -5,9 +5,9 @@ namespace ResultRendering
 {
   public static class ConcatExtension
   {
-    public static T[] Concat<T>(this T element, IEnumerable<T> rest)
+    public static IEnumerable<T> Concat<T>(this T element, IEnumerable<T> rest)
     {
-      return Enumerable.Concat(new[] { element }, rest).ToArray();
+      return Enumerable.Concat(new[] { element }, rest);
     }
   }
 }

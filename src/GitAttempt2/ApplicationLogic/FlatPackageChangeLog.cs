@@ -24,7 +24,8 @@ namespace ApplicationLogic
 
     public int ChangesCount()
     {
-      return _files.Sum(f => f.ChangesCount());
+      var changes = _files.Select(f => f.ChangeIds()).SelectMany(s => s).Distinct();
+      return changes.Count();
     }
 
     public double ComplexityOfCurrentVersion()

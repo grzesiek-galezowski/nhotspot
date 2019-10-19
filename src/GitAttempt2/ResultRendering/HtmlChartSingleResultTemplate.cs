@@ -34,9 +34,9 @@ namespace ResultRendering
       return hotSpotViewModel;
     }
 
-    private static IReadOnlyList<ChangeViewModel> Changes(FileChangeLog analysisResult)
+    private static IEnumerable<ChangeViewModel> Changes(FileChangeLog analysisResult)
     {
-      return analysisResult.Entries.Select(c => new ChangeViewModel(c.ChangeDate, c.Comment)).Reverse().ToList();
+      return analysisResult.Entries.Select(c => new ChangeViewModel(c.ChangeDate, c.Comment)).Reverse();
     }
 
     private static string Data(FileChangeLog fileChangeLog)
