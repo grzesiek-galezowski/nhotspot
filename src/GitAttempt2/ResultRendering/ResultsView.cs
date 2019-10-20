@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationLogic;
 using static ResultRendering.Html;
 
 namespace ResultRendering
 {
   public static class ResultsView
   {
-    public static string Render(ViewModel viewModel)
+    public static string Render(ViewModel viewModel, AnalysisConfig analysisConfig)
     {
       var htmlContent = DocumentHeaderView.Render();
       var content = Tag("html", Attribute("lang", "en"),
@@ -17,7 +18,7 @@ namespace ResultRendering
           RankingsView.RenderFrom(viewModel.Rankings), 
           CouplingView.RenderFrom(viewModel.CouplingViewModels),
           PackageListView.RenderFrom(viewModel.PackageTree), 
-          HotSpotsView.RenderFrom(viewModel.HotSpots)
+          HotSpotsView.RenderFrom(viewModel.HotSpots, analysisConfig)
         )
       );
       var contentString = content.ToString();

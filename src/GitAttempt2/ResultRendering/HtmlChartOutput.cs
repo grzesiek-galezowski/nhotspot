@@ -10,8 +10,14 @@ namespace ResultRendering
 {
   public class HtmlChartOutput
   {
+    private readonly AnalysisConfig _analysisConfig;
 
-    public void InstantiateTemplate(AnalysisResult analysisResults)
+    public HtmlChartOutput(AnalysisConfig analysisConfig)
+    {
+      _analysisConfig = analysisConfig;
+    }
+
+    public void InstantiateTemplate(AnalysisResult analysisResults, AnalysisConfig analysisConfig)
     {
       Console.WriteLine("START" + DateTime.Now);
       var viewModel = new ViewModel();
@@ -38,9 +44,9 @@ namespace ResultRendering
         Console.WriteLine(DateTime.Now);
       viewModel.RepoName = analysisResults.Path;
 
-      var contents = ResultsView.Render(viewModel);
+      var contents = ResultsView.Render(viewModel, analysisConfig);
         Console.WriteLine("END" + DateTime.Now);
-      File.WriteAllText("output.html", contents);
+      File.WriteAllText(analysisConfig.OutputFile, contents);
     }
 
     private void AddCouplingRanking(IEnumerable<Coupling> couplingMetrics, ICollection<CouplingViewModel> couplings)
@@ -104,7 +110,7 @@ namespace ResultRendering
 
     public void Show(AnalysisResult analysisResult)
     {
-      InstantiateTemplate(analysisResult);
+      InstantiateTemplate(analysisResult, _analysisConfig);
       Show();
     }
   }

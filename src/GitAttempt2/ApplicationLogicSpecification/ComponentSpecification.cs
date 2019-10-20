@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using ApplicationLogic;
 using FluentAssertions;
-using GitAttempt2;
+using NHotSpot.Console;
 using NSubstitute;
 using NUnit.Framework;
 using ResultRendering;
@@ -98,41 +98,7 @@ namespace ApplicationLogicSpecification
       fileChangeLog.PackagePath().Should().Be(string.Empty);
     }
 
-    [Test, Ignore("lol")]
-    public void METHOD123()
-    {
-      Stopwatch sw = new Stopwatch();
-      sw.Start();
-      //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\kafka", "trunk");
-      var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\NSubstitute\", "master");
-      sw.Stop();
-      Console.WriteLine(sw.ElapsedMilliseconds);
-      sw.Reset();
-      sw.Start();
-      new HtmlChartOutput().Show(analysisResult);
-      sw.Stop();
-      Console.WriteLine(sw.ElapsedMilliseconds);
-
-    }
-
     //TODO test package tree
-  }
-
-  public class AssertingVisitor : INodeVisitor
-  {
-    public void BeginVisiting(IFlatPackageChangeLog value)
-    {
-      Console.WriteLine("|" + value.PathOfCurrentVersion());
-    }
-
-    public void EndVisiting(IFlatPackageChangeLog value)
-    {
-    }
-
-    public void Visit(IFileChangeLog fileChangeLog)
-    {
-      Console.WriteLine(fileChangeLog.PathOfCurrentVersion());
-    }
   }
 
   public class MockSourceControlRepository : ISourceControlRepository

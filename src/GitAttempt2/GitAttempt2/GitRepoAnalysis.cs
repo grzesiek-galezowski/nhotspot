@@ -2,7 +2,7 @@ using ApplicationLogic;
 using GitAnalysis;
 using LibGit2Sharp;
 
-namespace GitAttempt2
+namespace NHotSpot.Console
 {
   public static class GitRepoAnalysis
   {

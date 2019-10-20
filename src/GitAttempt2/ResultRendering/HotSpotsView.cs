@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using ApplicationLogic;
 using static ResultRendering.Html;
 
 namespace ResultRendering
 {
   public static class HotSpotsView
   {
-    public static IHtmlContent RenderFrom(IEnumerable<HotSpotViewModel> viewModelHotSpots)
+    public static IHtmlContent RenderFrom(IEnumerable<HotSpotViewModel> viewModelHotSpots, AnalysisConfig analysisConfig)
     {
       return Tag("div", 
         H(1,"Hot Spots").Concat(
         viewModelHotSpots
-          .Take(100 /* bug make this configurable */).AsParallel().AsOrdered()
-          .Select(RenderHotSpot)));
+          .Take(analysisConfig.MaxHotSpotCount).AsParallel().AsOrdered()
+          .Select(model => RenderHotSpot(model, analysisConfig))));
     }
 
-    private static IHtmlContent RenderHotSpot(HotSpotViewModel hotSpot)
+    private static IHtmlContent RenderHotSpot(HotSpotViewModel hotSpot, AnalysisConfig analysisConfig)
     {
       return Tag("div",
         H(2, $"{hotSpot.Rating}. {hotSpot.Path}"),
@@ -36,8 +37,8 @@ namespace ResultRendering
             Tag("table", HistoryRows(hotSpot))
         ),
         Tag("details", 
-            Tag("summary", Text("Coupling (Top 20)")), 
-            Tag("table", CouplingRows(hotSpot, 20))
+            Tag("summary", Text($"Coupling (Top {analysisConfig.MaxCouplingsPerHotSpot})")), 
+            Tag("table", CouplingRows(hotSpot, analysisConfig.MaxCouplingsPerHotSpot))
         ),
         Tag("script", Text(JavaScriptCanvas(hotSpot)))
       );
