@@ -4,11 +4,11 @@ using LibGit2Sharp;
 
 namespace GitAnalysis
 {
-  public class NonBinaryBlob : IBlob
+  public class SupportedBlob : IBlob
   {
     private readonly string _blobContent;
 
-    public NonBinaryBlob(string blobContent)
+    public SupportedBlob(string blobContent)
     {
       _blobContent = blobContent;
     }

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace ResultRendering
 {
-  internal static class Browser
+  public static class Browser
   {
     public static void Open(string url)
     {

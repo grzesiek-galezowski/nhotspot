@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using ApplicationLogic;
 using Fclp;
 using ResultRendering;
@@ -31,8 +32,12 @@ namespace NHotSpot.Console
       sw.Stop();
       System.Console.WriteLine(sw.ElapsedMilliseconds);
       sw.Reset();
+      
       sw.Start();
-      new HtmlChartOutput(analysisConfig).Show(analysisResult);
+      var readyDocument = new HtmlAnalysisDocument(analysisConfig)
+        .RenderString(analysisResult);
+      File.WriteAllText(analysisConfig.OutputFile, readyDocument);
+      Browser.Open(analysisConfig.OutputFile);
       sw.Stop();
       System.Console.WriteLine(sw.ElapsedMilliseconds);
     }

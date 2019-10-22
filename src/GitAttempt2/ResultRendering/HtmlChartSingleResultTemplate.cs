@@ -41,15 +41,20 @@ namespace ResultRendering
 
     private static string Data(FileChangeLog fileChangeLog)
     {
-      var data = fileChangeLog.Entries.Select(change => "'" + change.Complexity.ToString(CultureInfo.InvariantCulture) + "'");
-      return string.Join(", ", data);
+        return FormatData(fileChangeLog);
+    }
+
+    private static string FormatData(FileChangeLog fileChangeLog)
+    {
+        var data = fileChangeLog.Entries.Select(change =>
+            change.Complexity.ToString(CultureInfo.InvariantCulture));
+        return TrashBinTrolololo.AsJavaScriptArrayString(data);
     }
 
     private static string Labels(FileChangeLog fileChangeLog)
     {
-      var data = fileChangeLog.Entries.Select(change => 
-        "'" + change.ChangeDate.ToString(Constants.CommitDateFormat, CultureInfo.InvariantCulture) + "'");
-      return string.Join(", ", data);
+        return TrashBinTrolololo.AsJavaScriptArrayString(fileChangeLog.Entries.Select(change =>
+            change.ChangeDate.ToString(Constants.CommitDateFormat, CultureInfo.InvariantCulture)));
     }
   }
 }

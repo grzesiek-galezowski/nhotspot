@@ -12,13 +12,16 @@ namespace ResultRendering
     public static string Render(ViewModel viewModel, AnalysisConfig analysisConfig)
     {
       var htmlContent = DocumentHeaderView.Render();
+      var histogramView = new ChartView("histogram");
       var content = Tag("html", Attribute("lang", "en"),
         Body( 
-          H(1, $"Analysis of {viewModel.RepoName}"), 
+          H(1, $"Analysis of {viewModel.RepoName}"),
+          histogramView.ChartDiv(80),
           RankingsView.RenderFrom(viewModel.Rankings), 
-          CouplingView.RenderFrom(viewModel.CouplingViewModels),
+          CouplingView.RenderFrom(viewModel.Couplings),
           PackageListView.RenderFrom(viewModel.PackageTree), 
-          HotSpotsView.RenderFrom(viewModel.HotSpots, analysisConfig)
+          HotSpotsView.RenderFrom(viewModel.HotSpots, analysisConfig),
+          Tag("script", Text(histogramView.ChartScript(viewModel.Histogram.Labels, viewModel.Histogram.Data, viewModel.Histogram.Description)))
         )
       );
       var contentString = content.ToString();
