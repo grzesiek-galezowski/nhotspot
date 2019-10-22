@@ -83,10 +83,12 @@ namespace ApplicationLogic
     {
       var ignoredFileTypes = new[] //bug move this to config
       {
-        ".txt", ".md", 
+        ".txt", 
+        ".md", 
         ".zip", 
         ".jar", 
         ".markdown", 
+        ".nuspec", 
         ".png", 
         ".jpg", 
         ".jpeg", 
