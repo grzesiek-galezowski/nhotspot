@@ -4,8 +4,8 @@ namespace ApplicationLogic
 {
   public interface IFlatPackageChangeLog : IChangeLog
   {
-    void Add(IFileChangeLog fileChangeLog);
-    IEnumerable<IFileChangeLog> Files { get; }
+    void Add(IFileHistory fileHistory);
+    IEnumerable<IFileHistory> Files { get; }
     string Name();
   }
 }

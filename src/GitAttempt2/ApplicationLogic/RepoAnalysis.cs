@@ -6,15 +6,17 @@ namespace ApplicationLogic
   public class RepoAnalysis
   {
     private readonly IClock _clock;
+    private readonly int _minChangeCount;
 
-    public RepoAnalysis(IClock clock)
+    public RepoAnalysis(IClock clock, int minChangeCount)
     {
       _clock = clock;
+      _minChangeCount = minChangeCount;
     }
     
     public AnalysisResult ExecuteOn(ISourceControlRepository sourceControlRepository)
     {
-      var visitor = new CollectFileChangeRateFromCommitVisitor(_clock);
+      var visitor = new CollectFileChangeRateFromCommitVisitor(_clock, _minChangeCount);
       sourceControlRepository.CollectResults(visitor);
 
       var trunkFiles = visitor.Result();
@@ -22,7 +24,7 @@ namespace ApplicationLogic
       return analysisResult;
     }
 
-    private static AnalysisResult CreateAnalysisResult(IReadOnlyList<FileChangeLog> trunkFiles, string repositoryPath)
+    private static AnalysisResult CreateAnalysisResult(IReadOnlyList<FileHistory> trunkFiles, string repositoryPath)
     {
       Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
       Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
@@ -33,15 +35,16 @@ namespace ApplicationLogic
       return new AnalysisResult(trunkFiles, 
         Rankings.GatherFlatPackageMetricsByPath(trunkFiles), 
         repositoryPath,
-        packageChangeLogNode);
+        packageChangeLogNode, 
+        ComplexityMetrics.CalculateCoupling(trunkFiles));
     }
 
-    private static IOrderedEnumerable<IFileChangeLog> OrderByChangesCount(IEnumerable<IFileChangeLog> trunkFiles)
+    private static IOrderedEnumerable<IFileHistory> OrderByChangesCount(IEnumerable<IFileHistory> trunkFiles)
     {
       return trunkFiles.ToList().OrderBy(h => h.ChangesCount());
     }
 
-    private static IOrderedEnumerable<IFileChangeLog> OrderByComplexity(IEnumerable<IFileChangeLog> trunkFiles)
+    private static IOrderedEnumerable<IFileHistory> OrderByComplexity(IEnumerable<IFileHistory> trunkFiles)
     {
       return trunkFiles.ToList().OrderBy(h => h.ComplexityOfCurrentVersion());
     }

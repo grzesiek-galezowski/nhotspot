@@ -34,9 +34,9 @@ namespace ResultRendering
       return contents;
     }
 
-    private HistogramViewModel CreateHistogram(IEnumerable<IFileChangeLog> entriesByDiminishingChangesCount)
+    private HistogramViewModel CreateHistogram(IEnumerable<IFileHistory> entriesByDiminishingChangesCount)
     {
-        var labels = entriesByDiminishingChangesCount.Select(e => Path.GetFileName(e.PathOfCurrentVersion()));
+      var labels = entriesByDiminishingChangesCount.Select(e => Path.GetFileName(e.PathOfCurrentVersion()));
         var values = entriesByDiminishingChangesCount.Select(e => e.ChangesCount().ToString());
 
         return new HistogramViewModel(
@@ -103,7 +103,7 @@ namespace ResultRendering
 
     private static void AddChartDataTo(
         ICollection<HotSpotViewModel> charts, 
-        IEnumerable<FileChangeLog> entries, 
+        IEnumerable<FileHistory> entries, 
         IEnumerable<Coupling> couplingMetrics)
     {
       foreach (var (log, index) in entries.Select((log, i) => (log, i)))

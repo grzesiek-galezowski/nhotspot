@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using ApplicationLogic;
 using Fclp;
@@ -16,11 +17,11 @@ namespace NHotSpot.Console
     static void Main(string[] args)
     {
       //var analysisResult = GitRepoAnalysis.Analyze(@"c:\Users\ftw637\Documents\GitHub\kafka\", "trunk");
-
+      /*
       var analysisConfig = new AnalysisConfig();
       var parser = CreateCliParser(analysisConfig);
       parser.Parse(args);
-
+      */
       Stopwatch sw = new Stopwatch();
       sw.Start();
       //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\kafka", "trunk");
@@ -28,7 +29,26 @@ namespace NHotSpot.Console
       //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\nscan\", "master");
       //var analysisResult = GitRepoAnalysis.Analyze(@"c:\Users\ftw637\source\repos\vp-bots\", "master");
 
-      var analysisResult = GitRepoAnalysis.Analyze(analysisConfig.RepoPath, analysisConfig.Branch);
+      var analysisConfig = new AnalysisConfig()
+      {
+        //Branch = "trunk",
+        Branch = "master",
+        MaxCouplingsPerHotSpot = 20,
+        MaxHotSpotCount = 100,
+        OutputFile = "output.html",
+        //RepoPath = @"c:\Users\ftw637\source\repos\vp-bots\"
+        //RepoPath = @"C:\Users\ftw637\Documents\GitHub\any"
+        //RepoPath = @"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\"
+        //RepoPath = @"C:\Users\grzes\Documents\GitHub\NSubstitute\",
+        //RepoPath = @"C:\Users\grzes\Documents\GitHub\kafka\",
+        RepoPath = @"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet",
+        MinChangeCount = 2
+      };
+      var analysisResult = GitRepoAnalysis.Analyze(
+        analysisConfig.RepoPath, 
+        analysisConfig.Branch, 
+        analysisConfig.MinChangeCount, 
+        DateTime.Now - TimeSpan.FromDays(366));
       sw.Stop();
       System.Console.WriteLine(sw.ElapsedMilliseconds);
       sw.Reset();
@@ -54,6 +74,11 @@ namespace NHotSpot.Console
       p.Setup<string>('b', "branch")
         .WithDescription("branch name")
         .Callback(branch => inputArguments.Branch = branch)
+        .Required();
+
+      p.Setup<int>("min-change-count")
+        .WithDescription("Minimum change count that makes a file count")
+        .Callback(minChangeCount => inputArguments.MinChangeCount = minChangeCount)
         .Required();
 
       p.Setup<int>("max-coupling-per-hospot")

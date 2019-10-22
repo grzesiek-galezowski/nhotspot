@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ApplicationLogic
 {
-  public interface IFileChangeLog : IChangeLog
+  public interface IFileHistory : IChangeLog
   {
     DateTimeOffset CreationDate();
     DateTimeOffset LastChangeDate();
@@ -13,16 +13,18 @@ namespace ApplicationLogic
     void AssignChangeCountRank(int rank);
     void AssignComplexityRank(int rank);
     IEnumerable<string> ChangeIds();
+    Coupling CalculateCouplingTo(IFileHistory otherHistory);
+    bool WasChangedIn(string changeId);
   }
 
-  public class FileChangeLog : IFileChangeLog
+  public class FileHistory : IFileHistory
   {
         private readonly List<Change> _entries = new List<Change>();
         private int _complexityRank = -1; //bug handle another way
         private int _changeCountRank = -1; //bug handle another way
         private readonly IClock _clock;
 
-        public FileChangeLog(IClock clock)
+        public FileHistory(IClock clock)
         {
           _clock = clock;
         }
@@ -65,20 +67,20 @@ namespace ApplicationLogic
           return System.IO.Path.GetDirectoryName(PathOfCurrentVersion());
         }
 
-        public Coupling CalculateCouplingTo(FileChangeLog otherChangeLog)
+        public Coupling CalculateCouplingTo(IFileHistory otherHistory)
         {
           var couplingCount = 0;
           foreach (var change in _entries)
           {
-            if (otherChangeLog.WasChangedIn(change.Id))
+            if (otherHistory.WasChangedIn(change.Id))
             {
               couplingCount++;
             }
           }
-          return new Coupling(PathOfCurrentVersion(), otherChangeLog.PathOfCurrentVersion(), couplingCount);
+          return new Coupling(PathOfCurrentVersion(), otherHistory.PathOfCurrentVersion(), couplingCount);
         }
 
-        private bool WasChangedIn(string changeId)
+        public bool WasChangedIn(string changeId)
         {
           return _entries.Select(e => e.Id).Contains(changeId);
         }

@@ -4,6 +4,6 @@ namespace ApplicationLogic
   {
     void BeginVisiting(IFlatPackageChangeLog value);
     void EndVisiting(IFlatPackageChangeLog value);
-    void Visit(IFileChangeLog fileChangeLog);
+    void Visit(IFileHistory fileHistory);
   }
 }

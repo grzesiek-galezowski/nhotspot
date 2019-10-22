@@ -21,7 +21,7 @@ namespace ApplicationLogicSpecification
       var clock = Any.Instance<IClock>();
       var nodeVisitor = Substitute.For<INodeVisitor>();
 
-      var analysisResult = new RepoAnalysis(clock).ExecuteOn(new MockSourceControlRepository("REPO", v =>
+      var analysisResult = new RepoAnalysis(clock, 200).ExecuteOn(new MockSourceControlRepository("REPO", v =>
       {
         v.OnAdded(File("src/Readme.txt"));
         v.OnAdded(File("src/Csharp/Project1/lol.cs"));
@@ -76,14 +76,14 @@ namespace ApplicationLogicSpecification
         ChangeDate = changeDate1
       }.Build();
 
-      var analysisResult = new RepoAnalysis(clock).ExecuteOn(new MockSourceControlRepository(repoPath, v =>
+      var analysisResult = new RepoAnalysis(clock, 200).ExecuteOn(new MockSourceControlRepository(repoPath, v =>
       {
         v.OnAdded(change1);
       }));
 
       analysisResult.Path.Should().Be(repoPath);
       analysisResult.EntriesByDiminishingActivityPeriod().Should().HaveCount(1);
-      var fileChangeLog = (FileChangeLog)analysisResult.EntriesByDiminishingActivityPeriod().First();
+      var fileChangeLog = (FileHistory)analysisResult.EntriesByDiminishingActivityPeriod().First();
       fileChangeLog.ActivityPeriod().Should().Be(TimeSpan.Zero);
       fileChangeLog.CreationDate().Should().Be(changeDate1);
       fileChangeLog.LastChangeDate().Should().Be(changeDate1);
@@ -111,7 +111,8 @@ namespace ApplicationLogicSpecification
             OutputFile = "output.html",
             //RepoPath = @"c:\Users\ftw637\source\repos\vp-bots\"
             //RepoPath = @"C:\Users\ftw637\Documents\GitHub\any"
-            RepoPath = @"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\"
+            //RepoPath = @"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\"
+            RepoPath = @"C:\Users\grzes\Documents\GitHub\NSubstitute\",
         };
 
         Stopwatch sw = new Stopwatch();
@@ -121,7 +122,7 @@ namespace ApplicationLogicSpecification
         //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\nscan\", "master");
         //var analysisResult = GitRepoAnalysis.Analyze(@"c:\Users\ftw637\source\repos\vp-bots\", "master");
 
-        var analysisResult = GitRepoAnalysis.Analyze(analysisConfig.RepoPath, analysisConfig.Branch);
+        var analysisResult = GitRepoAnalysis.Analyze(analysisConfig.RepoPath, analysisConfig.Branch, 200, DateTime.Parse("2018-01-01"));
         sw.Stop();
         System.Console.WriteLine(sw.ElapsedMilliseconds);
         sw.Reset();

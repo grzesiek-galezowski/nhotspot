@@ -1,11 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ApplicationLogic
 {
   public class AnalysisResult
   {
-    private const int ArbitraryLimit = 0; //bug make that a percentage?
     public string Path { get; }
 
     public PackageChangeLogNode PackageTree()
@@ -13,77 +14,65 @@ namespace ApplicationLogic
       return _packageChangeLogNode;
     }
 
-    private readonly IEnumerable<FileChangeLog> _changeLogs;
+    private readonly IEnumerable<FileHistory> _changeLogs;
 
     private readonly Dictionary<string, IFlatPackageChangeLog> _packageChangeLogsByPath;
     private readonly PackageChangeLogNode _packageChangeLogNode;
+    private readonly IEnumerable<Coupling> _changeCouplings;
 
-    public AnalysisResult(IEnumerable<FileChangeLog> changeLogs,
+    public AnalysisResult(IEnumerable<FileHistory> changeLogs,
       Dictionary<string, IFlatPackageChangeLog> packageMetricsByPath,
       string normalizedPath, 
-      PackageChangeLogNode packageChangeLogNode)
+      PackageChangeLogNode packageChangeLogNode, 
+      IEnumerable<Coupling> changeCouplings)
     {
       Path = normalizedPath;
       _changeLogs = changeLogs;
       _packageChangeLogsByPath = packageMetricsByPath;
       _packageChangeLogNode = packageChangeLogNode;
+      _changeCouplings = changeCouplings;
     }
 
     public IEnumerable<Coupling> CouplingMetrics()
     {
-      var couplingMetric = new List<Coupling>();
-
-      for (int i = 0 ; i < _changeLogs.Count() ; i++)
-      {
-        for (int j = i+1 ; j < _changeLogs.Count(); j++)
-        {
-          var coupling = _changeLogs.ElementAt(i).CalculateCouplingTo(_changeLogs.ElementAt(j));
-          if(coupling.CouplingCount != 0)
-          {
-            couplingMetric.Add(coupling);
-          }
-        }
-      }
-      return couplingMetric
-          .Where(c => c.CouplingCount > ArbitraryLimit)
-          .OrderByDescending(c => c.CouplingCount);
+      return _changeCouplings;
     }
 
-    public IEnumerable<FileChangeLog> EntriesByHotSpotRating()
+    public IEnumerable<FileHistory> EntriesByHotSpotRating()
     {
       return _changeLogs.OrderByDescending(h => h.HotSpotRating());
     }
 
-    private IEnumerable<IFileChangeLog> EntriesByRisingComplexity()
+    private IEnumerable<IFileHistory> EntriesByRisingComplexity()
     {
       return _changeLogs.OrderBy(h => h.ComplexityOfCurrentVersion());
     }
 
-    public IEnumerable<IFileChangeLog> EntriesByDiminishingComplexity()
+    public IEnumerable<IFileHistory> EntriesByDiminishingComplexity()
     {
       return EntriesByRisingComplexity().Reverse();
     }
 
-    public IEnumerable<IFileChangeLog> EntriesByRisingChangesCount()
+    public IEnumerable<IFileHistory> EntriesByRisingChangesCount()
     {
       return _changeLogs.OrderBy(h => h.ChangesCount());
     }
 
-    public IEnumerable<IFileChangeLog> EntriesByDiminishingChangesCount()
+    public IEnumerable<IFileHistory> EntriesByDiminishingChangesCount()
     {
       return _changeLogs.OrderByDescending(h => h.ChangesCount());
     }
 
-    public IEnumerable<IFileChangeLog> EntriesByDiminishingActivityPeriod()
+    public IEnumerable<IFileHistory> EntriesByDiminishingActivityPeriod()
     {
       return _changeLogs.OrderByDescending(h => h.ActivityPeriod());
     }
 
-    public IEnumerable<IFileChangeLog> EntriesFromMostRecentlyChanged()
+    public IEnumerable<IFileHistory> EntriesFromMostRecentlyChanged()
     {
       return _changeLogs.OrderByDescending(h => h.LastChangeDate());
     }
-    public IEnumerable<IFileChangeLog> EntriesFromMostAncientlyChanged()
+    public IEnumerable<IFileHistory> EntriesFromMostAncientlyChanged()
     {
       return EntriesFromMostRecentlyChanged().Reverse();
     }

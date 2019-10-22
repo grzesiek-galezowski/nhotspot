@@ -8,19 +8,19 @@ namespace ApplicationLogic
   public class FlatPackageChangeLog : IFlatPackageChangeLog
   {
     private readonly string _packagePath;
-    private readonly List<IFileChangeLog> _files = new List<IFileChangeLog>();
+    private readonly List<IFileHistory> _files = new List<IFileHistory>();
 
     public FlatPackageChangeLog(string packagePath)
     {
       _packagePath = packagePath;
     }
 
-    public void Add(IFileChangeLog fileChangeLog)
+    public void Add(IFileHistory fileHistory)
     {
-      _files.Add(fileChangeLog);
+      _files.Add(fileHistory);
     }
 
-    public IEnumerable<IFileChangeLog> Files => _files;
+    public IEnumerable<IFileHistory> Files => _files;
 
     public int ChangesCount()
     {

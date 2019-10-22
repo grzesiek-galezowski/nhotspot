@@ -8,7 +8,7 @@ namespace ApplicationLogic
 {
   public static class Rankings
   {
-    public static Dictionary<string, IFlatPackageChangeLog> GatherFlatPackageMetricsByPath(IEnumerable<FileChangeLog> fileChangeLogs)
+    public static Dictionary<string, IFlatPackageChangeLog> GatherFlatPackageMetricsByPath(IEnumerable<FileHistory> fileChangeLogs)
     {
       var packageChangeLogsByPath = new Dictionary<string, IFlatPackageChangeLog>();
       foreach (var fileChangeLog in fileChangeLogs)
@@ -35,7 +35,7 @@ namespace ApplicationLogic
       }
     }
 
-    public static PackageChangeLogNode GatherPackageTreeMetricsByPath(IEnumerable<FileChangeLog> fileChangeLogs)
+    public static PackageChangeLogNode GatherPackageTreeMetricsByPath(IEnumerable<FileHistory> fileChangeLogs)
     {
       var nodes = new Dictionary<string, PackageChangeLogNode>();
       var flatPackageMetricsByPath = GatherFlatPackageMetricsByPath(fileChangeLogs);
@@ -85,18 +85,18 @@ namespace ApplicationLogic
     }
 
 
-    public static void UpdateChangeCountRankingBasedOnOrderOf(IEnumerable<IFileChangeLog> entriesToRank)
+    public static void UpdateChangeCountRankingBasedOnOrderOf(IEnumerable<IFileHistory> entriesToRank)
     {
       entriesToRank
-        .Select(WithIndex<IFileChangeLog>())
+        .Select(WithIndex<IFileHistory>())
         .ToList().ForEach(
           tuple => tuple.entry.AssignChangeCountRank(tuple.index));
     }
 
-    public static void UpdateComplexityRankingBasedOnOrderOf(IEnumerable<IFileChangeLog> entriesToRank)
+    public static void UpdateComplexityRankingBasedOnOrderOf(IEnumerable<IFileHistory> entriesToRank)
     {
       entriesToRank
-        .Select(WithIndex<IFileChangeLog>())
+        .Select(WithIndex<IFileHistory>())
         .ToList().ForEach(
           tuple => tuple.entry.AssignComplexityRank(tuple.index));
     }
@@ -105,16 +105,16 @@ namespace ApplicationLogic
 
   public class FileChangeLogNode
   {
-    private readonly IFileChangeLog _fileChangeLog;
+    private readonly IFileHistory _fileHistory;
 
-    public FileChangeLogNode(IFileChangeLog fileChangeLog)
+    public FileChangeLogNode(IFileHistory fileHistory)
     {
-      _fileChangeLog = fileChangeLog;
+      _fileHistory = fileHistory;
     }
 
     public void Accept(INodeVisitor visitor)
     {
-      visitor.Visit(_fileChangeLog);
+      visitor.Visit(_fileHistory);
     }
   }
 }

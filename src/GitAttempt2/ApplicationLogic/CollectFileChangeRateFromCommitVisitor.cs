@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,20 +17,22 @@ namespace ApplicationLogic
   public class CollectFileChangeRateFromCommitVisitor : ITreeVisitor
   {
     private readonly IClock _clock;
+    private readonly int _minChangeCount;
 
-    public CollectFileChangeRateFromCommitVisitor(IClock clock)
+    public CollectFileChangeRateFromCommitVisitor(IClock clock, int minChangeCount)
     {
-      AnalysisMetadata = new Dictionary<string, FileChangeLog>();
+      AnalysisMetadata = new Dictionary<string, FileHistory>();
       _clock = clock;
+      _minChangeCount = minChangeCount;
     }
 
-    private Dictionary<string, FileChangeLog> AnalysisMetadata { get; }
+    private Dictionary<string, FileHistory> AnalysisMetadata { get; }
 
     public void OnBlob(Change change)
     {
       if (!AnalysisMetadata.ContainsKey(change.Path))
       {
-        AnalysisMetadata[change.Path] = new FileChangeLog(_clock);
+        AnalysisMetadata[change.Path] = new FileHistory(_clock);
       }
       AddChange(change);
     }
@@ -53,13 +56,13 @@ namespace ApplicationLogic
 
     public void OnCopied(Change change)
     {
-      AnalysisMetadata[change.Path] = new FileChangeLog(_clock);
+      AnalysisMetadata[change.Path] = new FileHistory(_clock);
       AddChange(change);
     }
 
     public void OnAdded(Change change)
     {
-      AnalysisMetadata[change.Path] = new FileChangeLog(_clock);
+      AnalysisMetadata[change.Path] = new FileHistory(_clock);
       AddChange(change);
     }
 
@@ -68,9 +71,43 @@ namespace ApplicationLogic
       AnalysisMetadata.Remove(removedEntryPath);
     }
 
-    public List<FileChangeLog> Result()
+    public List<FileHistory> Result()
     {
-      return AnalysisMetadata.Select(x => x.Value).ToList();
+      return AnalysisMetadata
+        .Where(x => x.Value.ChangesCount() >= _minChangeCount)
+        .Where(IsNotIgnoredFileType)
+        .Select(x => x.Value).ToList();
+    }
+
+    private static bool IsNotIgnoredFileType(KeyValuePair<string, FileHistory> x)
+    {
+      var ignoredFileTypes = new[] //bug move this to config
+      {
+        ".txt", ".md", 
+        ".zip", 
+        ".jar", 
+        ".markdown", 
+        ".png", 
+        ".jpg", 
+        ".jpeg", 
+        ".bmp", 
+        ".yml", 
+        ".json", 
+        ".xml", 
+        ".ico", 
+        ".ruleset", 
+        ".runsettings", 
+        "AssemblyInfo.cs", 
+        ".gitignore", 
+        ".properties", 
+        ".settings", 
+        ".gitattributes", 
+        ".csproj", ".sln", 
+        ".transcript", ".bat", 
+        ".dll", ".exe", ".lock",
+        ".html", ".htm", ".css"
+      };
+      return ignoredFileTypes.All(fileType => !x.Key.EndsWith(fileType, StringComparison.InvariantCultureIgnoreCase));
     }
   }
 }

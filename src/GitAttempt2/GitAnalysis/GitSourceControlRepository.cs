@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ApplicationLogic;
@@ -11,29 +12,28 @@ namespace GitAnalysis
 {
   public class GitSourceControlRepository : ISourceControlRepository
   {
-    public GitSourceControlRepository(IRepository repo, IReadOnlyCollection<Commit> commits)
+    public GitSourceControlRepository(IRepository repo, IEnumerable<Commit> commits)
     {
       Repo = repo;
-      Commits = commits;
+      Commits = commits.ToList();
       Path = repo.Info.Path.Replace("\\", "/");
     }
 
     private IRepository Repo { get; }
-    private IReadOnlyCollection<Commit> Commits { get; }
+    private IReadOnlyList<Commit> Commits { get; }
 
     public void CollectResults(ITreeVisitor visitor)
     {
-      var treeVisitor = visitor;
-      TreeNavigation.Traverse(Commits.First().Tree, Commits.First(), treeVisitor);
+      TreeNavigation.Traverse(Commits[0].Tree, Commits[0], visitor);
 
       var changesPerIndex = CalculateDiffsPerCommittIndex();
 
       for (var i = 1; i < Commits.Count; ++i)
       {
-        var currentCommit = Commits.ElementAt(i);
+        var currentCommit = Commits[i];
         AnalyzeChanges(
           changesPerIndex[i],
-          treeVisitor,
+          visitor,
           currentCommit
         );
       }
@@ -70,7 +70,7 @@ namespace GitAnalysis
             break;
           case ChangeKind.Added:
           {
-            var blob = Extract.BlobFrom(treeEntry, currentCommit);
+            var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
             blob.OnAdded(treeVisitor, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
 
             break;
@@ -82,19 +82,19 @@ namespace GitAnalysis
           }
           case ChangeKind.Modified:
           {
-            var blob = Extract.BlobFrom(treeEntry, currentCommit);
+            var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
             blob.OnModified(treeVisitor, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
             break;
           }
           case ChangeKind.Renamed:
           {
-            var blob = Extract.BlobFrom(treeEntry, currentCommit);
+            var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
             blob.OnRenamed(treeVisitor, treeEntry, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
             break;
           }
           case ChangeKind.Copied:
           {
-            var blob = Extract.BlobFrom(treeEntry, currentCommit);
+            var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
             blob.OnCopied(treeVisitor, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
             break;
           }
@@ -104,9 +104,9 @@ namespace GitAnalysis
       }
     }
 
-    public static GitSourceControlRepository FromBranch(string branchName, Repository repo)
+    public static GitSourceControlRepository FromBranch(string branchName, Repository repo, DateTime startDate)
     {
-      var commits = repo.Branches[branchName].Commits.Reverse().ToList();
+      var commits = repo.Branches[branchName].Commits.Reverse().SkipWhile(c => c.Author.When < startDate).ToList();
       var sourceControlRepository = new GitSourceControlRepository(repo, commits);
       return sourceControlRepository;
     }

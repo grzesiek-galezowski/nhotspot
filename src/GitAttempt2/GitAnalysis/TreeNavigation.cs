@@ -14,23 +14,17 @@ namespace GitAnalysis
         {
           case TreeEntryTargetType.Blob:
           {
-            var blob = (Blob) treeEntry.Target;
-            if (!blob.IsBinary)
-            {
-              string fileText = blob.GetContentText();
-              visitor.OnBlob(ChangeFactory.CreateChange(treeEntry.Path, fileText, commit.Author.When, commit.Message, commit.Sha));
-            }
-
+            var blob = Extract.BlobFrom(commit, treeEntry.Path);
+            blob.OnAdded(visitor, treeEntry.Path, commit.Author.When, commit.Message, commit.Sha);
             break;
           }
-
           case TreeEntryTargetType.Tree:
             Traverse(treeEntry, visitor, commit);
             break;
           case TreeEntryTargetType.GitLink:
-            throw new ArgumentException(treeEntry.Path);
+            break;
           default:
-            throw new ArgumentOutOfRangeException();
+            throw new InvalidOperationException(treeEntry.Path);
         }
       }
 

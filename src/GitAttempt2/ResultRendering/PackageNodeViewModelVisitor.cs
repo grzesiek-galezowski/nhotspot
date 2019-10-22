@@ -36,9 +36,9 @@ namespace ResultRendering
       _currentTreeNode = _currentTreeNode.Parent;
     }
 
-    public void Visit(IFileChangeLog fileChangeLog)
+    public void Visit(IFileHistory fileHistory)
     {
-      _currentTreeNode.Children.Add(new PackageTreeNodeViewModel(fileChangeLog.HotSpotRating(), fileChangeLog.PathOfCurrentVersion()));
+      _currentTreeNode.Children.Add(new PackageTreeNodeViewModel(fileHistory.HotSpotRating(), fileHistory.PathOfCurrentVersion()));
     }
   }
 }

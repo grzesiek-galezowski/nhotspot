@@ -6,13 +6,13 @@ namespace GitAnalysis
 {
   public static class Extract
   {
-    public static IBlob BlobFrom(TreeEntryChanges treeEntry, Commit currentCommit)
+    public static IBlob BlobFrom(Commit currentCommit, string treeEntryPath)
     {
-      if (currentCommit[treeEntry.Path].TargetType == TreeEntryTargetType.GitLink)
+      if (currentCommit[treeEntryPath].TargetType == TreeEntryTargetType.GitLink)
       {
         return new UnsupportedBlob();
       }
-      var blob = (Blob)currentCommit[treeEntry.Path].Target;
+      var blob = (Blob)currentCommit[treeEntryPath].Target;
       if (blob.IsBinary)
       {
         return new SupportedBlob(string.Empty);
