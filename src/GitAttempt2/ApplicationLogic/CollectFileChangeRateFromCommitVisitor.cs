@@ -104,7 +104,9 @@ namespace ApplicationLogic
         ".properties", 
         ".settings", 
         ".gitattributes", 
-        ".csproj", ".sln", 
+        ".csproj", 
+        ".fsproj", 
+        ".sln", 
         ".transcript", ".bat", 
         ".dll", ".exe", ".lock",
         ".html", ".htm", ".css"

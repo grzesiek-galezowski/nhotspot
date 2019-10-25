@@ -69,14 +69,8 @@ namespace ApplicationLogic
 
         public Coupling CalculateCouplingTo(IFileHistory otherHistory)
         {
-          var couplingCount = 0;
-          foreach (var change in _entries)
-          {
-            if (otherHistory.WasChangedIn(change.Id))
-            {
-              couplingCount++;
-            }
-          }
+          //performance-critical fragment
+          var couplingCount = ChangeIds().Intersect(otherHistory.ChangeIds()).Count();
           return new Coupling(PathOfCurrentVersion(), otherHistory.PathOfCurrentVersion(), couplingCount);
         }
 
