@@ -60,7 +60,7 @@ namespace ApplicationLogic
       return (2 * changeCountRank + complexityRank) / 2d;
     }
 
-    public static IEnumerable<Coupling> CalculateCoupling(IEnumerable<IFileHistory> fileHistories)
+    public static IEnumerable<Coupling> CalculateCoupling(IEnumerable<IFileHistory> fileHistories, int totalCommits)
     {
       var couplingMetric = new List<Coupling>();
       Console.WriteLine("Calculating coupling");
@@ -72,7 +72,7 @@ namespace ApplicationLogic
         i++;
         foreach (var otherHistory in fileHistories.Skip(i))
         {
-          var coupling = history.CalculateCouplingTo(otherHistory);
+          var coupling = history.CalculateCouplingTo(otherHistory, totalCommits);
           if (coupling.CouplingCount != 0)
           {
             couplingMetric.Add(coupling);

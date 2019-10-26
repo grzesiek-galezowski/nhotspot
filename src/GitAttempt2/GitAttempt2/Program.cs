@@ -24,10 +24,6 @@ namespace NHotSpot.Console
       */
       Stopwatch sw = new Stopwatch();
       sw.Start();
-      //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\kafka", "trunk");
-      //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\NSubstitute\", "master");
-      //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\nscan\", "master");
-      //var analysisResult = GitRepoAnalysis.Analyze(@"c:\Users\ftw637\source\repos\vp-bots\", "master");
 
       var analysisConfig = new AnalysisConfig()
       {
@@ -39,6 +35,7 @@ namespace NHotSpot.Console
         //RepoPath = @"c:\Users\ftw637\source\repos\vp-bots\"
         //RepoPath = @"C:\Users\ftw637\Documents\GitHub\any",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\any",
+        RepoPath = @"C:\Users\grzes\Documents\GitHub\nscan",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\AutoFixtureGenerator\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\TrainingExamples\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\tdd-ebook\",
@@ -50,7 +47,7 @@ namespace NHotSpot.Console
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\NSubstitute\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\kafka\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet",
-        RepoPath = @"C:\Users\grzes\Documents\GitHub\nunit",
+        //RepoPath = @"C:\Users\grzes\Documents\GitHub\nunit",
         MinChangeCount = 1
       };
       var analysisResult = GitRepoAnalysis.Analyze(

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ApplicationLogic;
@@ -17,6 +15,7 @@ namespace GitAnalysis
       Repo = repo;
       Commits = commits.ToList();
       Path = repo.Info.Path.Replace("\\", "/");
+      TotalCommits = Commits.Count;
     }
 
     private IRepository Repo { get; }
@@ -26,7 +25,7 @@ namespace GitAnalysis
     {
       TreeNavigation.Traverse(Commits[0].Tree, Commits[0], visitor);
 
-      var changesPerIndex = CalculateDiffsPerCommittIndex();
+      var changesPerIndex = CalculateDiffsPerCommitIndex();
 
       for (var i = 1; i < Commits.Count; ++i)
       {
@@ -39,7 +38,7 @@ namespace GitAnalysis
       }
     }
 
-    private ConcurrentDictionary<int, TreeChanges> CalculateDiffsPerCommittIndex()
+    private ConcurrentDictionary<int, TreeChanges> CalculateDiffsPerCommitIndex()
     {
       ConcurrentDictionary<int, TreeChanges> changesPerIndex = new ConcurrentDictionary<int, TreeChanges>();
       Parallel.For(1, Commits.Count, i =>
@@ -52,6 +51,7 @@ namespace GitAnalysis
     }
 
     public string Path { get; }
+    public int TotalCommits { get; }
 
     private static void AnalyzeChanges( //todo make this instance method with commit as a field
       TreeChanges treeChanges,

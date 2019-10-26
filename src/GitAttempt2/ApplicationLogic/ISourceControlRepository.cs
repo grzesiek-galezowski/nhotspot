@@ -4,5 +4,6 @@ namespace ApplicationLogic
   {
     void CollectResults(ITreeVisitor visitor);
     string Path { get; }
+    int TotalCommits { get; }
   }
 }

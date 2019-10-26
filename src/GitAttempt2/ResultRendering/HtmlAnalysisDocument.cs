@@ -65,7 +65,7 @@ namespace ResultRendering
     private void AddCouplingRanking(IEnumerable<Coupling> couplingMetrics, ICollection<CouplingViewModel> couplings)
     {
       foreach (var couplingViewModel in 
-        couplingMetrics.Select(c => new CouplingViewModel(c.Left, c.Right, c.CouplingCount, c.PercentageOfLeftCommits, c.PercentageOfRightCommits)))
+        couplingMetrics.Select(c => new CouplingViewModel(c.Left, c.Right, c.CouplingCount, c.PercentageOfLeftCommits, c.PercentageOfTotalCommits)))
       {
         couplings.Add(couplingViewModel);
       }

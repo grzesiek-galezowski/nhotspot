@@ -20,11 +20,14 @@ namespace ApplicationLogic
       sourceControlRepository.CollectResults(visitor);
 
       var trunkFiles = visitor.Result();
-      var analysisResult = CreateAnalysisResult(trunkFiles, sourceControlRepository.Path);
+      var analysisResult = CreateAnalysisResult(trunkFiles, sourceControlRepository.Path, sourceControlRepository.TotalCommits);
       return analysisResult;
     }
 
-    private static AnalysisResult CreateAnalysisResult(IReadOnlyList<FileHistory> trunkFiles, string repositoryPath)
+    private static AnalysisResult CreateAnalysisResult(
+      IReadOnlyList<FileHistory> trunkFiles, 
+      string repositoryPath,
+      int totalCommits)
     {
       Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
       Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
@@ -36,7 +39,7 @@ namespace ApplicationLogic
         Rankings.GatherFlatPackageMetricsByPath(trunkFiles), 
         repositoryPath,
         packageChangeLogNode, 
-        ComplexityMetrics.CalculateCoupling(trunkFiles));
+        ComplexityMetrics.CalculateCoupling(trunkFiles, totalCommits));
     }
 
     private static IOrderedEnumerable<IFileHistory> OrderByChangesCount(IEnumerable<IFileHistory> trunkFiles)

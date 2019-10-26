@@ -159,5 +159,6 @@ namespace ApplicationLogicSpecification
     }
 
     public string Path { get; }
+    public int TotalCommits { get; } = 0;
   }
 }

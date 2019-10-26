@@ -6,15 +6,12 @@ namespace ApplicationLogic
 {
   public interface IFileHistory : IChangeLog
   {
-    DateTimeOffset CreationDate();
     DateTimeOffset LastChangeDate();
     TimeSpan ActivityPeriod();
-    TimeSpan TimeSinceLastChange();
     void AssignChangeCountRank(int rank);
     void AssignComplexityRank(int rank);
     IEnumerable<string> ChangeIds();
-    Coupling CalculateCouplingTo(IFileHistory otherHistory);
-    bool WasChangedIn(string changeId);
+    Coupling CalculateCouplingTo(IFileHistory otherHistory, int totalCommits);
   }
 
   public class FileHistory : IFileHistory
@@ -67,7 +64,7 @@ namespace ApplicationLogic
           return System.IO.Path.GetDirectoryName(PathOfCurrentVersion());
         }
 
-        public Coupling CalculateCouplingTo(IFileHistory otherHistory)
+        public Coupling CalculateCouplingTo(IFileHistory otherHistory, int totalCommits)
         {
           //performance-critical fragment
           var couplingCount = ChangeIds().Intersect(otherHistory.ChangeIds()).Count();
@@ -76,13 +73,9 @@ namespace ApplicationLogic
             otherHistory.PathOfCurrentVersion(), 
             couplingCount,
             (couplingCount * 100)/ChangesCount(),
-            (couplingCount * 100)/otherHistory.ChangesCount()
+            (couplingCount * 100)/otherHistory.ChangesCount(),
+            (couplingCount * 100)/totalCommits
             );
-        }
-
-        public bool WasChangedIn(string changeId)
-        {
-          return _entries.Select(e => e.Id).Contains(changeId);
         }
 
         public IEnumerable<Coupling> Filter(IEnumerable<Coupling> couplingMetrics)
@@ -100,7 +93,8 @@ namespace ApplicationLogic
             c.Left, 
             c.CouplingCount, 
             c.PercentageOfRightCommits, 
-            c.PercentageOfLeftCommits);
+            c.PercentageOfLeftCommits,
+            c.PercentageOfTotalCommits);
         }
   }
 }

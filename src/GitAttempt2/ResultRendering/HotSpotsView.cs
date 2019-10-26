@@ -60,16 +60,22 @@ namespace ResultRendering
 
     private static IEnumerable<IHtmlContent> CouplingRows(HotSpotViewModel hotSpot, int count)
     {
-      return Tag("tr", Tag("th", Text("Filename")), Tag("th", Text("Change Coupling"), Tag("th", Text("% Total File Changes"))))
-        .Concat(hotSpot.ChangeCoupling.Take(count).Select(change =>
+      return Tag("tr", 
+          Tag("th", Text("Filename")), 
+          Tag("th", Text("Change Coupling")), 
+          Tag("th", Text("% Total File Changes")),
+          Tag("th", Text("% Total Changes"))
+          ).Concat(hotSpot.ChangeCoupling.Take(count).Select(change =>
         Tr(
           Td(Attribute("style", "border-bottom: 1pt solid gray;"),
             Text(change.Right)),
           Td(Attribute("style", "border-bottom: 1pt solid gray;"),
             Text(change.CouplingCount),
           Td(Attribute("style", "border-bottom: 1pt solid gray;"),
-            Text(change.PercentageOfLeftCommits + "%"))
-        ))));
+            Text(change.PercentageOfLeftCommits + "%"),
+          Td(Attribute("style", "border-bottom: 1pt solid gray;"),
+            Text(change.PercentageOfTotalCommits + "%")
+            ))))));
     }
 
   }
