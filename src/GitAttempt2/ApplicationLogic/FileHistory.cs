@@ -71,7 +71,13 @@ namespace ApplicationLogic
         {
           //performance-critical fragment
           var couplingCount = ChangeIds().Intersect(otherHistory.ChangeIds()).Count();
-          return new Coupling(PathOfCurrentVersion(), otherHistory.PathOfCurrentVersion(), couplingCount);
+          return new Coupling(
+            PathOfCurrentVersion(), 
+            otherHistory.PathOfCurrentVersion(), 
+            couplingCount,
+            (couplingCount * 100)/ChangesCount(),
+            (couplingCount * 100)/otherHistory.ChangesCount()
+            );
         }
 
         public bool WasChangedIn(string changeId)
@@ -83,8 +89,18 @@ namespace ApplicationLogic
         {
           var couplingsLeft = couplingMetrics.Where(c => c.Left == PathOfCurrentVersion());
           var couplingsRight = couplingMetrics.Where(c => c.Right == PathOfCurrentVersion())
-            .Select(c => new Coupling(c.Right, c.Left, c.CouplingCount));
-          return couplingsLeft.Concat(couplingsRight);
+            .Select(CouplingWithSwitchedSides());
+          return couplingsLeft.Concat(couplingsRight).OrderByDescending(c => c.CouplingCount);
+        }
+
+        private static Func<Coupling, Coupling> CouplingWithSwitchedSides()
+        {
+          return c => new Coupling(
+            c.Right, 
+            c.Left, 
+            c.CouplingCount, 
+            c.PercentageOfRightCommits, 
+            c.PercentageOfLeftCommits);
         }
   }
 }

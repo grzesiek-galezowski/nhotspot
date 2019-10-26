@@ -37,7 +37,8 @@ namespace ResultRendering
         ),
         Tag("details", 
             Tag("summary", Text($"Coupling (Top {analysisConfig.MaxCouplingsPerHotSpot})")), 
-            Tag("table", CouplingRows(hotSpot, analysisConfig.MaxCouplingsPerHotSpot))
+            Tag("table", 
+              CouplingRows(hotSpot, analysisConfig.MaxCouplingsPerHotSpot))
         ),
         Tag("script", Text(JavaScriptCanvas(hotSpot, chartView)))
       );
@@ -59,11 +60,16 @@ namespace ResultRendering
 
     private static IEnumerable<IHtmlContent> CouplingRows(HotSpotViewModel hotSpot, int count)
     {
-      return hotSpot.ChangeCoupling.Take(count).Select(change =>
-        Tr(Td(Attribute("style", "border-bottom: 1pt solid gray;"),
+      return Tag("tr", Tag("th", Text("Filename")), Tag("th", Text("Change Coupling"), Tag("th", Text("% Total File Changes"))))
+        .Concat(hotSpot.ChangeCoupling.Take(count).Select(change =>
+        Tr(
+          Td(Attribute("style", "border-bottom: 1pt solid gray;"),
+            Text(change.Right)),
+          Td(Attribute("style", "border-bottom: 1pt solid gray;"),
             Text(change.CouplingCount),
           Td(Attribute("style", "border-bottom: 1pt solid gray;"),
-            Text(change.Right)))));
+            Text(change.PercentageOfLeftCommits + "%"))
+        ))));
     }
 
   }

@@ -23,7 +23,7 @@ namespace ResultRendering
       AddCouplingRanking(analysisResults.CouplingMetrics(), viewModel.Couplings);
       AddChartDataTo(viewModel.HotSpots, analysisResults.EntriesByHotSpotRating(), analysisResults.CouplingMetrics());
       var rankingTasks = RankingTasks(analysisResults);
-      var getTreeTask = GetTree(analysisResults.PackageTree(), viewModel);
+      var getTreeTask = GetTree(analysisResults.PackageTree());
 
       viewModel.Rankings = Task.WhenAll(rankingTasks).Result;
       viewModel.PackageTree = getTreeTask.Result;
@@ -64,13 +64,14 @@ namespace ResultRendering
 
     private void AddCouplingRanking(IEnumerable<Coupling> couplingMetrics, ICollection<CouplingViewModel> couplings)
     {
-      foreach (var couplingViewModel in couplingMetrics.Select(c => new CouplingViewModel(c.Left, c.Right, c.CouplingCount)))
+      foreach (var couplingViewModel in 
+        couplingMetrics.Select(c => new CouplingViewModel(c.Left, c.Right, c.CouplingCount, c.PercentageOfLeftCommits, c.PercentageOfRightCommits)))
       {
         couplings.Add(couplingViewModel);
       }
     }
 
-    private Task<PackageTreeNodeViewModel> GetTree(PackageChangeLogNode packageTree, ViewModel viewModel)
+    private Task<PackageTreeNodeViewModel> GetTree(PackageChangeLogNode packageTree)
     {
       return Task.Run(() =>
       {
@@ -106,12 +107,12 @@ namespace ResultRendering
         IEnumerable<FileHistory> entries, 
         IEnumerable<Coupling> couplingMetrics)
     {
-      foreach (var (log, index) in entries.Select((log, i) => (log, i)))
+      foreach (var (fileHistory, index) in entries.Select((log, i) => (log, i)))
       { 
         var singleFileChart = HtmlChartSingleResultTemplate.FillWith(
           index + 1, 
-          log, 
-          log.Filter(couplingMetrics));
+          fileHistory, 
+          fileHistory.Filter(couplingMetrics));
         charts.Add(singleFileChart);
       }
     }

@@ -28,7 +28,8 @@ namespace ResultRendering
         Data = Data(fileHistory),
         Labels = Labels(fileHistory),
         Changes = Changes(fileHistory),
-        ChangeCoupling = fileCouplings.Select(c => new CouplingViewModel(c.Left, c.Right, c.CouplingCount))
+        ChangeCoupling = fileCouplings.Select(c => 
+          new CouplingViewModel(c.Left, c.Right, c.CouplingCount, c.PercentageOfLeftCommits, c.PercentageOfRightCommits))
       };
 
       return hotSpotViewModel;

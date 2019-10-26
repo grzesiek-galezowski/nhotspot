@@ -42,7 +42,7 @@ namespace NHotSpot.Console
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\AutoFixtureGenerator\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\TrainingExamples\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\tdd-ebook\",
-        RepoPath = @"C:\Users\grzes\Documents\GitHub\AutoFixture\",
+        //RepoPath = @"C:\Users\grzes\Documents\GitHub\AutoFixture\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\simple-nlp\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\Functional.Maybe\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\nodatime\",
@@ -50,7 +50,7 @@ namespace NHotSpot.Console
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\NSubstitute\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\kafka\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\nunit",
+        RepoPath = @"C:\Users\grzes\Documents\GitHub\nunit",
         MinChangeCount = 1
       };
       var analysisResult = GitRepoAnalysis.Analyze(
