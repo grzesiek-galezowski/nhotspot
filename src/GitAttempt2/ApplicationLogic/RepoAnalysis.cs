@@ -32,6 +32,8 @@ namespace ApplicationLogic
       Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
       Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
 
+      //bug convert to immutable type
+
       //bug remove
       var packageHistoryNode = Rankings.GatherPackageTreeMetricsByPath(trunkFiles);
 
@@ -42,12 +44,12 @@ namespace ApplicationLogic
         ComplexityMetrics.CalculateCoupling(trunkFiles, totalCommits));
     }
 
-    private static IOrderedEnumerable<IFileHistory> OrderByChangesCount(IEnumerable<IFileHistory> trunkFiles)
+    private static IOrderedEnumerable<IFileHistoryWithAssignableRank> OrderByChangesCount(IEnumerable<IFileHistoryWithAssignableRank> trunkFiles)
     {
       return trunkFiles.ToList().OrderBy(h => h.ChangesCount());
     }
 
-    private static IOrderedEnumerable<IFileHistory> OrderByComplexity(IEnumerable<IFileHistory> trunkFiles)
+    private static IOrderedEnumerable<IFileHistoryWithAssignableRank> OrderByComplexity(IEnumerable<IFileHistoryWithAssignableRank> trunkFiles)
     {
       return trunkFiles.ToList().OrderBy(h => h.ComplexityOfCurrentVersion());
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AtmaFileSystem;
 
 namespace ApplicationLogic
 {
@@ -8,10 +9,10 @@ namespace ApplicationLogic
   {
     void OnBlob(Change change);
     void OnModified(Change change);
-    void OnRenamed(string oldPath, Change change);
+    void OnRenamed(RelativeFilePath oldPath, Change change);
     void OnCopied(Change change);
     void OnAdded(Change change);
-    void OnRemoved(string removedEntryPath);
+    void OnRemoved(RelativeFilePath removedEntryPath);
   }
 
   public class CollectFileChangeRateFromCommitVisitor : ITreeVisitor
@@ -21,12 +22,12 @@ namespace ApplicationLogic
 
     public CollectFileChangeRateFromCommitVisitor(IClock clock, int minChangeCount)
     {
-      AnalysisMetadata = new Dictionary<string, FileHistory>();
+      AnalysisMetadata = new Dictionary<RelativeFilePath, FileHistory>();
       _clock = clock;
       _minChangeCount = minChangeCount;
     }
 
-    private Dictionary<string, FileHistory> AnalysisMetadata { get; }
+    private Dictionary<RelativeFilePath, FileHistory> AnalysisMetadata { get; }
 
     public void OnBlob(Change change)
     {
@@ -47,7 +48,7 @@ namespace ApplicationLogic
       AnalysisMetadata[change.Path].AddDataFrom(change);
     }
 
-    public void OnRenamed(string oldPath, Change change)
+    public void OnRenamed(RelativeFilePath oldPath, Change change)
     {
       AnalysisMetadata[change.Path] = AnalysisMetadata[oldPath];
       AnalysisMetadata.Remove(oldPath);
@@ -66,7 +67,7 @@ namespace ApplicationLogic
       AddChange(change);
     }
 
-    public void OnRemoved(string removedEntryPath)
+    public void OnRemoved(RelativeFilePath removedEntryPath)
     {
       AnalysisMetadata.Remove(removedEntryPath);
     }
@@ -79,7 +80,7 @@ namespace ApplicationLogic
         .Select(x => x.Value).ToList();
     }
 
-    private static bool IsNotIgnoredFileType(KeyValuePair<string, FileHistory> x)
+    private static bool IsNotIgnoredFileType(KeyValuePair<RelativeFilePath, FileHistory> x)
     {
       var ignoredFileTypes = new[] //bug move this to config
       {
@@ -111,7 +112,7 @@ namespace ApplicationLogic
         ".dll", ".exe", ".lock",
         ".html", ".htm", ".css"
       };
-      return ignoredFileTypes.All(fileType => !x.Key.EndsWith(fileType, StringComparison.InvariantCultureIgnoreCase));
+      return ignoredFileTypes.All(fileType => !x.Key.ToString().EndsWith(fileType, StringComparison.InvariantCultureIgnoreCase));
     }
   }
 }

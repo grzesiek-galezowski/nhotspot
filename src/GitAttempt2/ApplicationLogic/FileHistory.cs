@@ -10,13 +10,18 @@ namespace ApplicationLogic
   {
     DateTimeOffset LastChangeDate();
     TimeSpan ActivityPeriod();
-    void AssignChangeCountRank(int rank);
-    void AssignComplexityRank(int rank);
     IEnumerable<string> ChangeIds();
     Coupling CalculateCouplingTo(IFileHistory otherHistory, int totalCommits);
   }
 
-  public class FileHistory : IFileHistory
+  public interface IFileHistoryWithAssignableRank : IFileHistory
+  {
+    void AssignChangeCountRank(int rank);
+    void AssignComplexityRank(int rank);
+  }
+
+
+  public class FileHistory : IFileHistoryWithAssignableRank
   {
         private readonly List<Change> _entries = new List<Change>();
         private int _complexityRank = -1; //bug handle another way
@@ -35,7 +40,7 @@ namespace ApplicationLogic
             _entries.Add(change);
         }
 
-        public RelativeFilePath PathOfCurrentVersion() => RelativeFilePath.Value(Entries.Last().Path);
+        public RelativeFilePath PathOfCurrentVersion() => Entries.Last().Path;
         public int ChangesCount() => Entries.Count;
         public double ComplexityOfCurrentVersion() => Entries.Last().Complexity;
         public double HotSpotRating() => ComplexityMetrics.CalculateHotSpotRating(_complexityRank, _changeCountRank);
@@ -99,4 +104,5 @@ namespace ApplicationLogic
             c.PercentageOfTotalCommits);
         }
   }
+
 }

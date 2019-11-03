@@ -1,17 +1,18 @@
 ﻿using System;
+using AtmaFileSystem;
 
 namespace ApplicationLogic
 {
     public sealed class Change
     {
-        public string Path { get; }
+        public RelativeFilePath Path { get; }
         public DateTimeOffset ChangeDate { get; }
         public string Text { get; }
         public double Complexity { get; }
         public string Id { get; }
 
         public Change(
-          string path, 
+          RelativeFilePath path, 
           string text, 
           double complexity,
           DateTimeOffset changeDate, 

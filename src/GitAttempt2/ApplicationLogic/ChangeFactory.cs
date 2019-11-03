@@ -1,4 +1,5 @@
 using System;
+using static AtmaFileSystem.AtmaFileSystemPaths;
 
 namespace ApplicationLogic
 {
@@ -8,7 +9,7 @@ namespace ApplicationLogic
       string id)
     {
       return new Change(
-        path, 
+        RelativeFilePath(path), 
         fileText, ComplexityMetrics.CalculateComplexityFor(fileText), changeDate, changeComment, id);
     }
   }

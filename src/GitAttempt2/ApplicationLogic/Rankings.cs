@@ -63,27 +63,26 @@ namespace ApplicationLogic
 
     public static Dictionary<RelativeDirectoryPath, IFlatPackageHistory> GatherFlatPackageHistoriesByPath(IEnumerable<FileHistory> fileChangeLogs)
     {
-      var packageChangeLogsByPath = new Dictionary<RelativeDirectoryPath, IFlatPackageHistory>();
+      var packageHistoriesByPath = new Dictionary<RelativeDirectoryPath, IFlatPackageHistory>();
       foreach (var fileHistory in fileChangeLogs)
       {
-        //todo split variables
         var packagePath = fileHistory.LatestPackagePath().Select(p => ArtificialRoot + p).OrElse(ArtificialRoot);
 
-        EnsurePathIsIn(packageChangeLogsByPath, packagePath);
-        packageChangeLogsByPath[packagePath].Add(fileHistory);
+        EnsurePathIsIn(packageHistoriesByPath, packagePath);
+        packageHistoriesByPath[packagePath].Add(fileHistory);
 
         var packagePath2 = packagePath.ToMaybe();
         do
         {
-          EnsurePathIsIn(packageChangeLogsByPath, packagePath2.Value);
+          EnsurePathIsIn(packageHistoriesByPath, packagePath2.Value);
           packagePath2 = packagePath2.Value.ParentDirectory();
         } while (packagePath2.HasValue);
       }
 
-      return packageChangeLogsByPath;
+      return packageHistoriesByPath;
     }
 
-    private static void EnsurePathIsIn(Dictionary<RelativeDirectoryPath, IFlatPackageHistory> packageChangeLogsByPath, RelativeDirectoryPath packagePath)
+    private static void EnsurePathIsIn(IDictionary<RelativeDirectoryPath, IFlatPackageHistory> packageChangeLogsByPath, RelativeDirectoryPath packagePath)
     {
       if (!packageChangeLogsByPath.ContainsKey(packagePath))
       {
@@ -110,18 +109,18 @@ namespace ApplicationLogic
     }
 
 
-    public static void UpdateChangeCountRankingBasedOnOrderOf(IEnumerable<IFileHistory> entriesToRank)
+    public static void UpdateChangeCountRankingBasedOnOrderOf(IEnumerable<IFileHistoryWithAssignableRank> entriesToRank)
     {
       entriesToRank
-        .Select(WithIndex<IFileHistory>())
+        .Select(WithIndex<IFileHistoryWithAssignableRank>())
         .ToList().ForEach(
           tuple => tuple.entry.AssignChangeCountRank(tuple.index));
     }
 
-    public static void UpdateComplexityRankingBasedOnOrderOf(IEnumerable<IFileHistory> entriesToRank)
+    public static void UpdateComplexityRankingBasedOnOrderOf(IEnumerable<IFileHistoryWithAssignableRank> entriesToRank)
     {
       entriesToRank
-        .Select(WithIndex<IFileHistory>())
+        .Select(WithIndex<IFileHistoryWithAssignableRank>())
         .ToList().ForEach(
           tuple => tuple.entry.AssignComplexityRank(tuple.index));
     }
