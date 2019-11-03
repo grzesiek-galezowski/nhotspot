@@ -2,35 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AtmaFileSystem;
 
 namespace ApplicationLogic
 {
   public class AnalysisResult
   {
-    public string Path { get; }
-
-    public PackageChangeLogNode PackageTree()
-    {
-      return _packageChangeLogNode;
-    }
-
     private readonly IEnumerable<FileHistory> _changeLogs;
-
-    private readonly Dictionary<string, IFlatPackageChangeLog> _packageChangeLogsByPath;
-    private readonly PackageChangeLogNode _packageChangeLogNode;
+    private readonly Dictionary<RelativeDirectoryPath, IFlatPackageHistory> _packageHistoriesByPath;
+    private readonly PackageHistoryNode _packageHistoryNode;
     private readonly IEnumerable<Coupling> _changeCouplings;
 
     public AnalysisResult(IEnumerable<FileHistory> changeLogs,
-      Dictionary<string, IFlatPackageChangeLog> packageMetricsByPath,
-      string normalizedPath, 
-      PackageChangeLogNode packageChangeLogNode, 
+      Dictionary<RelativeDirectoryPath, IFlatPackageHistory> packageHistoriesByPath,
+      string normalizedPathToRepository, 
+      PackageHistoryNode packageHistoryNode, 
       IEnumerable<Coupling> changeCouplings)
     {
-      Path = normalizedPath;
+      PathToRepository = normalizedPathToRepository;
       _changeLogs = changeLogs;
-      _packageChangeLogsByPath = packageMetricsByPath;
-      _packageChangeLogNode = packageChangeLogNode;
+      _packageHistoriesByPath = packageHistoriesByPath;
+      _packageHistoryNode = packageHistoryNode;
       _changeCouplings = changeCouplings;
+    }
+
+    public string PathToRepository { get; }
+
+    public PackageHistoryNode PackageTree()
+    {
+      return _packageHistoryNode;
     }
 
     public IEnumerable<Coupling> CouplingMetrics()
@@ -77,9 +77,9 @@ namespace ApplicationLogic
       return EntriesFromMostRecentlyChanged().Reverse();
     }
 
-    public IEnumerable<IFlatPackageChangeLog> PackagesByDiminishingHotSpotRating()
+    public IEnumerable<IFlatPackageHistory> PackagesByDiminishingHotSpotRating()
     {
-      return _packageChangeLogsByPath.Select(kv => kv.Value).OrderByDescending(cl => cl.HotSpotRating());
+      return _packageHistoriesByPath.Select(kv => kv.Value).OrderByDescending(cl => cl.HotSpotRating());
     }
 
     

@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AtmaFileSystem;
 
 namespace ApplicationLogic
 {
-  public class FlatPackageChangeLog : IFlatPackageChangeLog
+  public class FlatPackageHistory : IFlatPackageHistory
   {
-    private readonly string _packagePath;
+    private readonly RelativeDirectoryPath _packagePath;
     private readonly List<IFileHistory> _files = new List<IFileHistory>();
 
-    public FlatPackageChangeLog(string packagePath)
+    public FlatPackageHistory(RelativeDirectoryPath packagePath)
     {
       _packagePath = packagePath;
     }
@@ -38,14 +39,14 @@ namespace ApplicationLogic
       return _files.Sum(f => f.HotSpotRating());
     }
 
-    public string PathOfCurrentVersion()
+    public RelativeDirectoryPath PathOfCurrentVersion()
     {
       return _packagePath;
     }
 
-    public string Name()
+    public DirectoryName Name()
     {
-      return Path.GetFileName(_packagePath);
+      return _packagePath.DirectoryName();
     }
 
     public override string ToString()

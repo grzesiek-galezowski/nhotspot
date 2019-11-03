@@ -2,8 +2,8 @@ namespace ApplicationLogic
 {
   public interface INodeVisitor
   {
-    void BeginVisiting(IFlatPackageChangeLog value);
-    void EndVisiting(IFlatPackageChangeLog value);
+    void BeginVisiting(IFlatPackageHistory value);
+    void EndVisiting(IFlatPackageHistory value);
     void Visit(IFileHistory fileHistory);
   }
 }

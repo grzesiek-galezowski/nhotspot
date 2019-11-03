@@ -1,6 +1,6 @@
 namespace ApplicationLogic
 {
-  public interface IChangeLog : IItemWithPath
+  public interface IItemHistory<T> : IItemWithPath<T>
   {
     double HotSpotRating();
     int ChangesCount();

@@ -2,82 +2,107 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AtmaFileSystem;
 using Functional.Maybe;
+using static AtmaFileSystem.AtmaFileSystemPaths;
 
 namespace ApplicationLogic
 {
+  public class PackagesTree
+  {
+    private Dictionary<RelativeDirectoryPath, PackageHistoryNode> NodeCache { get; } =
+      new Dictionary<RelativeDirectoryPath, PackageHistoryNode>();
+
+    private void Set(RelativeDirectoryPath path, PackageHistoryNode newNode)
+    {
+      NodeCache[path] = newNode;
+    }
+
+    private void BindWithParent(RelativeDirectoryPath path, PackageHistoryNode newNode)
+    {
+      while (true)
+      {
+        var parentPath = path.ParentDirectory();
+        if (parentPath.HasValue)
+        {
+          if (NodeCache.ContainsKey(parentPath.Value))
+          {
+            NodeCache[parentPath.Value].AddChild(newNode);
+            break;
+          }
+
+          path = parentPath.Value;
+        }
+        else
+        {
+          break;
+        }
+      }
+    }
+
+    public void Add(RelativeDirectoryPath path, PackageHistoryNode newNode)
+    {
+      Set(path, newNode);
+      BindWithParent(path, newNode);
+    }
+
+    public PackageHistoryNode Root()
+    {
+      return NodeCache.Values.Single(n => !n.HasParent());
+    }
+  }
+
   public static class Rankings
   {
-    public static Dictionary<string, IFlatPackageChangeLog> GatherFlatPackageMetricsByPath(IEnumerable<FileHistory> fileChangeLogs)
-    {
-      var packageChangeLogsByPath = new Dictionary<string, IFlatPackageChangeLog>();
-      foreach (var fileChangeLog in fileChangeLogs)
-      {
-        string packagePath = fileChangeLog.PackagePath();
-        EnsurePathIsIn(packageChangeLogsByPath, packagePath);
-        packageChangeLogsByPath[packagePath].Add(fileChangeLog);
+    private static readonly RelativeDirectoryPath ArtificialRoot;
 
+    static Rankings()
+    {
+      ArtificialRoot = RelativeDirectoryPath(".");
+    }
+
+    public static Dictionary<RelativeDirectoryPath, IFlatPackageHistory> GatherFlatPackageHistoriesByPath(IEnumerable<FileHistory> fileChangeLogs)
+    {
+      var packageChangeLogsByPath = new Dictionary<RelativeDirectoryPath, IFlatPackageHistory>();
+      foreach (var fileHistory in fileChangeLogs)
+      {
+        //todo split variables
+        var packagePath = fileHistory.LatestPackagePath().Select(p => ArtificialRoot + p).OrElse(ArtificialRoot);
+
+        EnsurePathIsIn(packageChangeLogsByPath, packagePath);
+        packageChangeLogsByPath[packagePath].Add(fileHistory);
+
+        var packagePath2 = packagePath.ToMaybe();
         do
         {
-          EnsurePathIsIn(packageChangeLogsByPath, packagePath);
-          packagePath = Path.GetDirectoryName(packagePath);
-        } while (packagePath != null);
+          EnsurePathIsIn(packageChangeLogsByPath, packagePath2.Value);
+          packagePath2 = packagePath2.Value.ParentDirectory();
+        } while (packagePath2.HasValue);
       }
 
       return packageChangeLogsByPath;
     }
 
-    private static void EnsurePathIsIn(Dictionary<string, IFlatPackageChangeLog> packageChangeLogsByPath, string packagePath)
+    private static void EnsurePathIsIn(Dictionary<RelativeDirectoryPath, IFlatPackageHistory> packageChangeLogsByPath, RelativeDirectoryPath packagePath)
     {
       if (!packageChangeLogsByPath.ContainsKey(packagePath))
       {
-        packageChangeLogsByPath[packagePath] = new FlatPackageChangeLog(packagePath);
+        packageChangeLogsByPath[packagePath] = new FlatPackageHistory(packagePath);
       }
     }
 
-    public static PackageChangeLogNode GatherPackageTreeMetricsByPath(IEnumerable<FileHistory> fileChangeLogs)
+    public static PackageHistoryNode GatherPackageTreeMetricsByPath(IEnumerable<FileHistory> fileChangeLogs)
     {
-      var nodes = new Dictionary<string, PackageChangeLogNode>();
-      var flatPackageMetricsByPath = GatherFlatPackageMetricsByPath(fileChangeLogs);
-      foreach (var packageChangeLogEntry in flatPackageMetricsByPath.ToList().OrderBy(kvp => kvp.Key))
+      var packagesTree = PackageHistoryNodeFactory.NewPackagesTree();
+      var flatPackageMetricsByPath = GatherFlatPackageHistoriesByPath(fileChangeLogs);
+      foreach (var (path, packageHistory) in flatPackageMetricsByPath.ToList().OrderBy(kvp => kvp.Key))
       {
-        var path = packageChangeLogEntry.Key;
-        var packageChangeLog = packageChangeLogEntry.Value;
-
-        var newNode = NewPackageNode(packageChangeLog);
-        nodes[path] = newNode;
-
-        AddToParent(nodes, newNode, path);
+        packagesTree.Add(path, PackageHistoryNodeFactory.NewPackageNode(packageHistory));
       }
 
-      return nodes.Values.Single(n => !n.HasParent());
+      return packagesTree.Root();
     }
 
-    private static PackageChangeLogNode NewPackageNode(IFlatPackageChangeLog packageChangeLog)
-    {
-        return new PackageChangeLogNode(
-            packageChangeLog, 
-            packageChangeLog.Files.Select(
-                f => new FileChangeLogNode(f)));
-    }
-
-
-    ///src/csharp
-    private static void AddToParent(Dictionary<string, PackageChangeLogNode> nodes, PackageChangeLogNode newNode, string path)
-    {
-      var parentPath = Path.GetDirectoryName(path).ToMaybe();
-      if (parentPath.HasValue)
-      {
-        if (nodes.ContainsKey(parentPath.Value))
-        {
-          nodes[parentPath.Value].AddChild(newNode);
-        }
-        else
-        {
-          AddToParent(nodes, newNode, parentPath.Value);
-        }
-      }
-    }
 
     private static Func<TEntry, int, (TEntry entry, int index)> WithIndex<TEntry>()
     {
@@ -103,18 +128,15 @@ namespace ApplicationLogic
 
   }
 
-  public class FileChangeLogNode
+  static class KvpExtensions
   {
-    private readonly IFileHistory _fileHistory;
-
-    public FileChangeLogNode(IFileHistory fileHistory)
+    public static void Deconstruct<TKey, TValue>(
+      this KeyValuePair<TKey, TValue> kvp,
+      out TKey key,
+      out TValue value)
     {
-      _fileHistory = fileHistory;
-    }
-
-    public void Accept(INodeVisitor visitor)
-    {
-      visitor.Visit(_fileHistory);
+      key = kvp.Key;
+      value = kvp.Value;
     }
   }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using ApplicationLogic;
+using AtmaFileSystem;
 using FluentAssertions;
 using NHotSpot.Console;
 using NSubstitute;
@@ -21,7 +22,8 @@ namespace ApplicationLogicSpecification
       var clock = Any.Instance<IClock>();
       var nodeVisitor = Substitute.For<INodeVisitor>();
 
-      var analysisResult = new RepoAnalysis(clock, 200).ExecuteOn(new MockSourceControlRepository("REPO", v =>
+      var analysisResult = new RepoAnalysis(clock, 200).ExecuteOn(
+        new MockSourceControlRepository("REPO", v =>
       {
         v.OnAdded(File("src/Readme.txt"));
         v.OnAdded(File("src/Csharp/Project1/lol.cs"));
@@ -46,10 +48,10 @@ namespace ApplicationLogicSpecification
       });
     }
 
-    private static IFlatPackageChangeLog Package(string expected)
+    private static IFlatPackageHistory Package(string expected)
     {
-      return Arg.Is<IFlatPackageChangeLog>(
-        log => log.PathOfCurrentVersion() == expected
+      return Arg.Is<IFlatPackageHistory>(
+        log => log.PathOfCurrentVersion() == AtmaFileSystemPaths.RelativeDirectoryPath(expected)
       //  ,log => log.ChangesCount().Should().Be(1) bug
       );
     }
@@ -81,7 +83,7 @@ namespace ApplicationLogicSpecification
         v.OnAdded(change1);
       }));
 
-      analysisResult.Path.Should().Be(repoPath);
+      analysisResult.PathToRepository.Should().Be(repoPath);
       analysisResult.EntriesByDiminishingActivityPeriod().Should().HaveCount(1);
       var fileChangeLog = (FileHistory)analysisResult.EntriesByDiminishingActivityPeriod().First();
       fileChangeLog.ActivityPeriod().Should().Be(TimeSpan.Zero);
@@ -94,8 +96,8 @@ namespace ApplicationLogicSpecification
       fileChangeLog.Entries.Should().HaveCount(1);
       fileChangeLog.Entries.Should().BeEquivalentTo(change1);
       fileChangeLog.Age().Should().Be(clock.Now() - changeDate1);
-      fileChangeLog.PathOfCurrentVersion().Should().Be(file1);
-      fileChangeLog.PackagePath().Should().Be(string.Empty);
+      fileChangeLog.PathOfCurrentVersion().Should().Be(RelativeFilePath.Value(file1));
+      fileChangeLog.LatestPackagePath().Should().Be(string.Empty);
     }
 
 

@@ -1,7 +1,9 @@
+using AtmaFileSystem;
+
 namespace ApplicationLogic
 {
-  public interface IItemWithPath
+  public interface IItemWithPath<T>
   {
-    string PathOfCurrentVersion();
+    T PathOfCurrentVersion();
   }
 }

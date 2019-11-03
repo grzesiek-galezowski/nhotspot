@@ -1,16 +1,18 @@
+using AtmaFileSystem;
+
 namespace ApplicationLogic
 {
   public class Coupling
   {
-    public string Left { get; }
-    public string Right { get; }
+    public RelativeFilePath Left { get; }
+    public RelativeFilePath Right { get; }
     public int CouplingCount { get; }
     public int PercentageOfLeftCommits { get; }
     public int PercentageOfRightCommits { get; }
     public int PercentageOfTotalCommits { get; }
 
-    public Coupling(string left,
-      string right,
+    public Coupling(RelativeFilePath left,
+      RelativeFilePath right,
       int couplingCount,
       int percentageOfLeftCommits,
       int percentageOfRightCommits, 

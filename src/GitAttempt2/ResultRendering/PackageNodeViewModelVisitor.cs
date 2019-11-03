@@ -13,11 +13,11 @@ namespace ResultRendering
       return _root;
     }
 
-    public void BeginVisiting(IFlatPackageChangeLog value)
+    public void BeginVisiting(IFlatPackageHistory value)
     {
       var packageNodeViewModel = new PackageTreeNodeViewModel(
           value.HotSpotRating(), 
-          value.PathOfCurrentVersion());
+          value.PathOfCurrentVersion().ToString());
       if (_currentTreeNode != null)
       {
         _currentTreeNode.Children.Add(packageNodeViewModel);
@@ -31,14 +31,14 @@ namespace ResultRendering
       _currentTreeNode = packageNodeViewModel;
     }
 
-    public void EndVisiting(IFlatPackageChangeLog value)
+    public void EndVisiting(IFlatPackageHistory value)
     {
       _currentTreeNode = _currentTreeNode.Parent;
     }
 
     public void Visit(IFileHistory fileHistory)
     {
-      _currentTreeNode.Children.Add(new PackageTreeNodeViewModel(fileHistory.HotSpotRating(), fileHistory.PathOfCurrentVersion()));
+      _currentTreeNode.Children.Add(new PackageTreeNodeViewModel(fileHistory.HotSpotRating(), fileHistory.PathOfCurrentVersion().ToString()));
     }
   }
 }

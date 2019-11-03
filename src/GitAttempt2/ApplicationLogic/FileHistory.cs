@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AtmaFileSystem;
+using Functional.Maybe;
 
 namespace ApplicationLogic
 {
-  public interface IFileHistory : IChangeLog
+  public interface IFileHistory : IItemHistory<RelativeFilePath>
   {
     DateTimeOffset LastChangeDate();
     TimeSpan ActivityPeriod();
@@ -33,7 +35,7 @@ namespace ApplicationLogic
             _entries.Add(change);
         }
 
-        public string PathOfCurrentVersion() => Entries.Last().Path;
+        public RelativeFilePath PathOfCurrentVersion() => RelativeFilePath.Value(Entries.Last().Path);
         public int ChangesCount() => Entries.Count;
         public double ComplexityOfCurrentVersion() => Entries.Last().Complexity;
         public double HotSpotRating() => ComplexityMetrics.CalculateHotSpotRating(_complexityRank, _changeCountRank);
@@ -59,9 +61,9 @@ namespace ApplicationLogic
           _changeCountRank = changeCountRank;
         }
 
-        public string PackagePath()
+        public Maybe<RelativeDirectoryPath> LatestPackagePath()
         {
-          return System.IO.Path.GetDirectoryName(PathOfCurrentVersion());
+          return PathOfCurrentVersion().ParentDirectory();
         }
 
         public Coupling CalculateCouplingTo(IFileHistory otherHistory, int totalCommits)

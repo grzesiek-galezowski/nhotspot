@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using AtmaFileSystem;
 
 namespace ApplicationLogic
 {
-  public interface IFlatPackageChangeLog : IChangeLog
+  public interface IFlatPackageHistory : IItemHistory<RelativeDirectoryPath>
   {
     void Add(IFileHistory fileHistory);
     IEnumerable<IFileHistory> Files { get; }
-    string Name();
+    DirectoryName Name();
   }
 }

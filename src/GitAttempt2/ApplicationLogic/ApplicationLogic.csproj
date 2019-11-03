@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AtmaFileSystem" Version="2.2.0" />
     <PackageReference Include="Functional.Maybe" Version="2.0.18" />
   </ItemGroup>
 

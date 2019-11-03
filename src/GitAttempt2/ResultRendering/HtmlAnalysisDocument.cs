@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ApplicationLogic;
+using AtmaFileSystem;
 
 namespace ResultRendering
 {
@@ -27,7 +28,7 @@ namespace ResultRendering
 
       viewModel.Rankings = Task.WhenAll(rankingTasks).Result;
       viewModel.PackageTree = getTreeTask.Result;
-      viewModel.RepoName = analysisResults.Path;
+      viewModel.RepoName = analysisResults.PathToRepository;
       viewModel.Histogram = CreateHistogram(analysisResults.EntriesByDiminishingChangesCount());
 
       var contents = ResultsView.Render(viewModel, _analysisConfig);
@@ -36,28 +37,28 @@ namespace ResultRendering
 
     private HistogramViewModel CreateHistogram(IEnumerable<IFileHistory> entriesByDiminishingChangesCount)
     {
-      var labels = entriesByDiminishingChangesCount.Select(e => Path.GetFileName(e.PathOfCurrentVersion()));
-        var values = entriesByDiminishingChangesCount.Select(e => e.ChangesCount().ToString());
+      var labels = entriesByDiminishingChangesCount.Select(e => e.PathOfCurrentVersion().FileName().ToString());
+      var values = entriesByDiminishingChangesCount.Select(e => e.ChangesCount().ToString());
 
-        return new HistogramViewModel(
-            "Change count histogram",
-            TrashBinTrolololo.AsJavaScriptArrayString(labels), 
-            TrashBinTrolololo.AsJavaScriptArrayString(values));
+      return new HistogramViewModel(
+          "Change count histogram",
+          TrashBinTrolololo.AsJavaScriptArrayString(labels), 
+          TrashBinTrolololo.AsJavaScriptArrayString(values));
     }
 
     private IEnumerable<Task<RankingViewModel>> RankingTasks(AnalysisResult analysisResults)
     {
         return new []
         {
-            GetRankingAsync(analysisResults.EntriesByDiminishingComplexity(), cl => cl.ComplexityOfCurrentVersion(),
+            GetRankingAsync<double, IFileHistory, RelativeFilePath>(analysisResults.EntriesByDiminishingComplexity(), cl => cl.ComplexityOfCurrentVersion(),
                 "Most complex"),
-            GetRankingAsync(analysisResults.EntriesByDiminishingChangesCount(), cl => cl.ChangesCount(), "Most often changed"),
-            GetRankingAsync(analysisResults.EntriesByDiminishingActivityPeriod(), cl => cl.ActivityPeriod(), "Longest active"),
-            GetRankingAsync(analysisResults.EntriesFromMostRecentlyChanged(), cl => cl.LastChangeDate().ToString("d"),
+            GetRankingAsync<double, IFileHistory, RelativeFilePath>(analysisResults.EntriesByDiminishingChangesCount(), cl => cl.ChangesCount(), "Most often changed"),
+            GetRankingAsync<TimeSpan, IFileHistory, RelativeFilePath>(analysisResults.EntriesByDiminishingActivityPeriod(), cl => cl.ActivityPeriod(), "Longest active"),
+            GetRankingAsync<string, IFileHistory, RelativeFilePath>(analysisResults.EntriesFromMostRecentlyChanged(), cl => cl.LastChangeDate().ToString("d"),
                 "Most recently changed (possible breeding grounds)"),
-            GetRankingAsync(analysisResults.EntriesFromMostAncientlyChanged(), cl => cl.LastChangeDate().ToString("d"),
+            GetRankingAsync<string, IFileHistory, RelativeFilePath>(analysisResults.EntriesFromMostAncientlyChanged(), cl => cl.LastChangeDate().ToString("d"),
                 "Most anciently changed (extract a library?)"),
-            GetRankingAsync(analysisResults.PackagesByDiminishingHotSpotRating(), cl => cl.HotSpotRating(),
+            GetRankingAsync<double, IFlatPackageHistory, RelativeDirectoryPath>(analysisResults.PackagesByDiminishingHotSpotRating(), cl => cl.HotSpotRating(),
                 "Package hot spots (flat)")
         };
     }
@@ -65,13 +66,13 @@ namespace ResultRendering
     private void AddCouplingRanking(IEnumerable<Coupling> couplingMetrics, ICollection<CouplingViewModel> couplings)
     {
       foreach (var couplingViewModel in 
-        couplingMetrics.Select(c => new CouplingViewModel(c.Left, c.Right, c.CouplingCount, c.PercentageOfLeftCommits, c.PercentageOfTotalCommits)))
+        couplingMetrics.Select(c => new CouplingViewModel(c.Left.ToString(), c.Right.ToString(), c.CouplingCount, c.PercentageOfLeftCommits, c.PercentageOfTotalCommits)))
       {
         couplings.Add(couplingViewModel);
       }
     }
 
-    private Task<PackageTreeNodeViewModel> GetTree(PackageChangeLogNode packageTree)
+    private Task<PackageTreeNodeViewModel> GetTree(PackageHistoryNode packageTree)
     {
       return Task.Run(() =>
       {
@@ -81,10 +82,10 @@ namespace ResultRendering
       });
     }
 
-    private Task<RankingViewModel> GetRankingAsync<TValue, TChangeLog>(
+    private Task<RankingViewModel> GetRankingAsync<TValue, TChangeLog, TPathType>(
       IEnumerable<TChangeLog> entries, 
       Func<TChangeLog, TValue> valueFun, 
-      string heading) where TChangeLog : IItemWithPath
+      string heading) where TChangeLog : IItemWithPath<TPathType>
     {
       return Task.Run(() =>
       {
@@ -93,7 +94,7 @@ namespace ResultRendering
         {
           rankingViewModel.Entries.Add(new RankingEntryViewModel()
           {
-            Name = changeLog.PathOfCurrentVersion(),
+            Name = changeLog.PathOfCurrentVersion().ToString(),
             Value = valueFun(changeLog).ToString()
           });
         }

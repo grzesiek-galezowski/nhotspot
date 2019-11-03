@@ -22,14 +22,14 @@ namespace ResultRendering
         TimeSinceLastChanged = (int)fileHistory.TimeSinceLastChange().TotalDays + " days",
         ActivePeriod = (int)fileHistory.ActivityPeriod().TotalDays + " days",
         Age = (int)fileHistory.Age().TotalDays + " days",
-        Path = fileHistory.PathOfCurrentVersion(),
+        Path = fileHistory.PathOfCurrentVersion().ToString(),
         Rating = elementNum.ToString(),
         ChartValueDescription = "Complexity per change",
         Data = Data(fileHistory),
         Labels = Labels(fileHistory),
         Changes = Changes(fileHistory),
         ChangeCoupling = fileCouplings.Select(c => 
-          new CouplingViewModel(c.Left, c.Right, c.CouplingCount, c.PercentageOfLeftCommits, c.PercentageOfTotalCommits))
+          new CouplingViewModel(c.Left.ToString(), c.Right.ToString(), c.CouplingCount, c.PercentageOfLeftCommits, c.PercentageOfTotalCommits))
       };
 
       return hotSpotViewModel;

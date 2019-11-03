@@ -3,28 +3,28 @@ using System.Collections.Generic;
 
 namespace ApplicationLogic
 {
-  public class PackageChangeLogNode
+  public class PackageHistoryNode
   {
-    private readonly IFlatPackageChangeLog _value;
-    private readonly IEnumerable<FileChangeLogNode> _files;
-    private readonly List<PackageChangeLogNode> _childPackages = new List<PackageChangeLogNode>();
-    private PackageChangeLogNode _parent;
+    private readonly IFlatPackageHistory _value;
+    private readonly IEnumerable<FileHistoryNode> _files;
+    private readonly List<PackageHistoryNode> _childPackages = new List<PackageHistoryNode>();
+    private PackageHistoryNode _parent;
 
-    public PackageChangeLogNode(IFlatPackageChangeLog value, IEnumerable<FileChangeLogNode> files)
+    public PackageHistoryNode(IFlatPackageHistory value, IEnumerable<FileHistoryNode> files)
     {
       _value = value;
       _files = files;
     }
 
-    public void AddChild(PackageChangeLogNode newNode)
+    public void AddChild(PackageHistoryNode newNode)
     {
       _childPackages.Add(newNode);
       newNode.SetParent(this);
     }
 
-    private void SetParent(PackageChangeLogNode packageChangeLogNode)
+    private void SetParent(PackageHistoryNode packageHistoryNode)
     {
-      _parent = packageChangeLogNode;
+      _parent = packageHistoryNode;
     }
 
     public bool HasParent()

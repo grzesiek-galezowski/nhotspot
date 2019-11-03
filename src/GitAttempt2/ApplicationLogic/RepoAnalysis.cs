@@ -33,12 +33,12 @@ namespace ApplicationLogic
       Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
 
       //bug remove
-      var packageChangeLogNode = Rankings.GatherPackageTreeMetricsByPath(trunkFiles);
+      var packageHistoryNode = Rankings.GatherPackageTreeMetricsByPath(trunkFiles);
 
       return new AnalysisResult(trunkFiles, 
-        Rankings.GatherFlatPackageMetricsByPath(trunkFiles), 
+        Rankings.GatherFlatPackageHistoriesByPath(trunkFiles), 
         repositoryPath,
-        packageChangeLogNode, 
+        packageHistoryNode, 
         ComplexityMetrics.CalculateCoupling(trunkFiles, totalCommits));
     }
 
