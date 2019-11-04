@@ -32,7 +32,7 @@ namespace NHotSpot.Console
         MaxCouplingsPerHotSpot = 20,
         MaxHotSpotCount = 100,
         OutputFile = "output.html",
-        RepoPath = @"c:\Users\ftw637\source\repos\vp-bots\",
+        //RepoPath = @"c:\Users\ftw637\source\repos\vp-bots\",
         //RepoPath = @"C:\Users\ftw637\Documents\GitHub\any",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\any",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\nscan",
@@ -43,7 +43,7 @@ namespace NHotSpot.Console
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\simple-nlp\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\Functional.Maybe\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\nodatime\",
-        //RepoPath = @"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\"
+        RepoPath = @"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\NSubstitute\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\kafka\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet",

@@ -33,9 +33,6 @@ namespace ApplicationLogic
       Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
 
       var immutableFileHistories = trunkFiles.Select(f => (IFileHistory)f.ToImmutableFileHistory());
-      //bug convert to immutable type
-
-      //bug remove
       var packageHistoryNode = Rankings.GatherPackageTreeMetricsByPath(immutableFileHistories);
 
       return new AnalysisResult(immutableFileHistories, 

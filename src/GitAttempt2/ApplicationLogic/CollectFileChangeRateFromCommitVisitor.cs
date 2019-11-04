@@ -96,6 +96,8 @@ namespace ApplicationLogic
         ".bmp", 
         ".yml", 
         ".json", 
+        ".schema", 
+        ".bot", 
         ".xml", 
         ".ico", 
         ".ruleset", 
