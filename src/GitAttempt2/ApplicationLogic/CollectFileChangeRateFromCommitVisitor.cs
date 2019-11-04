@@ -72,14 +72,6 @@ namespace ApplicationLogic
       AnalysisMetadata.Remove(removedEntryPath);
     }
 
-    public List<FileHistoryBuilder> Result()
-    {
-      return AnalysisMetadata
-        .Where(x => x.Value.ChangesCount() >= _minChangeCount)
-        .Where(IsNotIgnoredFileType)
-        .Select(x => x.Value).ToList();
-    }
-
     private static bool IsNotIgnoredFileType(KeyValuePair<RelativeFilePath, FileHistoryBuilder> x)
     {
       var ignoredFileTypes = new[] //bug move this to config
@@ -115,6 +107,35 @@ namespace ApplicationLogic
         ".html", ".htm", ".css"
       };
       return ignoredFileTypes.All(fileType => !x.Key.ToString().EndsWith(fileType, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private static IEnumerable<IFileHistory> CreateImmutableFileHistoriesFrom(IReadOnlyList<FileHistoryBuilder> trunkFiles)
+    {
+      Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
+      Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
+
+      var immutableFileHistories = trunkFiles.Select(f => (IFileHistory) f.ToImmutableFileHistory());
+      return immutableFileHistories;
+    }
+
+    private static IOrderedEnumerable<IFileHistoryBuilder> OrderByChangesCount(IEnumerable<IFileHistoryBuilder> trunkFiles)
+    {
+      return trunkFiles.ToList().OrderBy(h => h.ChangesCount());
+    }
+
+    private static IOrderedEnumerable<IFileHistoryBuilder> OrderByComplexity(IEnumerable<IFileHistoryBuilder> trunkFiles)
+    {
+      return trunkFiles.ToList().OrderBy(h => h.ComplexityOfCurrentVersion());
+    }
+
+    public IEnumerable<IFileHistory> Result()
+    {
+      var trunkFiles = AnalysisMetadata
+        .Where(x => x.Value.ChangesCount() >= _minChangeCount)
+        .Where(IsNotIgnoredFileType)
+        .Select(x => x.Value).ToList();
+      var immutableFileHistoriesFrom = CollectFileChangeRateFromCommitVisitor.CreateImmutableFileHistoriesFrom(trunkFiles);
+      return immutableFileHistoriesFrom;
     }
   }
 }

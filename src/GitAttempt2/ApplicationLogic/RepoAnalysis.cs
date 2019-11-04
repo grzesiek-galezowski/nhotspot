@@ -19,20 +19,15 @@ namespace ApplicationLogic
       var visitor = new CollectFileChangeRateFromCommitVisitor(_clock, _minChangeCount);
       sourceControlRepository.CollectResults(visitor);
 
-      var trunkFiles = visitor.Result();
-      var analysisResult = CreateAnalysisResult(trunkFiles, sourceControlRepository.Path, sourceControlRepository.TotalCommits);
+      var immutableFileHistoriesFrom = visitor.Result();
+      var analysisResult = CreateAnalysisResult(immutableFileHistoriesFrom, sourceControlRepository.Path, sourceControlRepository.TotalCommits);
       return analysisResult;
     }
 
-    private static AnalysisResult CreateAnalysisResult(
-      IReadOnlyList<FileHistoryBuilder> trunkFiles, 
-      string repositoryPath,
+    private static AnalysisResult CreateAnalysisResult(IEnumerable<IFileHistory> fileHistories, string repositoryPath,
       int totalCommits)
     {
-      Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
-      Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
-
-      var immutableFileHistories = trunkFiles.Select(f => (IFileHistory)f.ToImmutableFileHistory());
+      var immutableFileHistories = fileHistories;
       var packageHistoryNode = Rankings.GatherPackageTreeMetricsByPath(immutableFileHistories);
 
       return new AnalysisResult(immutableFileHistories, 
@@ -41,16 +36,5 @@ namespace ApplicationLogic
         packageHistoryNode, 
         ComplexityMetrics.CalculateCoupling(immutableFileHistories, totalCommits));
     }
-
-    private static IOrderedEnumerable<IFileHistoryBuilder> OrderByChangesCount(IEnumerable<IFileHistoryBuilder> trunkFiles)
-    {
-      return trunkFiles.ToList().OrderBy(h => h.ChangesCount());
-    }
-
-    private static IOrderedEnumerable<IFileHistoryBuilder> OrderByComplexity(IEnumerable<IFileHistoryBuilder> trunkFiles)
-    {
-      return trunkFiles.ToList().OrderBy(h => h.ComplexityOfCurrentVersion());
-    }
-
   }
 }
