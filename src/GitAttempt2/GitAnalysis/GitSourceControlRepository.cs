@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApplicationLogic;
-using AtmaFileSystem;
 using LibGit2Sharp;
+using static AtmaFileSystem.AtmaFileSystemPaths;
 
 namespace GitAnalysis
 {
@@ -78,7 +78,7 @@ namespace GitAnalysis
           }
           case ChangeKind.Deleted:
           {
-            treeVisitor.OnRemoved(RelativeFilePath.Value(treeEntryPath));
+            treeVisitor.OnRemoved(RelativeFilePath(treeEntryPath));
             break;
           }
           case ChangeKind.Modified:

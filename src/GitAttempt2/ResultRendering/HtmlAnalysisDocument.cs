@@ -105,7 +105,7 @@ namespace ResultRendering
 
     private static void AddChartDataTo(
         ICollection<HotSpotViewModel> charts, 
-        IEnumerable<FileHistory> entries, 
+        IEnumerable<IFileHistory> entries, 
         IEnumerable<Coupling> couplingMetrics)
     {
       foreach (var (fileHistory, index) in entries.Select((log, i) => (log, i)))

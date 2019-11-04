@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using ApplicationLogic;
-using AtmaFileSystem;
 using FluentAssertions;
 using NHotSpot.Console;
 using NSubstitute;
@@ -10,6 +9,7 @@ using NUnit.Framework;
 using ResultRendering;
 using TddXt.AnyRoot.Strings;
 using TddXt.XNSubstitute;
+using static AtmaFileSystem.AtmaFileSystemPaths;
 using static TddXt.AnyRoot.Root;
 
 namespace ApplicationLogicSpecification
@@ -51,7 +51,7 @@ namespace ApplicationLogicSpecification
     private static IFlatPackageHistory Package(string expected)
     {
       return Arg.Is<IFlatPackageHistory>(
-        log => log.PathOfCurrentVersion() == AtmaFileSystemPaths.RelativeDirectoryPath(expected)
+        log => log.PathOfCurrentVersion() == RelativeDirectoryPath(expected)
       //  ,log => log.ChangesCount().Should().Be(1) bug
       );
     }
@@ -85,7 +85,7 @@ namespace ApplicationLogicSpecification
 
       analysisResult.PathToRepository.Should().Be(repoPath);
       analysisResult.EntriesByDiminishingActivityPeriod().Should().HaveCount(1);
-      var fileChangeLog = (FileHistory)analysisResult.EntriesByDiminishingActivityPeriod().First();
+      var fileChangeLog = analysisResult.EntriesByDiminishingActivityPeriod().First();
       fileChangeLog.ActivityPeriod().Should().Be(TimeSpan.Zero);
       fileChangeLog.CreationDate().Should().Be(changeDate1);
       fileChangeLog.LastChangeDate().Should().Be(changeDate1);
@@ -96,7 +96,7 @@ namespace ApplicationLogicSpecification
       fileChangeLog.Entries.Should().HaveCount(1);
       fileChangeLog.Entries.Should().BeEquivalentTo(change1);
       fileChangeLog.Age().Should().Be(clock.Now() - changeDate1);
-      fileChangeLog.PathOfCurrentVersion().Should().Be(RelativeFilePath.Value(file1));
+      fileChangeLog.PathOfCurrentVersion().Should().Be(RelativeFilePath(file1));
       fileChangeLog.LatestPackagePath().Should().Be(string.Empty);
     }
 

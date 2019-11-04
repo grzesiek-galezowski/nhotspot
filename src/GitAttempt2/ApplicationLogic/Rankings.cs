@@ -61,7 +61,7 @@ namespace ApplicationLogic
       ArtificialRoot = RelativeDirectoryPath(".");
     }
 
-    public static Dictionary<RelativeDirectoryPath, IFlatPackageHistory> GatherFlatPackageHistoriesByPath(IEnumerable<FileHistory> fileChangeLogs)
+    public static Dictionary<RelativeDirectoryPath, IFlatPackageHistory> GatherFlatPackageHistoriesByPath(IEnumerable<IFileHistory> fileChangeLogs)
     {
       var packageHistoriesByPath = new Dictionary<RelativeDirectoryPath, IFlatPackageHistory>();
       foreach (var fileHistory in fileChangeLogs)
@@ -90,7 +90,7 @@ namespace ApplicationLogic
       }
     }
 
-    public static PackageHistoryNode GatherPackageTreeMetricsByPath(IEnumerable<FileHistory> fileChangeLogs)
+    public static PackageHistoryNode GatherPackageTreeMetricsByPath(IEnumerable<IFileHistory> fileChangeLogs)
     {
       var packagesTree = PackageHistoryNodeFactory.NewPackagesTree();
       var flatPackageMetricsByPath = GatherFlatPackageHistoriesByPath(fileChangeLogs);
@@ -109,18 +109,18 @@ namespace ApplicationLogic
     }
 
 
-    public static void UpdateChangeCountRankingBasedOnOrderOf(IEnumerable<IFileHistoryWithAssignableRank> entriesToRank)
+    public static void UpdateChangeCountRankingBasedOnOrderOf(IEnumerable<IFileHistoryBuilder> entriesToRank)
     {
       entriesToRank
-        .Select(WithIndex<IFileHistoryWithAssignableRank>())
+        .Select(WithIndex<IFileHistoryBuilder>())
         .ToList().ForEach(
           tuple => tuple.entry.AssignChangeCountRank(tuple.index));
     }
 
-    public static void UpdateComplexityRankingBasedOnOrderOf(IEnumerable<IFileHistoryWithAssignableRank> entriesToRank)
+    public static void UpdateComplexityRankingBasedOnOrderOf(IEnumerable<IFileHistoryBuilder> entriesToRank)
     {
       entriesToRank
-        .Select(WithIndex<IFileHistoryWithAssignableRank>())
+        .Select(WithIndex<IFileHistoryBuilder>())
         .ToList().ForEach(
           tuple => tuple.entry.AssignComplexityRank(tuple.index));
     }

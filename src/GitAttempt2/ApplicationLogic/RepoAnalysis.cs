@@ -25,31 +25,32 @@ namespace ApplicationLogic
     }
 
     private static AnalysisResult CreateAnalysisResult(
-      IReadOnlyList<FileHistory> trunkFiles, 
+      IReadOnlyList<FileHistoryBuilder> trunkFiles, 
       string repositoryPath,
       int totalCommits)
     {
       Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
       Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
 
+      var immutableFileHistories = trunkFiles.Select(f => (IFileHistory)f.ToImmutableFileHistory());
       //bug convert to immutable type
 
       //bug remove
-      var packageHistoryNode = Rankings.GatherPackageTreeMetricsByPath(trunkFiles);
+      var packageHistoryNode = Rankings.GatherPackageTreeMetricsByPath(immutableFileHistories);
 
-      return new AnalysisResult(trunkFiles, 
-        Rankings.GatherFlatPackageHistoriesByPath(trunkFiles), 
+      return new AnalysisResult(immutableFileHistories, 
+        Rankings.GatherFlatPackageHistoriesByPath(immutableFileHistories), 
         repositoryPath,
         packageHistoryNode, 
-        ComplexityMetrics.CalculateCoupling(trunkFiles, totalCommits));
+        ComplexityMetrics.CalculateCoupling(immutableFileHistories, totalCommits));
     }
 
-    private static IOrderedEnumerable<IFileHistoryWithAssignableRank> OrderByChangesCount(IEnumerable<IFileHistoryWithAssignableRank> trunkFiles)
+    private static IOrderedEnumerable<IFileHistoryBuilder> OrderByChangesCount(IEnumerable<IFileHistoryBuilder> trunkFiles)
     {
       return trunkFiles.ToList().OrderBy(h => h.ChangesCount());
     }
 
-    private static IOrderedEnumerable<IFileHistoryWithAssignableRank> OrderByComplexity(IEnumerable<IFileHistoryWithAssignableRank> trunkFiles)
+    private static IOrderedEnumerable<IFileHistoryBuilder> OrderByComplexity(IEnumerable<IFileHistoryBuilder> trunkFiles)
     {
       return trunkFiles.ToList().OrderBy(h => h.ComplexityOfCurrentVersion());
     }

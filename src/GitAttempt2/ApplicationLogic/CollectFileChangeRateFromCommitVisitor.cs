@@ -22,18 +22,18 @@ namespace ApplicationLogic
 
     public CollectFileChangeRateFromCommitVisitor(IClock clock, int minChangeCount)
     {
-      AnalysisMetadata = new Dictionary<RelativeFilePath, FileHistory>();
+      AnalysisMetadata = new Dictionary<RelativeFilePath, FileHistoryBuilder>();
       _clock = clock;
       _minChangeCount = minChangeCount;
     }
 
-    private Dictionary<RelativeFilePath, FileHistory> AnalysisMetadata { get; }
+    private Dictionary<RelativeFilePath, FileHistoryBuilder> AnalysisMetadata { get; }
 
     public void OnBlob(Change change)
     {
       if (!AnalysisMetadata.ContainsKey(change.Path))
       {
-        AnalysisMetadata[change.Path] = new FileHistory(_clock);
+        AnalysisMetadata[change.Path] = new FileHistoryBuilder(_clock);
       }
       AddChange(change);
     }
@@ -57,13 +57,13 @@ namespace ApplicationLogic
 
     public void OnCopied(Change change)
     {
-      AnalysisMetadata[change.Path] = new FileHistory(_clock);
+      AnalysisMetadata[change.Path] = new FileHistoryBuilder(_clock);
       AddChange(change);
     }
 
     public void OnAdded(Change change)
     {
-      AnalysisMetadata[change.Path] = new FileHistory(_clock);
+      AnalysisMetadata[change.Path] = new FileHistoryBuilder(_clock);
       AddChange(change);
     }
 
@@ -72,7 +72,7 @@ namespace ApplicationLogic
       AnalysisMetadata.Remove(removedEntryPath);
     }
 
-    public List<FileHistory> Result()
+    public List<FileHistoryBuilder> Result()
     {
       return AnalysisMetadata
         .Where(x => x.Value.ChangesCount() >= _minChangeCount)
@@ -80,7 +80,7 @@ namespace ApplicationLogic
         .Select(x => x.Value).ToList();
     }
 
-    private static bool IsNotIgnoredFileType(KeyValuePair<RelativeFilePath, FileHistory> x)
+    private static bool IsNotIgnoredFileType(KeyValuePair<RelativeFilePath, FileHistoryBuilder> x)
     {
       var ignoredFileTypes = new[] //bug move this to config
       {

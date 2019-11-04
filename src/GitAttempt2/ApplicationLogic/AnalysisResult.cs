@@ -8,12 +8,12 @@ namespace ApplicationLogic
 {
   public class AnalysisResult
   {
-    private readonly IEnumerable<FileHistory> _changeLogs;
+    private readonly IEnumerable<IFileHistory> _changeLogs;
     private readonly Dictionary<RelativeDirectoryPath, IFlatPackageHistory> _packageHistoriesByPath;
     private readonly PackageHistoryNode _packageHistoryNode;
     private readonly IEnumerable<Coupling> _changeCouplings;
 
-    public AnalysisResult(IEnumerable<FileHistory> changeLogs,
+    public AnalysisResult(IEnumerable<IFileHistory> changeLogs,
       Dictionary<RelativeDirectoryPath, IFlatPackageHistory> packageHistoriesByPath,
       string normalizedPathToRepository, 
       PackageHistoryNode packageHistoryNode, 
@@ -38,7 +38,7 @@ namespace ApplicationLogic
       return _changeCouplings;
     }
 
-    public IEnumerable<FileHistory> EntriesByHotSpotRating()
+    public IEnumerable<IFileHistory> EntriesByHotSpotRating()
     {
       return _changeLogs.OrderByDescending(h => h.HotSpotRating());
     }

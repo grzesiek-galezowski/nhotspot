@@ -10,7 +10,7 @@ namespace ResultRendering
   {
       public static HotSpotViewModel FillWith(
         int elementNum, 
-        FileHistory fileHistory,
+        IFileHistory fileHistory,
         IEnumerable<Coupling> fileCouplings)
     {
       var hotSpotViewModel = new HotSpotViewModel
@@ -35,24 +35,28 @@ namespace ResultRendering
       return hotSpotViewModel;
     }
 
-    private static IEnumerable<ChangeViewModel> Changes(FileHistory analysisResult)
+    private static IEnumerable<ChangeViewModel> Changes(IFileHistory analysisResult)
     {
       return analysisResult.Entries.Select(c => new ChangeViewModel(c.ChangeDate, c.Comment)).Reverse();
     }
 
-    private static string Data(FileHistory fileHistory)
+    private static string Data(IFileHistory fileHistory)
     {
         return FormatData(fileHistory);
     }
 
-    private static string FormatData(FileHistory fileHistory)
+    private static string FormatData(IFileHistory fileHistory)
     {
-        var data = fileHistory.Entries.Select(change =>
-            change.Complexity.ToString(CultureInfo.InvariantCulture));
+        var data = fileHistory.Entries.Select(ComplexityAsString);
         return TrashBinTrolololo.AsJavaScriptArrayString(data);
     }
 
-    private static string Labels(FileHistory fileHistory)
+    private static string ComplexityAsString(Change change)
+    {
+        return change.Complexity.ToString(CultureInfo.InvariantCulture);
+    }
+
+    private static string Labels(IFileHistory fileHistory)
     {
         return TrashBinTrolololo.AsJavaScriptArrayString(fileHistory.Entries.Select(change =>
             change.ChangeDate.ToString(Constants.CommitDateFormat, CultureInfo.InvariantCulture)));

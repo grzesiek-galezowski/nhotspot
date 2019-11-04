@@ -32,10 +32,10 @@ namespace NHotSpot.Console
         MaxCouplingsPerHotSpot = 20,
         MaxHotSpotCount = 100,
         OutputFile = "output.html",
-        //RepoPath = @"c:\Users\ftw637\source\repos\vp-bots\"
+        RepoPath = @"c:\Users\ftw637\source\repos\vp-bots\",
         //RepoPath = @"C:\Users\ftw637\Documents\GitHub\any",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\any",
-        RepoPath = @"C:\Users\grzes\Documents\GitHub\nscan",
+        //RepoPath = @"C:\Users\grzes\Documents\GitHub\nscan",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\AutoFixtureGenerator\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\TrainingExamples\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\tdd-ebook\",

@@ -1,7 +1,7 @@
 using System;
 using ApplicationLogic;
-using AtmaFileSystem;
 using LibGit2Sharp;
+using static AtmaFileSystem.AtmaFileSystemPaths;
 
 namespace GitAnalysis
 {
@@ -42,7 +42,7 @@ namespace GitAnalysis
       string treeEntryPath, DateTimeOffset changeDate, string changeComment, string id)
     {
       treeVisitor.OnRenamed(
-        RelativeFilePath.Value(treeEntry.OldPath),
+        RelativeFilePath(treeEntry.OldPath),
         ChangeFactory.CreateChange(
           treeEntryPath,
           _blobContent,
