@@ -7,7 +7,6 @@ namespace ApplicationLogic
 {
   public interface ITreeVisitor
   {
-    void OnBlob(Change change);
     void OnModified(Change change);
     void OnRenamed(RelativeFilePath oldPath, Change change);
     void OnCopied(Change change);
@@ -29,15 +28,6 @@ namespace ApplicationLogic
 
     private Dictionary<RelativeFilePath, FileHistoryBuilder> AnalysisMetadata { get; }
 
-    public void OnBlob(Change change)
-    {
-      if (!AnalysisMetadata.ContainsKey(change.Path))
-      {
-        AnalysisMetadata[change.Path] = new FileHistoryBuilder(_clock);
-      }
-      AddChange(change);
-    }
-
     public void OnModified(Change change)
     {
       AddChange(change);
@@ -50,26 +40,36 @@ namespace ApplicationLogic
 
     public void OnRenamed(RelativeFilePath oldPath, Change change)
     {
-      AnalysisMetadata[change.Path] = AnalysisMetadata[oldPath];
-      AnalysisMetadata.Remove(oldPath);
+      RenameFile(oldPath, change.Path);
       AddChange(change);
     }
 
     public void OnCopied(Change change)
     {
-      AnalysisMetadata[change.Path] = new FileHistoryBuilder(_clock);
+      InitializeHistoryFor(change.Path);
       AddChange(change);
     }
 
     public void OnAdded(Change change)
     {
-      AnalysisMetadata[change.Path] = new FileHistoryBuilder(_clock);
+      InitializeHistoryFor(change.Path);
       AddChange(change);
     }
 
     public void OnRemoved(RelativeFilePath removedEntryPath)
     {
       AnalysisMetadata.Remove(removedEntryPath);
+    }
+
+    private void RenameFile(RelativeFilePath oldPath, RelativeFilePath newPath)
+    {
+      AnalysisMetadata[newPath] = AnalysisMetadata[oldPath];
+      AnalysisMetadata.Remove(oldPath);
+    }
+
+    private void InitializeHistoryFor(RelativeFilePath relativeFilePath)
+    {
+      AnalysisMetadata[relativeFilePath] = new FileHistoryBuilder(_clock);
     }
 
     private static bool IsNotIgnoredFileType(KeyValuePair<RelativeFilePath, FileHistoryBuilder> x)
@@ -114,7 +114,7 @@ namespace ApplicationLogic
       Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
       Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
 
-      var immutableFileHistories = trunkFiles.Select(f => (IFileHistory) f.ToImmutableFileHistory());
+      var immutableFileHistories = trunkFiles.Select(f => f.ToImmutableFileHistory());
       return immutableFileHistories;
     }
 
@@ -134,7 +134,7 @@ namespace ApplicationLogic
         .Where(x => x.Value.ChangesCount() >= _minChangeCount)
         .Where(IsNotIgnoredFileType)
         .Select(x => x.Value).ToList();
-      var immutableFileHistoriesFrom = CollectFileChangeRateFromCommitVisitor.CreateImmutableFileHistoriesFrom(trunkFiles);
+      var immutableFileHistoriesFrom = CreateImmutableFileHistoriesFrom(trunkFiles);
       return immutableFileHistoriesFrom;
     }
   }

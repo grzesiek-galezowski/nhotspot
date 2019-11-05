@@ -1,36 +1,44 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AtmaFileSystem;
 
 namespace ApplicationLogic
 {
   public class AnalysisResult
   {
-    private readonly IEnumerable<IFileHistory> _changeLogs;
-    private readonly Dictionary<RelativeDirectoryPath, IFlatPackageHistory> _packageHistoriesByPath;
-    private readonly PackageHistoryNode _packageHistoryNode;
+    private readonly PackageHistoryNode _packageHistoryRootNode;
     private readonly IEnumerable<Coupling> _changeCouplings;
+    private readonly IOrderedEnumerable<IFileHistory> _entriesByHotSpotRating;
+    private readonly IEnumerable<IFileHistory> _entriesByDiminishingComplexity;
+    private readonly IOrderedEnumerable<IFileHistory> _entriesByDiminishingChangesCount;
+    private readonly IOrderedEnumerable<IFileHistory> _entriesByDiminishingActivityPeriod;
+    private readonly IOrderedEnumerable<IFileHistory> _entriesFromMostRecentlyChanged;
+    private readonly IEnumerable<IFileHistory> _entriesFromMostAncientlyChanged;
+    private readonly IOrderedEnumerable<IFlatPackageHistory> _packagesByDiminishingHotSpotRating;
 
-    public AnalysisResult(IEnumerable<IFileHistory> changeLogs,
+    public AnalysisResult(IEnumerable<IFileHistory> fileHistories,
       Dictionary<RelativeDirectoryPath, IFlatPackageHistory> packageHistoriesByPath,
       string normalizedPathToRepository, 
-      PackageHistoryNode packageHistoryNode, 
+      PackageHistoryNode packageHistoryRootNode, 
       IEnumerable<Coupling> changeCouplings)
     {
       PathToRepository = normalizedPathToRepository;
-      _changeLogs = changeLogs;
-      _packageHistoriesByPath = packageHistoriesByPath;
-      _packageHistoryNode = packageHistoryNode;
+      _packageHistoryRootNode = packageHistoryRootNode;
       _changeCouplings = changeCouplings;
+      _entriesByHotSpotRating = fileHistories.OrderByDescending(h => h.HotSpotRating());
+      _entriesByDiminishingComplexity = fileHistories.OrderByDescending(h => h.ComplexityOfCurrentVersion());
+      _entriesByDiminishingChangesCount = fileHistories.OrderByDescending(h => h.ChangesCount());
+      _entriesByDiminishingActivityPeriod = fileHistories.OrderByDescending(h => h.ActivityPeriod());
+      _entriesFromMostRecentlyChanged = fileHistories.OrderByDescending(h => h.LastChangeDate());
+      _entriesFromMostAncientlyChanged = _entriesFromMostRecentlyChanged.Reverse();
+      _packagesByDiminishingHotSpotRating = packageHistoriesByPath.Select(kv => kv.Value).OrderByDescending(cl => cl.HotSpotRating());
     }
 
     public string PathToRepository { get; }
 
     public PackageHistoryNode PackageTree()
     {
-      return _packageHistoryNode;
+      return _packageHistoryRootNode;
     }
 
     public IEnumerable<Coupling> CouplingMetrics()
@@ -40,46 +48,36 @@ namespace ApplicationLogic
 
     public IEnumerable<IFileHistory> EntriesByHotSpotRating()
     {
-      return _changeLogs.OrderByDescending(h => h.HotSpotRating());
-    }
-
-    private IEnumerable<IFileHistory> EntriesByRisingComplexity()
-    {
-      return _changeLogs.OrderBy(h => h.ComplexityOfCurrentVersion());
+      return _entriesByHotSpotRating;
     }
 
     public IEnumerable<IFileHistory> EntriesByDiminishingComplexity()
     {
-      return EntriesByRisingComplexity().Reverse();
-    }
-
-    public IEnumerable<IFileHistory> EntriesByRisingChangesCount()
-    {
-      return _changeLogs.OrderBy(h => h.ChangesCount());
+      return _entriesByDiminishingComplexity;
     }
 
     public IEnumerable<IFileHistory> EntriesByDiminishingChangesCount()
     {
-      return _changeLogs.OrderByDescending(h => h.ChangesCount());
+      return _entriesByDiminishingChangesCount;
     }
 
     public IEnumerable<IFileHistory> EntriesByDiminishingActivityPeriod()
     {
-      return _changeLogs.OrderByDescending(h => h.ActivityPeriod());
+      return _entriesByDiminishingActivityPeriod;
     }
 
     public IEnumerable<IFileHistory> EntriesFromMostRecentlyChanged()
     {
-      return _changeLogs.OrderByDescending(h => h.LastChangeDate());
+      return _entriesFromMostRecentlyChanged;
     }
     public IEnumerable<IFileHistory> EntriesFromMostAncientlyChanged()
     {
-      return EntriesFromMostRecentlyChanged().Reverse();
+      return _entriesFromMostAncientlyChanged;
     }
 
     public IEnumerable<IFlatPackageHistory> PackagesByDiminishingHotSpotRating()
     {
-      return _packageHistoriesByPath.Select(kv => kv.Value).OrderByDescending(cl => cl.HotSpotRating());
+      return _packagesByDiminishingHotSpotRating;
     }
 
     

@@ -43,33 +43,24 @@ namespace ApplicationLogic
           _changeCountRank = changeCountRank.Just();
         }
 
-        public int ChangesCount() => Entries.Count;
-        public double ComplexityOfCurrentVersion() => Entries.Last().Complexity;
+        public int ChangesCount() => _entries.Count;
+        public double ComplexityOfCurrentVersion() => _entries.Last().Complexity;
 
-        public ImmutableFileHistory ToImmutableFileHistory()
+        public IFileHistory ToImmutableFileHistory()
         {
             return new ImmutableFileHistory(
-                PathOfCurrentVersion(),
-                HotSpotRating(),
+                _entries.Last().Path,
+                ComplexityMetrics.CalculateHotSpotRating(_complexityRank.Value, _changeCountRank.Value),
                 ChangesCount(),
                 ComplexityOfCurrentVersion(),
-                LastChangeDate(),
-                ActivityPeriod(),
-                ChangeIds(),
-                CreationDate(),
-                LatestPackagePath(),
-                _clock.Now() - LastChangeDate(),
-                _clock.Now() - CreationDate(),
+                _entries.Last().ChangeDate,
+                _entries.Last().ChangeDate - _entries.First().ChangeDate,
+                _entries.Select(e => e.Id),
+                _entries.First().ChangeDate,
+                _entries.Last().Path.ParentDirectory(),
+                _clock.Now() - _entries.Last().ChangeDate,
+                _clock.Now() - _entries.First().ChangeDate,
                 _entries);
         }
-
-        private RelativeFilePath PathOfCurrentVersion() => Entries.Last().Path;
-        private IReadOnlyList<Change> Entries => _entries;
-        private IEnumerable<string> ChangeIds() => _entries.Select(e => e.Id);
-        private Maybe<RelativeDirectoryPath> LatestPackagePath() => PathOfCurrentVersion().ParentDirectory();
-        private double HotSpotRating() => ComplexityMetrics.CalculateHotSpotRating(_complexityRank.Value, _changeCountRank.Value);
-        private DateTimeOffset CreationDate() => Entries.First().ChangeDate;
-        private DateTimeOffset LastChangeDate() => Entries.Last().ChangeDate;
-        private TimeSpan ActivityPeriod() => LastChangeDate() - CreationDate();
   }
 }
