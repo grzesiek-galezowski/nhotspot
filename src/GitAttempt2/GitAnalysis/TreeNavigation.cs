@@ -15,7 +15,7 @@ namespace GitAnalysis
           case TreeEntryTargetType.Blob:
           {
             var blob = Extract.BlobFrom(commit, treeEntry.Path);
-            blob.OnAdded(visitor, treeEntry.Path, commit.Author.When, commit.Message, commit.Sha);
+            blob.OnAdded(visitor, treeEntry.Path, commit.Author.When, commit.Author.Name, commit.Message, commit.Sha);
             break;
           }
           case TreeEntryTargetType.Tree:

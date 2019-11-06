@@ -1,20 +1,20 @@
-using System.Collections.Generic;
 using System.Linq;
-using ApplicationLogic;
-using AtmaFileSystem;
 
-static internal class PackageHistoryNodeFactory
+namespace ApplicationLogic
 {
-  public static PackageHistoryNode NewPackageNode(IFlatPackageHistory packageHistory)
+  public static class PackageHistoryNodeFactory
   {
-    return new PackageHistoryNode(
-      packageHistory, 
-      packageHistory.Files.Select(
-        f => new FileHistoryNode(f)));
-  }
+    public static PackageHistoryNode NewPackageNode(IFlatPackageHistory packageHistory)
+    {
+      return new PackageHistoryNode(
+        packageHistory, 
+        packageHistory.Files.Select(
+          f => new FileHistoryNode(f)));
+    }
 
-  public static PackagesTree NewPackagesTree()
-  {
-    return new PackagesTree();
+    public static PackagesTree NewPackagesTree()
+    {
+      return new PackagesTree();
+    }
   }
 }

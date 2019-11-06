@@ -10,6 +10,7 @@ namespace ApplicationLogic
   {
     private readonly RelativeDirectoryPath _packagePath;
     private readonly List<IFileHistory> _files = new List<IFileHistory>();
+    private readonly HashSet<string> _changeIds = new HashSet<string>();
 
     public FlatPackageHistory(RelativeDirectoryPath packagePath)
     {
@@ -19,14 +20,14 @@ namespace ApplicationLogic
     public void Add(IFileHistory fileHistory)
     {
       _files.Add(fileHistory);
+      _changeIds.UnionWith(fileHistory.ChangeIds());
     }
 
     public IEnumerable<IFileHistory> Files => _files;
 
     public int ChangesCount()
     {
-      var changes = _files.Select(f => f.ChangeIds()).SelectMany(s => s).Distinct();
-      return changes.Count();
+      return _changeIds.Count;
     }
 
     public double ComplexityOfCurrentVersion()
@@ -36,6 +37,8 @@ namespace ApplicationLogic
 
     public double HotSpotRating()
     {
+      //bug 
+
       return _files.Sum(f => f.HotSpotRating());
     }
 

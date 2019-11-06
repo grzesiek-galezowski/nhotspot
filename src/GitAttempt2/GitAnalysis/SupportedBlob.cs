@@ -15,50 +15,54 @@ namespace GitAnalysis
     }
 
     public void OnAdded(ITreeVisitor treeVisitor, string treeEntryPath,
-      DateTimeOffset changeDate, string changeComment, string id)
+      DateTimeOffset changeDate, string authorName, string changeComment, string id)
     {
-      var fileText = _blobContent;
       treeVisitor.OnAdded(
         ChangeFactory.CreateChange(
           treeEntryPath,
-          fileText,
-          changeDate,
+          _blobContent, authorName, changeDate,
           changeComment, 
           id));
     }
 
     public void OnModified(ITreeVisitor treeVisitor, string treeEntryPath,
-      DateTimeOffset changeDate, string changeComment, string id)
+      DateTimeOffset changeDate, string authorName, string changeComment, string id)
     {
       treeVisitor.OnModified(
         ChangeFactory.CreateChange(
           treeEntryPath,
           _blobContent,
+          authorName,
           changeDate,
-          changeComment, id));
+          changeComment, 
+          id));
     }
 
     public void OnRenamed(ITreeVisitor treeVisitor, TreeEntryChanges treeEntry,
-      string treeEntryPath, DateTimeOffset changeDate, string changeComment, string id)
+      string treeEntryPath, DateTimeOffset changeDate, string authorName, string changeComment, string id)
     {
       treeVisitor.OnRenamed(
         RelativeFilePath(treeEntry.OldPath),
         ChangeFactory.CreateChange(
           treeEntryPath,
-          _blobContent,
+          _blobContent, 
+          authorName, 
           changeDate,
-          changeComment, id));
+          changeComment, 
+          id));
     }
 
     public void OnCopied(ITreeVisitor treeVisitor, string treeEntryPath,
-      DateTimeOffset changeDate, string changeComment, string id)
+      DateTimeOffset changeDate, string authorName, string changeComment, string id)
     {
       treeVisitor.OnCopied(
         ChangeFactory.CreateChange(
           treeEntryPath,
-          _blobContent,
+          _blobContent, 
+          authorName, 
           changeDate,
-          changeComment, id));
+          changeComment, 
+          id));
     }
   }
 }

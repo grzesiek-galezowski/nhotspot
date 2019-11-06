@@ -63,6 +63,7 @@ namespace GitAnalysis
       {
         var treeEntryPath = treeEntry.Path;
         var changeDate = currentCommit.Author.When;
+        var authorName = currentCommit.Author.Name;
         var changeComment = currentCommit.Message;
 
         switch (treeEntry.Status)
@@ -72,7 +73,7 @@ namespace GitAnalysis
           case ChangeKind.Added:
           {
             var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-            blob.OnAdded(treeVisitor, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
+            blob.OnAdded(treeVisitor, treeEntryPath, changeDate, authorName, changeComment, currentCommit.Sha);
 
             break;
           }
@@ -84,19 +85,19 @@ namespace GitAnalysis
           case ChangeKind.Modified:
           {
             var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-            blob.OnModified(treeVisitor, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
+            blob.OnModified(treeVisitor, treeEntryPath, changeDate, authorName, changeComment, currentCommit.Sha);
             break;
           }
           case ChangeKind.Renamed:
           {
             var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-            blob.OnRenamed(treeVisitor, treeEntry, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
+            blob.OnRenamed(treeVisitor, treeEntry, treeEntryPath, changeDate, authorName, changeComment, currentCommit.Sha);
             break;
           }
           case ChangeKind.Copied:
           {
             var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-            blob.OnCopied(treeVisitor, treeEntryPath, changeDate, changeComment, currentCommit.Sha);
+            blob.OnCopied(treeVisitor, treeEntryPath, changeDate, authorName, changeComment, currentCommit.Sha);
             break;
           }
           default:

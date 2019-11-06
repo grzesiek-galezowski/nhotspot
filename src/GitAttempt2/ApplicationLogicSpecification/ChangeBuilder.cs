@@ -1,5 +1,6 @@
 using System;
 using ApplicationLogic;
+using TddXt.AnyRoot;
 using TddXt.AnyRoot.Strings;
 using static TddXt.AnyRoot.Root;
 
@@ -11,8 +12,10 @@ namespace ApplicationLogicSpecification
     public Change Build()
     {
       string fileText = FileText;
-      return ChangeFactory.CreateChange(Path, fileText, ChangeDate, ChangeComment, Id);
+      return ChangeFactory.CreateChange(Path, fileText, AuthorName, ChangeDate, ChangeComment, Id);
     }
+
+    public string AuthorName { get; } = Any.Instance<string>();
 
     public string Id { private get; set; } = Any.Instance<string>();
 

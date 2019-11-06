@@ -7,6 +7,5 @@ namespace ApplicationLogic
   {
     void Add(IFileHistory fileHistory);
     IEnumerable<IFileHistory> Files { get; }
-    DirectoryName Name();
   }
 }

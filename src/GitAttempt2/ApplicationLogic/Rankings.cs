@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using AtmaFileSystem;
 using Functional.Maybe;
+using Functional.Maybe.Just;
 using static AtmaFileSystem.AtmaFileSystemPaths;
 
 namespace ApplicationLogic
@@ -71,12 +72,12 @@ namespace ApplicationLogic
         EnsurePathIsIn(packageHistoriesByPath, packagePath);
         packageHistoriesByPath[packagePath].Add(fileHistory);
 
-        var packagePath2 = packagePath.ToMaybe();
+        var currentPackagePath = packagePath.Just();
         do
         {
-          EnsurePathIsIn(packageHistoriesByPath, packagePath2.Value);
-          packagePath2 = packagePath2.Value.ParentDirectory();
-        } while (packagePath2.HasValue);
+          EnsurePathIsIn(packageHistoriesByPath, currentPackagePath.Value);
+          currentPackagePath = currentPackagePath.Value.ParentDirectory();
+        } while (currentPackagePath.HasValue);
       }
 
       return packageHistoriesByPath;
