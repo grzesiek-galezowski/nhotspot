@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -20,19 +21,29 @@ namespace ResultRendering
 
     public string RenderString(AnalysisResult analysisResults)
     {
+      var viewModel = CreateViewModel(analysisResults);
+      var contents = ResultsView.Render(viewModel, _analysisConfig);
+      return contents;
+    }
+
+    private ViewModel CreateViewModel(AnalysisResult analysisResults)
+    {
       var viewModel = new ViewModel();
       AddCouplingRanking(analysisResults.CouplingMetrics(), viewModel.Couplings);
-      AddChartDataTo(viewModel.HotSpots, analysisResults.EntriesByHotSpotRating(), analysisResults.CouplingMetrics());
+      var chartDataTask = GenerateChartDataFrom(
+        analysisResults.EntriesByHotSpotRating(),
+        analysisResults.CouplingMetrics());
       var rankingTasks = RankingTasks(analysisResults);
       var getTreeTask = GetTree(analysisResults.PackageTree());
+
+      Task.WaitAll(rankingTasks.Concat(new Task[] {getTreeTask, chartDataTask}).ToArray());
 
       viewModel.Rankings = Task.WhenAll(rankingTasks).Result;
       viewModel.PackageTree = getTreeTask.Result;
       viewModel.RepoName = analysisResults.PathToRepository;
       viewModel.Histogram = CreateHistogram(analysisResults.EntriesByDiminishingChangesCount());
-
-      var contents = ResultsView.Render(viewModel, _analysisConfig);
-      return contents;
+      viewModel.HotSpots = chartDataTask.Result;
+      return viewModel;
     }
 
     private HistogramViewModel CreateHistogram(IEnumerable<IFileHistory> entriesByDiminishingChangesCount)
@@ -103,19 +114,17 @@ namespace ResultRendering
       });
     }
 
-    private static void AddChartDataTo(
-        ICollection<HotSpotViewModel> charts, 
-        IEnumerable<IFileHistory> entries, 
+    private static Task<IEnumerable<HotSpotViewModel>> GenerateChartDataFrom(
+      IEnumerable<IFileHistory> entries, 
         IEnumerable<Coupling> couplingMetrics)
     {
-      foreach (var (fileHistory, index) in entries.Select((log, i) => (log, i)))
-      { 
-        var singleFileChart = HtmlChartSingleResultTemplate.FillWith(
-          index + 1, 
-          fileHistory, 
-          fileHistory.Filter(couplingMetrics));
-        charts.Add(singleFileChart);
-      }
+      return Task.Run(() =>
+      {
+        return entries.Select((log, i) => HtmlChartSingleResultTemplate.FillWith(
+          i + 1,
+          log,
+          log.Filter(couplingMetrics)));
+      });
     }
   }
 }
