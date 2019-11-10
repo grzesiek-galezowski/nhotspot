@@ -18,9 +18,10 @@ namespace ApplicationLogic
     {
       var visitor = new CollectFileChangeRateFromCommitVisitor(_clock, _minChangeCount);
       sourceControlRepository.CollectResults(visitor);
-
-      var immutableFileHistoriesFrom = visitor.Result();
-      var analysisResult = CreateAnalysisResult(immutableFileHistoriesFrom, sourceControlRepository.Path, sourceControlRepository.TotalCommits);
+      var analysisResult = CreateAnalysisResult(
+        visitor.Result(), 
+        sourceControlRepository.Path, 
+        sourceControlRepository.TotalCommits);
       return analysisResult;
     }
 

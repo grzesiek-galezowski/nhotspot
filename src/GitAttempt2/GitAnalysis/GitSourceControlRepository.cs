@@ -31,8 +31,9 @@ namespace GitAnalysis
       for (var i = 1; i < Commits.Count; ++i)
       {
         var currentCommit = Commits[i];
+        var changesBetweenCurrentAndLastCommit = changesPerIndex[i];
         AnalyzeChanges(
-          changesPerIndex[i],
+          changesBetweenCurrentAndLastCommit,
           visitor,
           currentCommit
         );

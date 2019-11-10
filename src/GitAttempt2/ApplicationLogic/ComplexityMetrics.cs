@@ -10,11 +10,13 @@ namespace ApplicationLogic
 {
   public static class ComplexityMetrics
   {
+    private static readonly Regex NewlineRegex = new Regex(@"\r\n|\r|\n", RegexOptions.Compiled);
     private const int ArbitraryLimit = 0; //bug make that a percentage?
 
     public static double CalculateComplexityFor(string contentText)
     {
-      return CalculateComplexityFor(Regex.Split(contentText, @"\r\n|\r|\n"));
+      
+      return CalculateComplexityFor(NewlineRegex.Split(contentText));
     }
 
     private static double CalculateComplexityFor(IReadOnlyCollection<string> linesInFile)

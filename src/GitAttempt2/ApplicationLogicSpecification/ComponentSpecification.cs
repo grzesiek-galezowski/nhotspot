@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using ApplicationLogic;
 using FluentAssertions;
+using GitAnalysis;
 using NHotSpot.Console;
 using NSubstitute;
 using NUnit.Framework;

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using ApplicationLogic;
 using Fclp;
+using GitAnalysis;
 using ResultRendering;
 
 namespace NHotSpot.Console
@@ -16,14 +17,6 @@ namespace NHotSpot.Console
     //TODO add trend - fastest increasing complexity (not no. of changes)
     static void Main(string[] args)
     {
-      //var analysisResult = GitRepoAnalysis.Analyze(@"c:\Users\ftw637\Documents\GitHub\kafka\", "trunk");
-      /*
-      var analysisConfig = new AnalysisConfig();
-      var parser = CreateCliParser(analysisConfig);
-      parser.Parse(args);
-      */
-      Stopwatch sw = new Stopwatch();
-      sw.Start();
 
       var analysisConfig = new AnalysisConfig()
       {
@@ -35,14 +28,14 @@ namespace NHotSpot.Console
         //RepoPath = @"c:\Users\ftw637\source\repos\vp-bots\",
         //RepoPath = @"C:\Users\ftw637\Documents\GitHub\any",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\any",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\nscan",
+        RepoPath = @"C:\Users\grzes\Documents\GitHub\nscan",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\AutoFixtureGenerator\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\TrainingExamples\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\tdd-ebook\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\AutoFixture\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\simple-nlp\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\Functional.Maybe\",
-        RepoPath = @"C:\Users\grzes\Documents\GitHub\nodatime\",
+        //RepoPath = @"C:\Users\grzes\Documents\GitHub\nodatime\",
         //RepoPath = @"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\NSubstitute\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\kafka\",
@@ -50,62 +43,45 @@ namespace NHotSpot.Console
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\nunit",
         MinChangeCount = 1
       };
-      var analysisResult = GitRepoAnalysis.Analyze(
-        analysisConfig.RepoPath, 
-        analysisConfig.Branch, 
-        analysisConfig.MinChangeCount, 
-        //DateTime.Now - TimeSpan.FromDays(366));
-        DateTime.MinValue + TimeSpan.FromDays(300));
-      sw.Stop();
-      System.Console.WriteLine(sw.ElapsedMilliseconds);
-      sw.Reset();
-      
+
+      var sw = new Stopwatch();
       sw.Start();
-      var readyDocument = new HtmlAnalysisDocument(analysisConfig)
-        .RenderString(analysisResult);
-      File.WriteAllText(analysisConfig.OutputFile, readyDocument);
-      Browser.Open(analysisConfig.OutputFile);
+
+      Run(new []
+      {
+        "-r", 
+        //@"C:\Users\grzes\Documents\GitHub\nscan",
+        @"C:\Users\grzes\Documents\GitHub\nodatime\",
+        "-b", "master",
+        "--max-coupling-per-hospot", "20",
+        "--max-hostpot-count", "100",
+        "-o", "output.html",
+        "--min-change-count", "1"
+      });
       sw.Stop();
-      System.Console.WriteLine(sw.ElapsedMilliseconds);
+      System.Console.WriteLine("Total " + sw.Elapsed);
     }
 
-    private static FluentCommandLineParser CreateCliParser(AnalysisConfig inputArguments)
+    private static void Run(string[] args)
     {
-      var p = new FluentCommandLineParser();
-
-      p.Setup<string>('r', "repository-path")
-        .WithDescription("Path to repository root")
-        .Callback(repositoryPath => inputArguments.RepoPath = repositoryPath)
-        .Required();
+      var analysisConfig = CommandLineParser.Parse(args);
+      var analysisResult = GitRepoAnalysis.Analyze(
+        analysisConfig.RepoPath,
+        analysisConfig.Branch,
+        analysisConfig.MinChangeCount,
+        //DateTime.Now - TimeSpan.FromDays(366));
+        SinceBeginning());
       
-      p.Setup<string>('b', "branch")
-        .WithDescription("branch name")
-        .Callback(branch => inputArguments.Branch = branch)
-        .Required();
+      var readyDocument = new HtmlAnalysisDocument(analysisConfig)
+        .RenderString(analysisResult);
+      
+      File.WriteAllText(analysisConfig.OutputFile, readyDocument);
+      Browser.Open(analysisConfig.OutputFile);
+    }
 
-      p.Setup<int>("min-change-count")
-        .WithDescription("Minimum change count that makes a file count")
-        .Callback(minChangeCount => inputArguments.MinChangeCount = minChangeCount)
-        .Required();
-
-      p.Setup<int>("max-coupling-per-hospot")
-        .WithDescription("Maximum rendered change couplings per hotspot")
-        .SetDefault(20)
-        .Callback(maxCouplingsPerHotSpot => inputArguments.MaxCouplingsPerHotSpot = maxCouplingsPerHotSpot);
-
-      p.Setup<int>("max-hostpot-count")
-        .WithDescription("Maximum count of rendered hotspots")
-        .SetDefault(100)
-        .Callback(maxHotSpotCount => inputArguments.MaxHotSpotCount = maxHotSpotCount);
-
-      p.Setup<string>("output-file")
-        .WithDescription("Path to output file")
-        .SetDefault("output.html")
-        .Callback(outputFilePath => inputArguments.OutputFile = outputFilePath);
-
-      p.SetupHelp("?", "help")
-        .Callback(text => System.Console.WriteLine(text));
-      return p;
+    private static DateTime SinceBeginning()
+    {
+      return DateTime.MinValue + TimeSpan.FromDays(300);
     }
   }
 }

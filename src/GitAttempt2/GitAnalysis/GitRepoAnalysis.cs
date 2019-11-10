@@ -1,9 +1,8 @@
 using System;
 using ApplicationLogic;
-using GitAnalysis;
 using LibGit2Sharp;
 
-namespace NHotSpot.Console
+namespace GitAnalysis
 {
   public static class GitRepoAnalysis
   {
@@ -12,7 +11,6 @@ namespace NHotSpot.Console
       using (var repo = new Repository(repositoryPath))
       {
         var sourceControlRepository = GitSourceControlRepository.FromBranch(branchName, repo, startDate);
-
         return new RepoAnalysis(new RealClock(), minChangeCount).ExecuteOn(sourceControlRepository);
       }
     }
