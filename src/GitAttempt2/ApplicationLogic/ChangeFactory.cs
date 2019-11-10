@@ -12,7 +12,7 @@ namespace ApplicationLogic
       return new Change(
         RelativeFilePath(path), 
         fileText, 
-        ComplexityMetrics.CalculateComplexityFor(fileText), 
+        new Lazy<double>(() => ComplexityMetrics.CalculateComplexityFor(fileText)), 
         changeDate,
         authorName,
         changeComment, 

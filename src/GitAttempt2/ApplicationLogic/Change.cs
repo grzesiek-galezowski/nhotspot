@@ -9,12 +9,12 @@ namespace ApplicationLogic
         public DateTimeOffset ChangeDate { get; }
         public string AuthorName { get; }
         public string Text { get; }
-        public double Complexity { get; }
+        public Lazy<double> Complexity { get; }
         public string Id { get; }
 
         public Change(RelativeFilePath path,
           string text,
-          double complexity,
+          Lazy<double> complexity,
           DateTimeOffset changeDate,
           string authorName,
           string comment,

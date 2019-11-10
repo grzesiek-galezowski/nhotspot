@@ -44,7 +44,7 @@ namespace ApplicationLogic
         }
 
         public int ChangesCount() => _entries.Count;
-        public double ComplexityOfCurrentVersion() => _entries.Last().Complexity;
+        public double ComplexityOfCurrentVersion() => _entries.Last().Complexity.Value;
 
         public IFileHistory ToImmutableFileHistory()
         {

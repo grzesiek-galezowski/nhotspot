@@ -53,7 +53,7 @@ namespace ResultRendering
 
     private static string ComplexityAsString(Change change)
     {
-        return change.Complexity.ToString(CultureInfo.InvariantCulture);
+        return change.Complexity.Value.ToString(CultureInfo.InvariantCulture);
     }
 
     private static string Labels(IFileHistory fileHistory)
