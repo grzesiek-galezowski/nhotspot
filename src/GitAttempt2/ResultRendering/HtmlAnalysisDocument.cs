@@ -77,10 +77,27 @@ namespace ResultRendering
     private void AddCouplingRanking(IEnumerable<Coupling> couplingMetrics, ICollection<CouplingViewModel> couplings)
     {
       foreach (var couplingViewModel in 
-        couplingMetrics.Select(c => new CouplingViewModel(c.Left.ToString(), c.Right.ToString(), c.CouplingCount, c.PercentageOfLeftCommits, c.PercentageOfTotalCommits)))
+        couplingMetrics.Select(ToViewModel)
+          .OrderByDescending(c => c.CouplingCount))
       {
         couplings.Add(couplingViewModel);
       }
+    }
+
+    private CouplingViewModel ToSwitchedViewModel(Coupling arg)
+    {
+      return ToViewModel(arg.WithSwitchedSides());
+    }
+
+    private static CouplingViewModel ToViewModel(Coupling c)
+    {
+      return new CouplingViewModel(
+        c.Left.ToString(), 
+        c.Right.ToString(), 
+        c.CouplingCount, 
+        c.PercentageOfLeftCommits, 
+        c.PercentageOfRightCommits, 
+        c.PercentageOfTotalCommits);
     }
 
     private Task<PackageTreeNodeViewModel> GetTree(PackageHistoryNode packageTree)

@@ -121,13 +121,7 @@ namespace ApplicationLogic
 
         private static Func<Coupling, Coupling> CouplingWithSwitchedSides()
         {
-            return c => new Coupling(
-                c.Right, 
-                c.Left, 
-                c.CouplingCount, 
-                c.PercentageOfRightCommits, 
-                c.PercentageOfLeftCommits,
-                c.PercentageOfTotalCommits);
+            return c => c.WithSwitchedSides();
         }
 
         public DateTimeOffset CreationDate()

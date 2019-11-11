@@ -50,10 +50,11 @@ namespace NHotSpot.Console
       Run(new []
       {
         "-r", 
-        //@"C:\Users\grzes\Documents\GitHub\nscan",
-        @"C:\Users\grzes\Documents\GitHub\kafka\",
-        //"-b", "master",
-        "-b", "trunk",
+        @"C:\Users\grzes\Documents\GitHub\nscan",
+        //@"C:\Users\grzes\Documents\GitHub\kafka\",
+        //@"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet\",
+        "-b", "master",
+        //"-b", "trunk",
         "--max-coupling-per-hospot", "20",
         "--max-hostpot-count", "100",
         "-o", "output.html",

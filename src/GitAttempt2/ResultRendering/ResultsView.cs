@@ -40,10 +40,14 @@ namespace ResultRendering
       return Tag("div",
         Tag("details",
           Tag("summary", H(2, Attribute("style", "display: inline"), "Coupling")),
-          Tag("table", viewModels.Take(100).Select(model => Tr(
-            Td(Text(model.CouplingCount)),
-            Td(Text(model.Left)),
-            Td(Text(model.Right))
+          Tag("table", viewModels.Take(100).Select(model => 
+            Tr(
+              Td(Text(model.CouplingCount)),
+              Td(Text(model.PercentageOfLeftCommits + "%")),
+              Td(Text(model.Left)),
+              Td(Text(model.PercentageOfRightCommits + "%")),
+              Td(Text(model.Right)),
+              Td(Text(model.PercentageOfTotalCommits + "%"))
           )))));
     }
   }

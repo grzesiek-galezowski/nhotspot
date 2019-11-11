@@ -25,5 +25,16 @@ namespace ApplicationLogic
       PercentageOfRightCommits = percentageOfRightCommits;
       PercentageOfTotalCommits = percentageOfTotalCommits;
     }
+
+    public Coupling WithSwitchedSides()
+    {
+      return new Coupling(
+        Right, 
+        Left, 
+        CouplingCount, 
+        PercentageOfRightCommits, 
+        PercentageOfLeftCommits,
+        PercentageOfTotalCommits);
+    }
   }
 }
