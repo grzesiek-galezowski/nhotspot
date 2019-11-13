@@ -33,20 +33,22 @@ namespace ApplicationLogic
         private readonly Maybe<RelativeDirectoryPath> _latestPackagePath;
         private readonly TimeSpan _timeSinceLastChange;
         private readonly TimeSpan _age;
+        private readonly IEnumerable<Mastery> _masteries;
 
         public ImmutableFileHistory(
-            RelativeFilePath pathOfCurrentVersion, 
-            double hotSpotRating, 
-            int changesCount, 
-            double complexityOfCurrentVersion, 
-            DateTimeOffset lastChangedDate, 
-            TimeSpan activityPeriod, 
-            IEnumerable<string> changeIds, 
-            DateTimeOffset creationDate, 
-            Maybe<RelativeDirectoryPath> latestPackagePath, 
-            TimeSpan timeSinceLastChange, 
-            TimeSpan age, 
-            IReadOnlyList<Change> entries)
+          RelativeFilePath pathOfCurrentVersion,
+          double hotSpotRating,
+          int changesCount,
+          double complexityOfCurrentVersion,
+          DateTimeOffset lastChangedDate,
+          TimeSpan activityPeriod,
+          IEnumerable<string> changeIds,
+          DateTimeOffset creationDate,
+          Maybe<RelativeDirectoryPath> latestPackagePath,
+          TimeSpan timeSinceLastChange,
+          TimeSpan age,
+          IEnumerable<Mastery> masteries,
+          IReadOnlyList<Change> entries)
         {
             _pathOfCurrentVersion = pathOfCurrentVersion;
             _hotSpotRating = hotSpotRating;
@@ -59,43 +61,23 @@ namespace ApplicationLogic
             _latestPackagePath = latestPackagePath;
             _timeSinceLastChange = timeSinceLastChange;
             _age = age;
+            _masteries = masteries;
             Entries = entries;
         }
 
-        public RelativeFilePath PathOfCurrentVersion()
-        {
-            return _pathOfCurrentVersion;
-        }
-
-        public double HotSpotRating()
-        {
-            return _hotSpotRating;
-        }
-
-        public int ChangesCount()
-        {
-            return _changesCount;
-        }
-
-        public double ComplexityOfCurrentVersion()
-        {
-            return _complexityOfCurrentVersion;
-        }
-
-        public DateTimeOffset LastChangeDate()
-        {
-            return _lastChangedDate;
-        }
-
-        public TimeSpan ActivityPeriod()
-        {
-            return _activityPeriod;
-        }
-
-        public IEnumerable<string> ChangeIds()
-        {
-            return _changeIds;
-        }
+        public RelativeFilePath PathOfCurrentVersion() => _pathOfCurrentVersion;
+        public double HotSpotRating() => _hotSpotRating;
+        public int ChangesCount() => _changesCount;
+        public double ComplexityOfCurrentVersion() => _complexityOfCurrentVersion;
+        public DateTimeOffset LastChangeDate() => _lastChangedDate;
+        public TimeSpan ActivityPeriod() => _activityPeriod;
+        public IEnumerable<string> ChangeIds() => _changeIds;
+        public DateTimeOffset CreationDate() => _creationDate;
+        public TimeSpan TimeSinceLastChange() => _timeSinceLastChange;
+        public TimeSpan Age() => _age;
+        public IReadOnlyList<Change> Entries { get; }
+        public IEnumerable<Mastery> Masteries() => _masteries;
+        public Maybe<RelativeDirectoryPath> LatestPackagePath() => _latestPackagePath;
 
         public Coupling CalculateCouplingTo(IFileHistory otherHistory, int totalCommits)
         {
@@ -123,23 +105,5 @@ namespace ApplicationLogic
         {
             return c => c.WithSwitchedSides();
         }
-
-        public DateTimeOffset CreationDate()
-        {
-            return _creationDate;
-        }
-
-        public TimeSpan TimeSinceLastChange()
-        {
-            return _timeSinceLastChange;
-        }
-
-        public TimeSpan Age()
-        {
-            return _age;
-        }
-
-        public IReadOnlyList<Change> Entries { get; }
-        public Maybe<RelativeDirectoryPath> LatestPackagePath() => _latestPackagePath;
     }
 }

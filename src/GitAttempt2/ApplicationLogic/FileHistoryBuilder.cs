@@ -48,19 +48,36 @@ namespace ApplicationLogic
 
         public IFileHistory ToImmutableFileHistory()
         {
-            return new ImmutableFileHistory(
-                _entries.Last().Path,
-                ComplexityMetrics.CalculateHotSpotRating(_complexityRank.Value, _changeCountRank.Value),
-                ChangesCount(),
-                ComplexityOfCurrentVersion(),
-                _entries.Last().ChangeDate,
-                _entries.Last().ChangeDate - _entries.First().ChangeDate,
-                _entries.Select(e => e.Id),
-                _entries.First().ChangeDate,
-                _entries.Last().Path.ParentDirectory(),
-                _clock.Now() - _entries.Last().ChangeDate,
-                _clock.Now() - _entries.First().ChangeDate,
-                _entries);
+          return new ImmutableFileHistory(
+            _entries.Last().Path,
+            ComplexityMetrics.CalculateHotSpotRating(_complexityRank.Value, _changeCountRank.Value),
+            ChangesCount(),
+            ComplexityOfCurrentVersion(),
+            _entries.Last().ChangeDate,
+            _entries.Last().ChangeDate - _entries.First().ChangeDate,
+            _entries.Select(e => e.Id),
+            _entries.First().ChangeDate,
+            _entries.Last().Path.ParentDirectory(),
+            _clock.Now() - _entries.Last().ChangeDate,
+            _clock.Now() - _entries.First().ChangeDate,
+            Masteries(),
+            _entries);
         }
+
+        private IEnumerable<Mastery> Masteries()
+        {
+          return _entries.GroupBy(change => change.AuthorName).Select(changesByAuthor => new Mastery(
+            changesByAuthor.Key,
+            changesByAuthor.Count(),
+            _entries.Count));
+        }
+  }
+
+  public class Mastery
+  {
+    public Mastery(string authorName, int commits, int totalFileCommits)
+    {
+      
+    }
   }
 }
