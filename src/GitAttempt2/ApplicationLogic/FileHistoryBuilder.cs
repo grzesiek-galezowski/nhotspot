@@ -60,24 +60,31 @@ namespace ApplicationLogic
             _entries.Last().Path.ParentDirectory(),
             _clock.Now() - _entries.Last().ChangeDate,
             _clock.Now() - _entries.First().ChangeDate,
-            Masteries(),
+            Contributions(),
             _entries);
         }
 
-        private IEnumerable<Mastery> Masteries()
+        private IEnumerable<Contribution> Contributions()
         {
-          return _entries.GroupBy(change => change.AuthorName).Select(changesByAuthor => new Mastery(
+          return _entries.GroupBy(change => change.AuthorName).Select(
+              changesByAuthor => new Contribution(
             changesByAuthor.Key,
             changesByAuthor.Count(),
-            _entries.Count));
+            _entries.Count)).Where(c => c.ChangeCount > 0);
         }
   }
 
-  public class Mastery
+  public class Contribution
   {
-    public Mastery(string authorName, int commits, int totalFileCommits)
+    public Contribution(string authorName, int commitsByAuthor, int totalFileCommits)
     {
-      
+        ChangeCount = commitsByAuthor;
+        ChangePercentage = commitsByAuthor / (decimal) totalFileCommits*100;
+        AuthorName = authorName;
     }
+
+    public string AuthorName { get; }
+    public decimal ChangePercentage { get; }
+    public int ChangeCount { get; }
   }
 }

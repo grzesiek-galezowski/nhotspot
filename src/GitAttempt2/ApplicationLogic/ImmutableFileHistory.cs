@@ -18,6 +18,7 @@ namespace ApplicationLogic
         TimeSpan Age();
         IReadOnlyList<Change> Entries { get; }
         Maybe<RelativeDirectoryPath> LatestPackagePath();
+        IEnumerable<Contribution> Contributions();
     }
 
     public class ImmutableFileHistory : IFileHistory
@@ -33,7 +34,7 @@ namespace ApplicationLogic
         private readonly Maybe<RelativeDirectoryPath> _latestPackagePath;
         private readonly TimeSpan _timeSinceLastChange;
         private readonly TimeSpan _age;
-        private readonly IEnumerable<Mastery> _masteries;
+        private readonly IEnumerable<Contribution> _contributions;
 
         public ImmutableFileHistory(
           RelativeFilePath pathOfCurrentVersion,
@@ -47,7 +48,7 @@ namespace ApplicationLogic
           Maybe<RelativeDirectoryPath> latestPackagePath,
           TimeSpan timeSinceLastChange,
           TimeSpan age,
-          IEnumerable<Mastery> masteries,
+          IEnumerable<Contribution> contributions,
           IReadOnlyList<Change> entries)
         {
             _pathOfCurrentVersion = pathOfCurrentVersion;
@@ -61,7 +62,7 @@ namespace ApplicationLogic
             _latestPackagePath = latestPackagePath;
             _timeSinceLastChange = timeSinceLastChange;
             _age = age;
-            _masteries = masteries;
+            _contributions = contributions;
             Entries = entries;
         }
 
@@ -76,7 +77,7 @@ namespace ApplicationLogic
         public TimeSpan TimeSinceLastChange() => _timeSinceLastChange;
         public TimeSpan Age() => _age;
         public IReadOnlyList<Change> Entries { get; }
-        public IEnumerable<Mastery> Masteries() => _masteries;
+        public IEnumerable<Contribution> Contributions() => _contributions;
         public Maybe<RelativeDirectoryPath> LatestPackagePath() => _latestPackagePath;
 
         public Coupling CalculateCouplingTo(IFileHistory otherHistory, int totalCommits)

@@ -28,7 +28,7 @@ namespace NHotSpot.Console
         //RepoPath = @"c:\Users\ftw637\source\repos\vp-bots\",
         //RepoPath = @"C:\Users\ftw637\Documents\GitHub\any",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\any",
-        RepoPath = @"C:\Users\grzes\Documents\GitHub\nscan",
+        //RepoPath = @"C:\Users\grzes\Documents\GitHub\nscan",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\AutoFixtureGenerator\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\TrainingExamples\",
         //RepoPath = @"C:\Users\grzes\Documents\GitHub\tdd-ebook\",
@@ -50,9 +50,11 @@ namespace NHotSpot.Console
       Run(new []
       {
         "-r", 
-        @"C:\Users\grzes\Documents\GitHub\nscan",
+        //@"C:\Users\grzes\Documents\GitHub\nscan",
+        //@"C:\Users\ftw637\Documents\GitHub\nscan",
         //@"C:\Users\grzes\Documents\GitHub\kafka\",
         //@"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet\",
+        @"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\",
         "-b", "master",
         //"-b", "trunk",
         "--max-coupling-per-hospot", "20",

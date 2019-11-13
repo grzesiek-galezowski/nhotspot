@@ -22,6 +22,7 @@ namespace ResultRendering
         TimeSinceLastChanged = (int)fileHistory.TimeSinceLastChange().TotalDays + " days",
         ActivePeriod = (int)fileHistory.ActivityPeriod().TotalDays + " days",
         Age = (int)fileHistory.Age().TotalDays + " days",
+        Contributions = ContributionsFrom(fileHistory),
         Path = fileHistory.PathOfCurrentVersion().ToString(),
         Rating = elementNum.ToString(),
         ChartValueDescription = "Complexity per change",
@@ -41,7 +42,15 @@ namespace ResultRendering
       return hotSpotViewModel;
     }
 
-    private static IEnumerable<ChangeViewModel> Changes(IFileHistory analysisResult)
+      private static IEnumerable<ContributionViewModel> ContributionsFrom(IFileHistory fileHistory)
+      {
+          return fileHistory.Contributions().Select(c => new ContributionViewModel(
+              c.ChangePercentage,
+              c.ChangeCount,
+              c.AuthorName));
+      }
+
+      private static IEnumerable<ChangeViewModel> Changes(IFileHistory analysisResult)
     {
       return analysisResult.Entries.Select(c => new ChangeViewModel(c.ChangeDate, c.Comment)).Reverse();
     }

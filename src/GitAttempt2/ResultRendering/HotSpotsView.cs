@@ -32,6 +32,10 @@ namespace ResultRendering
           ), 
         chartView.ChartDiv(40),
         Tag("details", 
+            Tag("summary", Text("Contributions")), 
+            Tag("table", ContributionRows(hotSpot))
+        ),
+        Tag("details", 
             Tag("summary", Text("History")), 
             Tag("table", HistoryRows(hotSpot))
         ),
@@ -44,9 +48,22 @@ namespace ResultRendering
       );
     }
 
+
     private static string JavaScriptCanvas(HotSpotViewModel hotSpot, ChartView chartView)
     {
         return chartView.ChartScript(hotSpot.Labels, hotSpot.Data, hotSpot.ChartValueDescription);
+    }
+
+    private static IEnumerable<IHtmlContent> ContributionRows(HotSpotViewModel hotSpot)
+    {
+        return hotSpot.Contributions.OrderByDescending(c => c.ChangePercentage)
+            .Select(contributionViewModel =>
+                Tr(Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
+                        Text(contributionViewModel.AuthorName)),
+                    Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
+                        Text(contributionViewModel.ChangeCount)),
+                    Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
+                        Text(contributionViewModel.ChangePercentage + "%"))));
     }
 
     private static IEnumerable<IHtmlContent> HistoryRows(HotSpotViewModel hotSpot)
