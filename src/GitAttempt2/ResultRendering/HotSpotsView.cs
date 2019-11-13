@@ -63,7 +63,7 @@ namespace ResultRendering
                     Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
                         Text(contributionViewModel.ChangeCount)),
                     Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
-                        Text(contributionViewModel.ChangePercentage + "%"))));
+                        Text(contributionViewModel.ChangePercentage.ToString("F2") + "%"))));
     }
 
     private static IEnumerable<IHtmlContent> HistoryRows(HotSpotViewModel hotSpot)

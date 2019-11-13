@@ -50,11 +50,11 @@ namespace NHotSpot.Console
       Run(new []
       {
         "-r", 
-        //@"C:\Users\grzes\Documents\GitHub\nscan",
+        @"C:\Users\grzes\Documents\GitHub\nscan",
         //@"C:\Users\ftw637\Documents\GitHub\nscan",
         //@"C:\Users\grzes\Documents\GitHub\kafka\",
         //@"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet\",
-        @"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\",
+        //@"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\",
         "-b", "master",
         //"-b", "trunk",
         "--max-coupling-per-hospot", "20",
