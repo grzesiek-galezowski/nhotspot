@@ -50,7 +50,8 @@ namespace NHotSpot.Console
       Run(new []
       {
         "-r", 
-        @"C:\Users\grzes\Documents\GitHub\nscan",
+        //@"C:\Users\grzes\Documents\GitHub\nscan",
+        @"c:\Users\ftw637\source\repos\vp-bots\",
         //@"C:\Users\ftw637\Documents\GitHub\nscan",
         //@"C:\Users\grzes\Documents\GitHub\kafka\",
         //@"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet\",
