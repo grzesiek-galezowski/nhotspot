@@ -8,6 +8,8 @@ namespace ResultRendering
 {
   public static class HotSpotsView
   {
+    private static readonly HtmlAttribute[] TdAttributes = Attribute("style", "border-bottom: 1pt solid gray;");
+
     public static IHtmlContent RenderFrom(IEnumerable<HotSpotViewModel> viewModelHotSpots, AnalysisConfig analysisConfig)
     {
       return Tag("div", 
@@ -56,23 +58,28 @@ namespace ResultRendering
 
     private static IEnumerable<IHtmlContent> ContributionRows(HotSpotViewModel hotSpot)
     {
-        return hotSpot.Contributions.OrderByDescending(c => c.ChangePercentage)
+        return Tag("tr", 
+          Tag("th", Text("Contributor")), 
+          Tag("th", Text("# Contributions")), 
+          Tag("th", Text("% Contributions"))
+        ).Concat(
+          hotSpot.Contributions.OrderByDescending(c => c.ChangePercentage)
             .Select(contributionViewModel =>
-                Tr(Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
-                        Text(contributionViewModel.AuthorName)),
-                    Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
-                        Text(contributionViewModel.ChangeCount)),
-                    Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
-                        Text(contributionViewModel.ChangePercentage.ToString("F2") + "%"))));
+                Tr(
+                  Td(TdAttributes, Text(contributionViewModel.AuthorName)),
+                  Td(TdAttributes, Text(contributionViewModel.ChangeCount)),
+                  Td(TdAttributes, Text(contributionViewModel.ChangePercentage.ToString("F2") + "%"))))
+          );
     }
 
     private static IEnumerable<IHtmlContent> HistoryRows(HotSpotViewModel hotSpot)
     {
       return hotSpot.Changes.Select(change =>
-        Tr(Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
+        Tr(Td(TdAttributes, 
                 Pre(change.ChangeDate.ToString(Constants.CommitDateFormat, CultureInfo.InvariantCulture))),
-          Td(Attribute("style", "border-bottom: 1pt solid gray;"), 
-              Pre(change.Comment))));
+          Td(TdAttributes, Pre(change.Author)),
+          Td(TdAttributes, Pre(change.Comment))
+          ));
     }
 
     private static IEnumerable<IHtmlContent> CouplingRows(HotSpotViewModel hotSpot, int count)
@@ -84,15 +91,12 @@ namespace ResultRendering
           Tag("th", Text("% Total Changes"))
           ).Concat(hotSpot.ChangeCoupling.Take(count).Select(change =>
         Tr(
-          Td(Attribute("style", "border-bottom: 1pt solid gray;"),
-            Text(change.Right)),
-          Td(Attribute("style", "border-bottom: 1pt solid gray;"),
-            Text(change.CouplingCount),
-          Td(Attribute("style", "border-bottom: 1pt solid gray;"),
-            Text(change.PercentageOfLeftCommits + "%"),
-          Td(Attribute("style", "border-bottom: 1pt solid gray;"),
-            Text(change.PercentageOfTotalCommits + "%")
-            ))))));
+          Td(TdAttributes, Text(change.Right)),
+          Td(TdAttributes, Text(change.CouplingCount)),
+          Td(TdAttributes, Text(change.PercentageOfLeftCommits + "%")),
+          Td(TdAttributes, Text(change.PercentageOfTotalCommits + "%"))
+        )
+      ));
     }
 
   }

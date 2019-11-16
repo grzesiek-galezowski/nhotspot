@@ -52,7 +52,8 @@ namespace ResultRendering
 
       private static IEnumerable<ChangeViewModel> Changes(IFileHistory analysisResult)
     {
-      return analysisResult.Entries.Select(c => new ChangeViewModel(c.ChangeDate, c.Comment)).Reverse();
+      return analysisResult.Entries.Select(c => 
+        new ChangeViewModel(c.ChangeDate, c.Comment, c.AuthorName)).Reverse();
     }
 
     private static string Data(IFileHistory fileHistory)
