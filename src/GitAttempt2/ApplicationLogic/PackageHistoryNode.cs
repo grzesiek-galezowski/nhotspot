@@ -3,12 +3,20 @@ using System.Collections.Generic;
 
 namespace ApplicationLogic
 {
-  public class PackageHistoryNode
+  public interface IPackageHistoryNode
+  {
+    bool HasParent();
+    void Accept(INodeVisitor visitor);
+    void AddChild(IPackageHistoryNode newNode);
+    void SetParent(IPackageHistoryNode packageHistoryNode);
+  }
+
+  public class PackageHistoryNode : IPackageHistoryNode
   {
     private readonly IFlatPackageHistory _value;
     private readonly IEnumerable<FileHistoryNode> _files;
-    private readonly List<PackageHistoryNode> _childPackages = new List<PackageHistoryNode>();
-    private PackageHistoryNode _parent;
+    private readonly List<IPackageHistoryNode> _childPackages = new List<IPackageHistoryNode>();
+    private IPackageHistoryNode _parent;
 
     public PackageHistoryNode(IFlatPackageHistory value, IEnumerable<FileHistoryNode> files)
     {
@@ -16,13 +24,13 @@ namespace ApplicationLogic
       _files = files;
     }
 
-    public void AddChild(PackageHistoryNode newNode)
+    public void AddChild(IPackageHistoryNode newNode)
     {
       _childPackages.Add(newNode);
       newNode.SetParent(this);
     }
 
-    private void SetParent(PackageHistoryNode packageHistoryNode)
+    public void SetParent(IPackageHistoryNode packageHistoryNode)
     {
       _parent = packageHistoryNode;
     }

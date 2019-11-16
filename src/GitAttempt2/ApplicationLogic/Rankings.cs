@@ -11,10 +11,10 @@ namespace ApplicationLogic
 {
   public class PackagesTree
   {
-    private Dictionary<RelativeDirectoryPath, PackageHistoryNode> NodeCache { get; } =
-      new Dictionary<RelativeDirectoryPath, PackageHistoryNode>();
+    private Dictionary<RelativeDirectoryPath, IPackageHistoryNode> NodeCache { get; } =
+      new Dictionary<RelativeDirectoryPath, IPackageHistoryNode>();
 
-    private void Set(RelativeDirectoryPath path, PackageHistoryNode newNode)
+    private void Set(RelativeDirectoryPath path, IPackageHistoryNode newNode)
     {
       NodeCache[path] = newNode;
     }
@@ -47,9 +47,19 @@ namespace ApplicationLogic
       BindWithParent(path, newNode);
     }
 
-    public PackageHistoryNode Root()
+    public IPackageHistoryNode Root()
     {
-      return NodeCache.Values.Single(n => !n.HasParent());
+      var potentialRoots = NodeCache.Values.Where(n => !n.HasParent()).ToArray();
+      if (!potentialRoots.Any())
+      {
+        return new NoFilesOrPackages();
+      }
+      if (potentialRoots.Count() > 1)
+      {
+        throw new Exception($"Detected {potentialRoots.Count()} potential roots. Programmer error");
+      }
+
+      return potentialRoots.Single();
     }
   }
 
@@ -91,13 +101,13 @@ namespace ApplicationLogic
       }
     }
 
-    public static PackageHistoryNode GatherPackageTreeMetricsByPath(IEnumerable<IFileHistory> fileChangeLogs)
+    public static IPackageHistoryNode GatherPackageTreeMetricsByPath(IEnumerable<IFileHistory> fileChangeLogs)
     {
-      var packagesTree = PackageHistoryNodeFactory.NewPackagesTree();
+      var packagesTree = PackageTreeFactory.NewPackagesTree();
       var flatPackageMetricsByPath = GatherFlatPackageHistoriesByPath(fileChangeLogs);
       foreach (var (path, packageHistory) in flatPackageMetricsByPath.ToList().OrderBy(kvp => kvp.Key))
       {
-        packagesTree.Add(path, PackageHistoryNodeFactory.NewPackageNode(packageHistory));
+        packagesTree.Add(path, PackageTreeFactory.NewPackageNode(packageHistory));
       }
 
       return packagesTree.Root();

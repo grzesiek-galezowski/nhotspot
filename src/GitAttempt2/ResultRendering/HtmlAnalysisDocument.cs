@@ -27,11 +27,12 @@ namespace ResultRendering
     {
       var viewModel = new ViewModel();
       AddCouplingRanking(analysisResults.CouplingMetrics(), viewModel.Couplings);
-      var chartDataTask = GenerateChartDataFrom(
-        analysisResults.EntriesByHotSpotRating(),
-        analysisResults.CouplingMetrics());
+      var chartDataTask = Task.Run(() => 
+        HotSpotViewModel.FromAsync(
+          analysisResults.EntriesByHotSpotRating(), 
+          analysisResults.CouplingMetrics()));
       var rankingTasks = RankingTasks(analysisResults);
-      var getTreeTask = GetTree(analysisResults.PackageTree());
+      var getTreeTask = Task.Run(() => PackageTreeNodeViewModel.From(analysisResults.PackageTree()));
 
       Task.WaitAll(rankingTasks.Concat(new Task[] {getTreeTask, chartDataTask}).ToArray());
 
@@ -69,21 +70,6 @@ namespace ResultRendering
       {
         couplings.Add(couplingViewModel);
       }
-    }
-
-    private Task<PackageTreeNodeViewModel> GetTree(PackageHistoryNode packageTree)
-    {
-      return Task.Run(() => PackageTreeNodeViewModel.From(packageTree));
-    }
-
-    private static Task<IEnumerable<HotSpotViewModel>> GenerateChartDataFrom(
-      IEnumerable<IFileHistory> entries, 
-        IEnumerable<Coupling> couplingMetrics)
-    {
-      return Task.Run(() =>
-      {
-        return entries.Select((history, i) => HotSpotViewModel.From(couplingMetrics, i, history));
-      });
     }
   }
 }

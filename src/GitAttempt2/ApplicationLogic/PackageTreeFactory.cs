@@ -2,7 +2,7 @@ using System.Linq;
 
 namespace ApplicationLogic
 {
-  public static class PackageHistoryNodeFactory
+  public static class PackageTreeFactory
   {
     public static PackageHistoryNode NewPackageNode(IFlatPackageHistory packageHistory)
     {

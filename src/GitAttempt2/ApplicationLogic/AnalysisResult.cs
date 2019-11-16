@@ -6,7 +6,7 @@ namespace ApplicationLogic
 {
   public class AnalysisResult
   {
-    private readonly PackageHistoryNode _packageHistoryRootNode;
+    private readonly IPackageHistoryNode _packageHistoryRootNode;
     private readonly IEnumerable<Coupling> _changeCouplings;
     private readonly IOrderedEnumerable<IFileHistory> _entriesByHotSpotRating;
     private readonly IEnumerable<IFileHistory> _entriesByDiminishingComplexity;
@@ -19,7 +19,7 @@ namespace ApplicationLogic
     public AnalysisResult(IEnumerable<IFileHistory> fileHistories,
       Dictionary<RelativeDirectoryPath, IFlatPackageHistory> packageHistoriesByPath,
       string normalizedPathToRepository, 
-      PackageHistoryNode packageHistoryRootNode, 
+      IPackageHistoryNode packageHistoryRootNode, 
       IEnumerable<Coupling> changeCouplings)
     {
       PathToRepository = normalizedPathToRepository;
@@ -36,7 +36,7 @@ namespace ApplicationLogic
 
     public string PathToRepository { get; }
 
-    public PackageHistoryNode PackageTree()
+    public IPackageHistoryNode PackageTree()
     {
       return _packageHistoryRootNode;
     }

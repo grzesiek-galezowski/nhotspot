@@ -26,7 +26,7 @@ namespace ResultRendering
       get { return _hotSpotRating + Children.Sum(c => c.HotSpotRating); }
     }
 
-    public static PackageTreeNodeViewModel From(PackageHistoryNode packageTree)
+    public static PackageTreeNodeViewModel From(IPackageHistoryNode packageTree)
     {
       var packageNodeViewModelVisitor = new PackageNodeViewModelVisitor();
       packageTree.Accept(packageNodeViewModelVisitor);

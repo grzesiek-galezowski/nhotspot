@@ -23,7 +23,7 @@ namespace ApplicationLogicSpecification
       var clock = Any.Instance<IClock>();
       var nodeVisitor = Substitute.For<INodeVisitor>();
 
-      var analysisResult = new RepoAnalysis(clock, 200).ExecuteOn(
+      var analysisResult = new RepoAnalysis(clock, 0).ExecuteOn(
         new MockSourceControlRepository("REPO", v =>
       {
         v.OnAdded(File("src/Readme.txt"));
@@ -31,7 +31,10 @@ namespace ApplicationLogicSpecification
         v.OnAdded(File("src/Csharp/Project2/lol.cs"));
         v.OnAdded(File("src/Java/src/lol.cs"));
         v.OnAdded(File("src/Java/test/lol.cs"));
-      }));
+      })
+        {
+          TotalCommits = 1
+        });
 
       var tree = analysisResult.PackageTree();
 
@@ -162,6 +165,6 @@ namespace ApplicationLogicSpecification
     }
 
     public string Path { get; }
-    public int TotalCommits { get; } = 0;
+    public int TotalCommits { get; set; } = 0;
   }
 }

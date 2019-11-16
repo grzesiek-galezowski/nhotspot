@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ApplicationLogic;
 
 namespace ResultRendering
@@ -27,6 +28,11 @@ namespace ResultRendering
         i + 1,
         log,
         log.Filter(couplingMetrics));
+    }
+
+    public static IEnumerable<HotSpotViewModel> FromAsync(IEnumerable<IFileHistory> entries, IEnumerable<Coupling> couplingMetrics)
+    {
+      return entries.Select((history, i) => HotSpotViewModel.From(couplingMetrics, i, history));
     }
   }
 }

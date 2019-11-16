@@ -11,8 +11,13 @@ namespace ApplicationLogicSpecification
 
     public Change Build()
     {
-      string fileText = FileText;
-      return ChangeFactory.CreateChange(Path, fileText, AuthorName, ChangeDate, ChangeComment, Id);
+      return ChangeFactory.CreateChange(
+        Path, 
+        FileText, 
+        AuthorName, 
+        ChangeDate, 
+        ChangeComment, 
+        Id);
     }
 
     public string AuthorName { get; } = Any.Instance<string>();
