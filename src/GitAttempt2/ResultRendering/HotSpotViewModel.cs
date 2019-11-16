@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ApplicationLogic;
 
 namespace ResultRendering
 {
@@ -19,5 +20,13 @@ namespace ResultRendering
     public IEnumerable<ChangeViewModel> Changes { get; set; }
     public IEnumerable<CouplingViewModel> ChangeCoupling { get; set; }
     public IEnumerable<ContributionViewModel> Contributions { get; set; }
+
+    public static HotSpotViewModel From(IEnumerable<Coupling> couplingMetrics, int i, IFileHistory log)
+    {
+      return HtmlChartSingleResultTemplate.FillWith(
+        i + 1,
+        log,
+        log.Filter(couplingMetrics));
+    }
   }
 }

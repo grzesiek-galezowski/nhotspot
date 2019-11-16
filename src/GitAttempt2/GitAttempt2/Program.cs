@@ -51,9 +51,10 @@ namespace NHotSpot.Console
       {
         "-r", 
         //@"C:\Users\grzes\Documents\GitHub\nscan",
-        @"c:\Users\ftw637\source\repos\vp-bots\",
+        //@"c:\Users\ftw637\source\repos\vp-bots\",
         //@"C:\Users\ftw637\Documents\GitHub\nscan",
         //@"C:\Users\grzes\Documents\GitHub\kafka\",
+        @"C:\Users\grzes\Documents\GitHub\nhotspot\",
         //@"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet\",
         //@"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\",
         "-b", "master",

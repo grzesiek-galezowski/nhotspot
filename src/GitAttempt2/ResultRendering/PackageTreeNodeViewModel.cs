@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ApplicationLogic;
 
 namespace ResultRendering
 {
@@ -23,6 +24,13 @@ namespace ResultRendering
     public double HotSpotRating
     {
       get { return _hotSpotRating + Children.Sum(c => c.HotSpotRating); }
+    }
+
+    public static PackageTreeNodeViewModel From(PackageHistoryNode packageTree)
+    {
+      var packageNodeViewModelVisitor = new PackageNodeViewModelVisitor();
+      packageTree.Accept(packageNodeViewModelVisitor);
+      return packageNodeViewModelVisitor.ToPackageNodeViewModel();
     }
   }
 }

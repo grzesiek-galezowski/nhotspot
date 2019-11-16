@@ -1,3 +1,5 @@
+using ApplicationLogic;
+
 namespace ResultRendering
 {
   public class CouplingViewModel
@@ -22,6 +24,17 @@ namespace ResultRendering
       PercentageOfLeftCommits = percentageOfLeftCommits;
       PercentageOfRightCommits = percentageOfRightCommits;
       PercentageOfTotalCommits = percentageOfTotalCommits;
+    }
+
+    public static CouplingViewModel From(Coupling c)
+    {
+      return new CouplingViewModel(
+        c.Left.ToString(), 
+        c.Right.ToString(), 
+        c.CouplingCount, 
+        c.PercentageOfLeftCommits, 
+        c.PercentageOfRightCommits, 
+        c.PercentageOfTotalCommits);
     }
   }
 }
