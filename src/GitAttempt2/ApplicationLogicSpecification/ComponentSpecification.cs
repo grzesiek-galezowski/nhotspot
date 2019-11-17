@@ -2,14 +2,13 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using ApplicationLogic;
+using AtmaFileSystem;
 using FluentAssertions;
 using GitAnalysis;
-using NHotSpot.Console;
 using NSubstitute;
 using NUnit.Framework;
 using ResultRendering;
 using TddXt.AnyRoot.Strings;
-using TddXt.XNSubstitute;
 using static AtmaFileSystem.AtmaFileSystemPaths;
 using static TddXt.AnyRoot.Root;
 
@@ -26,45 +25,49 @@ namespace ApplicationLogicSpecification
       var analysisResult = new RepoAnalysis(clock, 0).ExecuteOn(
         new MockSourceControlRepository("REPO", v =>
       {
-        v.OnAdded(File("src/Readme.txt"));
-        v.OnAdded(File("src/Csharp/Project1/lol.cs"));
-        v.OnAdded(File("src/Csharp/Project2/lol.cs"));
-        v.OnAdded(File("src/Java/src/lol.cs"));
-        v.OnAdded(File("src/Java/test/lol.cs"));
-      })
-        {
-          TotalCommits = 1
-        });
+        v.Add(File("src/Readme.txt"));
+        v.Add(File("src/CSharp/Project1/lol.cs"));
+        v.Add(File("src/CSharp/Project2/lol.cs"));
+        v.Add(File("src/Java/src/lol.java"));
+        v.Add(File("src/Java/test/lol.java"));
+        v.Commit();
+      }));
 
       var tree = analysisResult.PackageTree();
 
-      tree.Accept(nodeVisitor);
+      var testNodeVisitor = new TestNodeVisitor();
+      tree.Accept(testNodeVisitor);
 
-      //THEN
-      Received.InOrder(() =>
-      {
-        nodeVisitor.BeginVisiting(Package("src"));
-        nodeVisitor.BeginVisiting(Package("CSharp"));
-        nodeVisitor.EndVisiting(Package("CSharp"));
-        nodeVisitor.BeginVisiting(Package("Java"));
-        nodeVisitor.EndVisiting(Package("Java"));
-        nodeVisitor.EndVisiting(Package("src"));
-      });
+      var root = RelativeDirectoryPath(".");
+      var src = RelativeDirectoryPath(@".\src");
+      var java = RelativeDirectoryPath(@".\src\Java");
+      var javasrc = RelativeDirectoryPath(@".\src\Java\src");
+      var javatest = RelativeDirectoryPath(@".\src\Java\test");
+      var csharp = RelativeDirectoryPath(@".\src\CSharp");
+      var csharpProject1 = RelativeDirectoryPath(@".\src\CSharp\Project1");
+      var csharpProject2 = RelativeDirectoryPath(@".\src\CSharp\Project2");
+      testNodeVisitor.OrderedPackages.Select(p => (p.nesting, p.history.PathOfCurrentVersion())).Should().BeEquivalentTo(
+        new System.Collections.Generic.List<(int nesting, RelativeDirectoryPath path)>
+        {
+          (1, root),
+          (2, src),
+          (3, java),
+          (4, javasrc),
+          (4, javatest),
+          (3, csharp),
+          (4, csharpProject1),
+          (4, csharpProject2),
+        });
+
+      testNodeVisitor.PackagesByPath[root].ComplexityOfCurrentVersion().Should().Be(0);
     }
 
-    private static IFlatPackageHistory Package(string expected)
-    {
-      return Arg.Is<IFlatPackageHistory>(
-        log => log.PathOfCurrentVersion() == RelativeDirectoryPath(expected)
-      //  ,log => log.ChangesCount().Should().Be(1) bug
-      );
-    }
-
-    private static Change File(string file1)
+    private static Change File(string file1, int complexity)
     {
       return new ChangeBuilder
       {
         Path = file1,
+        FileText = complexity.Times()
       }.Build();
     }
 
@@ -84,7 +87,7 @@ namespace ApplicationLogicSpecification
 
       var analysisResult = new RepoAnalysis(clock, 200).ExecuteOn(new MockSourceControlRepository(repoPath, v =>
       {
-        v.OnAdded(change1);
+        v.Add(change1);
       }));
 
       analysisResult.PathToRepository.Should().Be(repoPath);
@@ -144,27 +147,71 @@ namespace ApplicationLogicSpecification
     //TODO test package tree
   }
 
-  public class MockSourceControlRepository : ISourceControlRepository
+  public class MockTreeVisitor : IMockTreeVisitor
   {
-    public static MockSourceControlRepository Default(Action<ITreeVisitor> action)
+    private readonly ITreeVisitor _visitor;
+    private int _commits = 0;
+
+    public MockTreeVisitor(ITreeVisitor visitor)
     {
-      return new MockSourceControlRepository(Any.String(), action);
+      _visitor = visitor;
     }
 
-    private readonly Action<ITreeVisitor> _action;
-
-    public MockSourceControlRepository(string path, Action<ITreeVisitor> action)
+    public void Modify(Change change)
     {
-      _action = action;
-      Path = path;
+      _visitor.OnModified(change);
     }
 
-    public void CollectResults(ITreeVisitor visitor)
+    public void Rename(RelativeFilePath oldPath, Change change)
     {
-      _action(visitor);
+      _visitor.OnRenamed(oldPath, change);
     }
 
-    public string Path { get; }
-    public int TotalCommits { get; set; } = 0;
+    public void Copy(Change change)
+    {
+      _visitor.OnCopied(change);
+    }
+
+    public void Add(Change change)
+    {
+      _visitor.OnAdded(change);
+    }
+
+    public void Remove(RelativeFilePath removedEntryPath)
+    {
+      _visitor.OnRemoved(removedEntryPath);
+    }
+
+    public void Commit()
+    {
+      _commits++;
+    }
+
+    public int CommitCount()
+    {
+      return _commits;
+    }
+  }
+
+  public interface IMockTreeVisitor
+  {
+    void Modify(Change change);
+    void Rename(RelativeFilePath oldPath, Change change);
+    void Copy(Change change);
+    void Add(Change change);
+    void Remove(RelativeFilePath removedEntryPath);
+    void Commit();
+    int CommitCount();
+  }
+
+  public static class TimesExtensions
+  {
+    public static void Times(this int num, Action action)
+    {
+      for (int i = 0; i < num; ++i)
+      {
+        action();
+      }
+    }
   }
 }
