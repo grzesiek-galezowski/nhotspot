@@ -1,10 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using ApplicationLogic;
-using Fclp;
-using GitAnalysis;
-using ResultRendering;
 
 namespace NHotSpot.Console
 {
@@ -18,36 +13,10 @@ namespace NHotSpot.Console
     static void Main(string[] args)
     {
 
-      var analysisConfig = new AnalysisConfig()
-      {
-        //Branch = "trunk",
-        Branch = "master",
-        MaxCouplingsPerHotSpot = 20,
-        MaxHotSpotCount = 100,
-        OutputFile = "output.html",
-        //RepoPath = @"c:\Users\ftw637\source\repos\vp-bots\",
-        //RepoPath = @"C:\Users\ftw637\Documents\GitHub\any",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\any",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\nscan",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\AutoFixtureGenerator\",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\TrainingExamples\",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\tdd-ebook\",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\AutoFixture\",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\simple-nlp\",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\Functional.Maybe\",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\nodatime\",
-        //RepoPath = @"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\NSubstitute\",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\kafka\",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet",
-        //RepoPath = @"C:\Users\grzes\Documents\GitHub\nunit",
-        MinChangeCount = 1
-      };
-
       var sw = new Stopwatch();
       sw.Start();
 
-      Run(new []
+      Program.Run(new []
       {
         "-r", 
         //@"C:\Users\grzes\Documents\GitHub\nscan",
@@ -55,7 +24,8 @@ namespace NHotSpot.Console
         //@"C:\Users\ftw637\Documents\GitHub\nscan",
         //@"C:\Users\grzes\Documents\GitHub\kafka\",
         //@"C:\Users\grzes\Documents\GitHub\nhotspot\",
-        @"c:\Users\ftw637\source\repos\vp-bot-gateway\",
+        @"C:\Users\ftw637\Documents\GitHub\nhotspot\",
+        //@"c:\Users\ftw637\source\repos\vp-bot-gateway\",
         //@"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet\",
         //@"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\",
         "-b", "master",
@@ -67,28 +37,6 @@ namespace NHotSpot.Console
       });
       sw.Stop();
       System.Console.WriteLine("Total " + sw.Elapsed);
-    }
-
-    private static void Run(string[] args)
-    {
-      var analysisConfig = CommandLineParser.Parse(args);
-      var analysisResult = GitRepoAnalysis.Analyze(
-        analysisConfig.RepoPath,
-        analysisConfig.Branch,
-        analysisConfig.MinChangeCount,
-        //DateTime.Now - TimeSpan.FromDays(366));
-        SinceBeginning());
-      
-      var readyDocument = new HtmlAnalysisDocument(analysisConfig)
-        .RenderString(analysisResult);
-      
-      File.WriteAllText(analysisConfig.OutputFile, readyDocument);
-      Browser.Open(analysisConfig.OutputFile);
-    }
-
-    private static DateTime SinceBeginning()
-    {
-      return DateTime.MinValue + TimeSpan.FromDays(300);
     }
   }
 }
