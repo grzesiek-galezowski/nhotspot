@@ -9,8 +9,12 @@ using NSubstitute;
 using NUnit.Framework;
 using ResultRendering;
 using TddXt.AnyRoot.Strings;
+using static System.Environment;
+using static System.Linq.Enumerable;
 using static AtmaFileSystem.AtmaFileSystemPaths;
+using static FactoryMethods;
 using static TddXt.AnyRoot.Root;
+using PackagePathsWithNesting = System.Collections.Generic.List<(int nesting, AtmaFileSystem.RelativeDirectoryPath path)>;
 
 namespace ApplicationLogicSpecification
 { 
@@ -20,16 +24,14 @@ namespace ApplicationLogicSpecification
     public void ShouldCreateRepoTreeWithNesting()
     {
       var clock = Any.Instance<IClock>();
-      var nodeVisitor = Substitute.For<INodeVisitor>();
-
       var analysisResult = new RepoAnalysis(clock, 0).ExecuteOn(
         new MockSourceControlRepository("REPO", v =>
       {
-        v.Add(File("src/Readme.txt"));
-        v.Add(File("src/CSharp/Project1/lol.cs"));
-        v.Add(File("src/CSharp/Project2/lol.cs"));
-        v.Add(File("src/Java/src/lol.java"));
-        v.Add(File("src/Java/test/lol.java"));
+        v.Add(File("src/Readme.txt", 1));
+        v.Add(File("src/CSharp/Project1/lol.cs", 4));
+        v.Add(File("src/CSharp/Project2/lol.cs", 5));
+        v.Add(File("src/Java/src/lol.java", 6));
+        v.Add(File("src/Java/test/lol.java", 7));
         v.Commit();
       }));
 
@@ -47,7 +49,7 @@ namespace ApplicationLogicSpecification
       var csharpProject1 = RelativeDirectoryPath(@".\src\CSharp\Project1");
       var csharpProject2 = RelativeDirectoryPath(@".\src\CSharp\Project2");
       testNodeVisitor.OrderedPackages.Select(p => (p.nesting, p.history.PathOfCurrentVersion())).Should().BeEquivalentTo(
-        new System.Collections.Generic.List<(int nesting, RelativeDirectoryPath path)>
+        new PackagePathsWithNesting
         {
           (1, root),
           (2, src),
@@ -60,17 +62,41 @@ namespace ApplicationLogicSpecification
         });
 
       testNodeVisitor.PackagesByPath[root].ComplexityOfCurrentVersion().Should().Be(0);
-    }
+      testNodeVisitor.PackagesByPath[src].ComplexityOfCurrentVersion().Should().Be(0);
+      testNodeVisitor.PackagesByPath[java].ComplexityOfCurrentVersion().Should().Be(0);
+      testNodeVisitor.PackagesByPath[javasrc].ComplexityOfCurrentVersion().Should().Be(6);
+      testNodeVisitor.PackagesByPath[javatest].ComplexityOfCurrentVersion().Should().Be(7);
+      testNodeVisitor.PackagesByPath[csharp].ComplexityOfCurrentVersion().Should().Be(0);
+      testNodeVisitor.PackagesByPath[csharpProject1].ComplexityOfCurrentVersion().Should().Be(4);
+      testNodeVisitor.PackagesByPath[csharpProject2].ComplexityOfCurrentVersion().Should().Be(5);
 
-    private static Change File(string file1, int complexity)
-    {
-      return new ChangeBuilder
-      {
-        Path = file1,
-        FileText = complexity.Times()
-      }.Build();
-    }
+      testNodeVisitor.PackagesByPath[root]          .ChangesCount().Should().Be(0);
+      testNodeVisitor.PackagesByPath[src]           .ChangesCount().Should().Be(0);
+      testNodeVisitor.PackagesByPath[java]          .ChangesCount().Should().Be(0);
+      testNodeVisitor.PackagesByPath[javasrc]       .ChangesCount().Should().Be(1);
+      testNodeVisitor.PackagesByPath[javatest]      .ChangesCount().Should().Be(1);
+      testNodeVisitor.PackagesByPath[csharp]        .ChangesCount().Should().Be(0);
+      testNodeVisitor.PackagesByPath[csharpProject1].ChangesCount().Should().Be(1);
+      testNodeVisitor.PackagesByPath[csharpProject2].ChangesCount().Should().Be(1);
 
+      testNodeVisitor.PackagesByPath[root]          .HotSpotRating().Should().Be(0);
+      testNodeVisitor.PackagesByPath[src]           .HotSpotRating().Should().Be(0);
+      testNodeVisitor.PackagesByPath[java]          .HotSpotRating().Should().Be(0);
+      testNodeVisitor.PackagesByPath[javasrc]       .HotSpotRating().Should().Be(4.5);
+      testNodeVisitor.PackagesByPath[javatest]      .HotSpotRating().Should().Be(6);
+      testNodeVisitor.PackagesByPath[csharp]        .HotSpotRating().Should().Be(0);
+      testNodeVisitor.PackagesByPath[csharpProject1].HotSpotRating().Should().Be(1.5);
+      testNodeVisitor.PackagesByPath[csharpProject2].HotSpotRating().Should().Be(3);
+
+      testNodeVisitor.PackagesByPath[root]          .Files.Count().Should().Be(0);
+      testNodeVisitor.PackagesByPath[src]           .Files.Count().Should().Be(0);
+      testNodeVisitor.PackagesByPath[java]          .Files.Count().Should().Be(0);
+      testNodeVisitor.PackagesByPath[javasrc]       .Files.Count().Should().Be(1);
+      testNodeVisitor.PackagesByPath[javatest]      .Files.Count().Should().Be(1);
+      testNodeVisitor.PackagesByPath[csharp]        .Files.Count().Should().Be(0);
+      testNodeVisitor.PackagesByPath[csharpProject1].Files.Count().Should().Be(1);
+      testNodeVisitor.PackagesByPath[csharpProject2].Files.Count().Should().Be(1);
+    }
 
     [Test] 
     public void METHOD()
@@ -82,17 +108,18 @@ namespace ApplicationLogicSpecification
       var change1 = new ChangeBuilder
       {
         Path = file1,
-        ChangeDate = changeDate1
+        ChangeDate = changeDate1,
       }.Build();
 
       var analysisResult = new RepoAnalysis(clock, 200).ExecuteOn(new MockSourceControlRepository(repoPath, v =>
       {
         v.Add(change1);
+        v.Commit();
       }));
 
       analysisResult.PathToRepository.Should().Be(repoPath);
       analysisResult.EntriesByDiminishingActivityPeriod().Should().HaveCount(1);
-      var fileChangeLog = analysisResult.EntriesByDiminishingActivityPeriod().First();
+      var fileChangeLog = analysisResult.EntriesByDiminishingActivityPeriod().Single();
       fileChangeLog.ActivityPeriod().Should().Be(TimeSpan.Zero);
       fileChangeLog.CreationDate().Should().Be(changeDate1);
       fileChangeLog.LastChangeDate().Should().Be(changeDate1);

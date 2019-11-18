@@ -22,32 +22,37 @@ namespace ResultRendering
     private static IHtmlContent RenderHotSpot(HotSpotViewModel hotSpot, AnalysisConfig analysisConfig)
     {
         var chartView = new ChartView($"myChart{hotSpot.Rating}");
+        var maxCouplingPerHotSpot = analysisConfig.MaxCouplingsPerHotSpot;
         return Tag("div",
         H(2, $"{hotSpot.Rating}. {hotSpot.Path}"),
         Tag("table",
-          Tr(Td(Text("Rating")), Td(Text(hotSpot.Rating))),
-          Tr(Td(Text("Complexity")), Td(Text(hotSpot.Complexity))),
-          Tr(Td(Text("Changes")), Td(Text(hotSpot.ChangesCount))),
-          Tr(Td(Text("Created")), Td(Text(hotSpot.Age + " ago"))),
-          Tr(Td(Text("Last Changed")), Td(Text(hotSpot.TimeSinceLastChanged + " ago"))),
-          Tr(Td(Text("Active for")), Td(Text($"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})")))
+          KeyValueRow("Rating", hotSpot.Rating),
+          KeyValueRow("Complexity", hotSpot.Complexity),
+          KeyValueRow("Changes", hotSpot.ChangesCount),
+          KeyValueRow("Created", hotSpot.Age + " ago"),
+          KeyValueRow("Last Changed", hotSpot.TimeSinceLastChanged + " ago"),
+          KeyValueRow("Active for", $"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})")
           ), 
-        chartView.ChartDiv(40),
-        Tag("details", 
-            Tag("summary", Text("Contributions")), 
-            Tag("table", ContributionRows(hotSpot))
-        ),
-        Tag("details", 
-            Tag("summary", Text("History")), 
-            Tag("table", HistoryRows(hotSpot))
-        ),
-        Tag("details", 
-            Tag("summary", Text($"Coupling (Top {analysisConfig.MaxCouplingsPerHotSpot})")), 
-            Tag("table", 
-              CouplingRows(hotSpot, analysisConfig.MaxCouplingsPerHotSpot))
-        ),
+        chartView.ChartDiv(80),
+        UnrollableTable("Contributions", ContributionRows(hotSpot)),
+        UnrollableTable("History", HistoryRows(hotSpot)),
+        UnrollableTable($"Coupling (Top {maxCouplingPerHotSpot})", 
+            CouplingRows(hotSpot, maxCouplingPerHotSpot)),
         Tag("script", Text(JavaScriptCanvas(hotSpot, chartView)))
       );
+    }
+
+    private static IHtmlContent KeyValueRow(string rating, string hotSpotRating)
+    {
+        return Tr(Td(Text(rating)), Td(Text(hotSpotRating)));
+    }
+
+    private static IHtmlContent UnrollableTable(string summary, IEnumerable<IHtmlContent> rows)
+    {
+        return Tag("details", 
+            Tag("summary", Text(summary)), 
+            Tag("table", rows)
+        );
     }
 
 

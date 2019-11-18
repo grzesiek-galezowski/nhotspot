@@ -8,7 +8,7 @@ using ResultRendering;
 
 namespace NHotSpot.Console
 {
-  public class Program
+  public class EntryPoint
   {
     //TODO histogram of age (how many files live each number of months)
     //TODO count complexity increase/decrease numbers and increase ratio (how many complexity drops vs complexity increases)
@@ -54,7 +54,8 @@ namespace NHotSpot.Console
         //@"c:\Users\ftw637\source\repos\vp-bots\",
         //@"C:\Users\ftw637\Documents\GitHub\nscan",
         //@"C:\Users\grzes\Documents\GitHub\kafka\",
-        @"C:\Users\grzes\Documents\GitHub\nhotspot\",
+        //@"C:\Users\grzes\Documents\GitHub\nhotspot\",
+        @"c:\Users\ftw637\source\repos\vp-bot-gateway\",
         //@"C:\Users\grzes\Documents\GitHub\botbuilder-dotnet\",
         //@"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\",
         "-b", "master",
