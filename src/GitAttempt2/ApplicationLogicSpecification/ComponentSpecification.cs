@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using ApplicationLogic;
-using AtmaFileSystem;
 using FluentAssertions;
 using GitAnalysis;
 using NSubstitute;
@@ -25,15 +24,24 @@ namespace ApplicationLogicSpecification
     {
       var clock = Any.Instance<IClock>();
       var analysisResult = new RepoAnalysis(clock, 0).ExecuteOn(
-        new MockSourceControlRepository("REPO", v =>
-      {
-        v.Add(File("src/Readme.txt", 1));
-        v.Add(File("src/CSharp/Project1/lol.cs", 4));
-        v.Add(File("src/CSharp/Project2/lol.cs", 5));
-        v.Add(File("src/Java/src/lol.java", 6));
-        v.Add(File("src/Java/test/lol.java", 7));
-        v.Commit();
-      }));
+        new MockSourceControlRepository("REPO", root2 =>
+        {
+          root2.Dir("src", src2 => 
+          {
+            src2.File("Readme.txt").Complexity(1).Add();
+            src2.Dir("CSharp", csharp2 =>
+            {
+              csharp2.Dir("Project1").File("lol.cs").Complexity(4).Add();
+              csharp2.Dir("Project2").File("lol.cs").Complexity(5).Add();
+            });
+            src2.Dir("Java", java2 =>
+            {
+              java2.Dir("src").File("lol.java") .Complexity(6).Add();
+              java2.Dir("test").File("lol.java").Complexity(7).Add();
+            });
+          });
+          root2.Commit(); //bug
+        }));
 
       var tree = analysisResult.PackageTree();
 
@@ -172,73 +180,5 @@ namespace ApplicationLogicSpecification
         System.Console.WriteLine(sw.ElapsedMilliseconds);
     }
     //TODO test package tree
-  }
-
-  public class MockTreeVisitor : IMockTreeVisitor
-  {
-    private readonly ITreeVisitor _visitor;
-    private int _commits = 0;
-
-    public MockTreeVisitor(ITreeVisitor visitor)
-    {
-      _visitor = visitor;
-    }
-
-    public void Modify(Change change)
-    {
-      _visitor.OnModified(change);
-    }
-
-    public void Rename(RelativeFilePath oldPath, Change change)
-    {
-      _visitor.OnRenamed(oldPath, change);
-    }
-
-    public void Copy(Change change)
-    {
-      _visitor.OnCopied(change);
-    }
-
-    public void Add(Change change)
-    {
-      _visitor.OnAdded(change);
-    }
-
-    public void Remove(RelativeFilePath removedEntryPath)
-    {
-      _visitor.OnRemoved(removedEntryPath);
-    }
-
-    public void Commit()
-    {
-      _commits++;
-    }
-
-    public int CommitCount()
-    {
-      return _commits;
-    }
-  }
-
-  public interface IMockTreeVisitor
-  {
-    void Modify(Change change);
-    void Rename(RelativeFilePath oldPath, Change change);
-    void Copy(Change change);
-    void Add(Change change);
-    void Remove(RelativeFilePath removedEntryPath);
-    void Commit();
-    int CommitCount();
-  }
-
-  public static class TimesExtensions
-  {
-    public static void Times(this int num, Action action)
-    {
-      for (int i = 0; i < num; ++i)
-      {
-        action();
-      }
-    }
   }
 }
