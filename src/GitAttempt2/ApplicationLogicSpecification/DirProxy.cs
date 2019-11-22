@@ -6,9 +6,9 @@ namespace ApplicationLogicSpecification
   public class DirProxy
   {
     private readonly RelativeDirectoryPath _dirName;
-    private readonly MockTreeVisitor _context;
+    private readonly RepositoryEvolution _context;
 
-    public DirProxy(RelativeDirectoryPath dirName, MockTreeVisitor context)
+    public DirProxy(RelativeDirectoryPath dirName, RepositoryEvolution context)
     {
       _dirName = dirName;
       _context = context;

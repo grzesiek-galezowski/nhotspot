@@ -1,15 +1,17 @@
 using System;
+using System.IO;
 using ApplicationLogic;
 using AtmaFileSystem;
+using FluentAssertions;
 
 namespace ApplicationLogicSpecification
 {
-  public class MockTreeVisitor : IMockTreeVisitor
+  public class RepositoryEvolution : IRepositoryEvolution
   {
     private readonly ITreeVisitor _visitor;
     private int _commits = 0;
 
-    public MockTreeVisitor(ITreeVisitor visitor)
+    public RepositoryEvolution(ITreeVisitor visitor)
     {
       _visitor = visitor;
     }
@@ -39,7 +41,7 @@ namespace ApplicationLogicSpecification
       _visitor.OnRemoved(removedEntryPath);
     }
 
-    public void Commit()
+    public void CommitChanges()
     {
       _commits++;
     }
@@ -59,6 +61,14 @@ namespace ApplicationLogicSpecification
       var dirProxy = Dir(dirName);
       dirProxyAction(dirProxy);
       return dirProxy;
+    }
+
+    public void Commit(Action<DirProxy> action)
+    {
+      var relativeDirectoryPath = RelativeDirectoryPath.Value("");
+      var dirProxy = new DirProxy(relativeDirectoryPath, this);
+      action(dirProxy);
+      this.CommitChanges();
     }
   }
 }

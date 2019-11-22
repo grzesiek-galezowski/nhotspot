@@ -7,16 +7,16 @@ namespace ApplicationLogicSpecification
   public class FileProxy
   {
     private readonly RelativeFilePath _fileName;
-    private readonly MockTreeVisitor _context;
+    private readonly RepositoryEvolution _context;
     private int _complexity = 0;
 
-    public FileProxy(RelativeFilePath fileName, MockTreeVisitor context)
+    public FileProxy(RelativeFilePath fileName, RepositoryEvolution context)
     {
       _fileName = fileName;
       _context = context;
     }
 
-    public void Add()
+    public void Added()
     {
       _context.Add(new ChangeBuilder()
       {

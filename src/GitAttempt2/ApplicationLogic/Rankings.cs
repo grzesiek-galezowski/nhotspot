@@ -69,7 +69,7 @@ namespace ApplicationLogic
 
     static Rankings()
     {
-      ArtificialRoot = RelativeDirectoryPath(".");
+      ArtificialRoot = RelativeDirectoryPath("ROOT");
     }
 
     public static Dictionary<RelativeDirectoryPath, IFlatPackageHistory> GatherFlatPackageHistoriesByPath(IEnumerable<IFileHistory> fileChangeLogs)

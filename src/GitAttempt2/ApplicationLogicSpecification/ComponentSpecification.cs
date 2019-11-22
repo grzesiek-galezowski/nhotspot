@@ -4,58 +4,55 @@ using System.Linq;
 using ApplicationLogic;
 using FluentAssertions;
 using GitAnalysis;
-using NSubstitute;
 using NUnit.Framework;
 using ResultRendering;
 using TddXt.AnyRoot.Strings;
-using static System.Environment;
-using static System.Linq.Enumerable;
 using static AtmaFileSystem.AtmaFileSystemPaths;
-using static FactoryMethods;
 using static TddXt.AnyRoot.Root;
 using PackagePathsWithNesting = System.Collections.Generic.List<(int nesting, AtmaFileSystem.RelativeDirectoryPath path)>;
 
 namespace ApplicationLogicSpecification
-{ 
+{
   public class ComponentSpecification
   {
     [Test]
     public void ShouldCreateRepoTreeWithNesting()
     {
-      var clock = Any.Instance<IClock>();
-      var analysisResult = new RepoAnalysis(clock, 0).ExecuteOn(
-        new MockSourceControlRepository("REPO", root2 =>
+      var analysisResult = new RepoAnalysisDriver().Analyze(flow =>
+      {
+        flow.Commit(rootDir =>
         {
-          root2.Dir("src", src2 => 
+          rootDir.Dir("src", srcDir =>
           {
-            src2.File("Readme.txt").Complexity(1).Add();
-            src2.Dir("CSharp", csharp2 =>
+            srcDir.File("Readme.txt").Complexity(1).Added();
+            srcDir.Dir("CSharp", csharpDir =>
             {
-              csharp2.Dir("Project1").File("lol.cs").Complexity(4).Add();
-              csharp2.Dir("Project2").File("lol.cs").Complexity(5).Add();
+              csharpDir.Dir("Project1").File("lol.cs").Complexity(4).Added();
+              csharpDir.Dir("Project2").File("lol.cs").Complexity(5).Added();
             });
-            src2.Dir("Java", java2 =>
+            srcDir.Dir("Java", javaDir =>
             {
-              java2.Dir("src").File("lol.java") .Complexity(6).Add();
-              java2.Dir("test").File("lol.java").Complexity(7).Add();
+              javaDir.Dir("src").File("lol.java").Complexity(6).Added();
+              javaDir.Dir("test").File("lol.java").Complexity(7).Added();
             });
           });
-          root2.Commit(); //bug
-        }));
+        });
+      });
 
       var tree = analysisResult.PackageTree();
 
       var testNodeVisitor = new TestNodeVisitor();
       tree.Accept(testNodeVisitor);
 
-      var root = RelativeDirectoryPath(".");
-      var src = RelativeDirectoryPath(@".\src");
-      var java = RelativeDirectoryPath(@".\src\Java");
-      var javasrc = RelativeDirectoryPath(@".\src\Java\src");
-      var javatest = RelativeDirectoryPath(@".\src\Java\test");
-      var csharp = RelativeDirectoryPath(@".\src\CSharp");
-      var csharpProject1 = RelativeDirectoryPath(@".\src\CSharp\Project1");
-      var csharpProject2 = RelativeDirectoryPath(@".\src\CSharp\Project2");
+
+      var root = RelativeDirectoryPath("ROOT");
+      var src = root + RelativeDirectoryPath(@"src");
+      var java = src + RelativeDirectoryPath(@"Java");
+      var javasrc = java + RelativeDirectoryPath(@"src");
+      var javatest = java + RelativeDirectoryPath(@"test");
+      var csharp = src + RelativeDirectoryPath(@"CSharp");
+      var csharpProject1 = csharp + RelativeDirectoryPath(@"Project1");
+      var csharpProject2 = csharp + RelativeDirectoryPath(@"Project2");
       testNodeVisitor.OrderedPackages.Select(p => (p.nesting, p.history.PathOfCurrentVersion())).Should().BeEquivalentTo(
         new PackagePathsWithNesting
         {
@@ -122,7 +119,7 @@ namespace ApplicationLogicSpecification
       var analysisResult = new RepoAnalysis(clock, 200).ExecuteOn(new MockSourceControlRepository(repoPath, v =>
       {
         v.Add(change1);
-        v.Commit();
+        v.CommitChanges();
       }));
 
       analysisResult.PathToRepository.Should().Be(repoPath);

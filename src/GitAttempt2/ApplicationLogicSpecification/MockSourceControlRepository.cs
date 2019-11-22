@@ -7,14 +7,14 @@ namespace ApplicationLogicSpecification
 {
   public class MockSourceControlRepository : ISourceControlRepository
   {
-    public static MockSourceControlRepository Default(Action<IMockTreeVisitor> action)
+    public static MockSourceControlRepository Default(Action<IRepositoryEvolution> action)
     {
       return new MockSourceControlRepository(Root.Any.String(), action);
     }
 
-    private readonly Action<IMockTreeVisitor> _action;
+    private readonly Action<IRepositoryEvolution> _action;
 
-    public MockSourceControlRepository(string path, Action<IMockTreeVisitor> action)
+    public MockSourceControlRepository(string path, Action<IRepositoryEvolution> action)
     {
       _action = action;
       Path = path;
@@ -22,7 +22,7 @@ namespace ApplicationLogicSpecification
 
     public void CollectResults(ITreeVisitor visitor)
     {
-      var mockTreeVisitor = new MockTreeVisitor(visitor);
+      var mockTreeVisitor = new RepositoryEvolution(visitor);
       _action(mockTreeVisitor);
       TotalCommits = mockTreeVisitor.CommitCount();
     }

@@ -5,7 +5,7 @@ using ResultRendering;
 
 namespace NHotSpot.Console
 {
-    static internal class Program
+    internal static class Program
     {
         public static void Run(string[] args)
         {
