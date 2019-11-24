@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using ApplicationLogic;
+using ApplicationLogicSpecification.Automation;
 using FluentAssertions;
 using GitAnalysis;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ using PackagePathsWithNesting = System.Collections.Generic.List<(int nesting, At
 
 namespace ApplicationLogicSpecification
 {
-  public class ComponentSpecification
+  public class OldSpecification
   {
     [Test]
     public void ShouldCreateRepoTreeWithNesting()

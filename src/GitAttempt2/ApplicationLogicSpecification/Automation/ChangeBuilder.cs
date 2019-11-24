@@ -1,10 +1,9 @@
 using System;
 using ApplicationLogic;
-using TddXt.AnyRoot;
 using TddXt.AnyRoot.Strings;
 using static TddXt.AnyRoot.Root;
 
-namespace ApplicationLogicSpecification
+namespace ApplicationLogicSpecification.Automation
 {
   public class ChangeBuilder
   {
@@ -20,7 +19,7 @@ namespace ApplicationLogicSpecification
         Id);
     }
 
-    public string AuthorName { get; } = Any.Instance<string>();
+    public string AuthorName { get; set; } = Any.Instance<string>();
 
     public string Id { private get; set; } = Any.Instance<string>();
 

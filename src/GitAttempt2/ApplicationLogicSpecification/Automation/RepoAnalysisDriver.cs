@@ -2,7 +2,7 @@ using System;
 using ApplicationLogic;
 using TddXt.AnyRoot;
 
-namespace ApplicationLogicSpecification
+namespace ApplicationLogicSpecification.Automation
 {
   public class RepoAnalysisDriver
   {

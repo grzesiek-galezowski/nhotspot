@@ -70,6 +70,7 @@ namespace ApplicationLogic
     {
       return _entriesFromMostRecentlyChanged;
     }
+
     public IEnumerable<IFileHistory> EntriesFromMostAncientlyChanged()
     {
       return _entriesFromMostAncientlyChanged;

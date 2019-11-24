@@ -3,7 +3,7 @@ using System.Linq;
 using ApplicationLogic;
 using AtmaFileSystem;
 
-namespace ApplicationLogicSpecification
+namespace ApplicationLogicSpecification.Automation
 {
   public class TestNodeVisitor : INodeVisitor
   {

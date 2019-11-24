@@ -1,7 +1,7 @@
 using System;
 using AtmaFileSystem;
 
-namespace ApplicationLogicSpecification
+namespace ApplicationLogicSpecification.Automation
 {
   public class DirProxy
   {

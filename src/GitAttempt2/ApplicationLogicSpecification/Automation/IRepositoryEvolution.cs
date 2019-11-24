@@ -1,9 +1,7 @@
 using System;
 using ApplicationLogic;
-using AtmaFileSystem;
-using LibGit2Sharp;
 
-namespace ApplicationLogicSpecification
+namespace ApplicationLogicSpecification.Automation
 {
   public interface IRepositoryEvolution
   {

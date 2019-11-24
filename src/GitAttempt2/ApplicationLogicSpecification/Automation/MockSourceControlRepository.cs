@@ -3,7 +3,7 @@ using ApplicationLogic;
 using TddXt.AnyRoot;
 using TddXt.AnyRoot.Strings;
 
-namespace ApplicationLogicSpecification
+namespace ApplicationLogicSpecification.Automation
 {
   public class MockSourceControlRepository : ISourceControlRepository
   {

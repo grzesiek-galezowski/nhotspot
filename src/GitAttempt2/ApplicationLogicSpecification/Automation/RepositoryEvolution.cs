@@ -1,10 +1,8 @@
 using System;
-using System.IO;
 using ApplicationLogic;
 using AtmaFileSystem;
-using FluentAssertions;
 
-namespace ApplicationLogicSpecification
+namespace ApplicationLogicSpecification.Automation
 {
   public class RepositoryEvolution : IRepositoryEvolution
   {
