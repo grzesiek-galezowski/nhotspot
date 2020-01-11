@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitAnalysis", "GitAnalysis\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationLogicSpecification", "ApplicationLogicSpecification\ApplicationLogicSpecification.csproj", "{A916D7D5-B33C-44D6-AAF2-8F5644B02F1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Build", "Build\Build.csproj", "{A813B654-D192-4350-9DE8-36ADF162954D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A916D7D5-B33C-44D6-AAF2-8F5644B02F1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A916D7D5-B33C-44D6-AAF2-8F5644B02F1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A916D7D5-B33C-44D6-AAF2-8F5644B02F1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A813B654-D192-4350-9DE8-36ADF162954D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A813B654-D192-4350-9DE8-36ADF162954D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A813B654-D192-4350-9DE8-36ADF162954D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A813B654-D192-4350-9DE8-36ADF162954D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

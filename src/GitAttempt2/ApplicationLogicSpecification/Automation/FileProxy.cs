@@ -1,6 +1,7 @@
 using System;
-using System.Linq;
 using AtmaFileSystem;
+using static System.Environment;
+using static System.Linq.Enumerable;
 using static TddXt.AnyRoot.Root;
 
 namespace ApplicationLogicSpecification.Automation
@@ -9,22 +10,25 @@ namespace ApplicationLogicSpecification.Automation
   {
     private readonly RelativeFilePath _fileName;
     private readonly RepositoryEvolution _context;
+    private readonly CommitContext _commitContext;
     private int _complexity = 0;
     private string _author = Any.Instance<string>();
 
-    public FileProxy(RelativeFilePath fileName, RepositoryEvolution context)
+    public FileProxy(RelativeFilePath fileName, RepositoryEvolution context, CommitContext commitContext)
     {
       _fileName = fileName;
       _context = context;
+      _commitContext = commitContext;
     }
 
     public void Added()
     {
-      _context.Add(new ChangeBuilder()
+      _context.Add(new ChangeBuilder
       {
         Path = _fileName.ToString(),
         AuthorName = _author,
-        FileText = string.Join(Environment.NewLine, Enumerable.Repeat(" a", _complexity))
+        FileText = string.Join(NewLine, Repeat(" a", _complexity)),
+        ChangeDate = _commitContext.Date,
       }.Build());
     }
 
@@ -34,7 +38,7 @@ namespace ApplicationLogicSpecification.Automation
       return this;
     }
 
-    public FileProxy Author(string name)
+    public FileProxy By(string name)
     {
       _author = name;
       return this;

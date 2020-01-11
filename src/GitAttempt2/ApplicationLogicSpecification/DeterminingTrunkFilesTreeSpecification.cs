@@ -13,11 +13,13 @@ namespace ApplicationLogicSpecification
     [Test]
     public void METHOD()
     {
+      var date = DateTime.Now;
       var analysisResult = new RepoAnalysisDriver().Analyze(flow =>
       {
-        flow.Commit(root =>
+        flow.Commit(commit =>
         {
-          root.File("A.cs").Author("Zenek").Added();
+          commit.Date(date);
+          commit.File("A.cs").By("Zenek").Complexity(5).Added();
         });
       });
 
@@ -31,7 +33,9 @@ namespace ApplicationLogicSpecification
 
       fileHistory.Entries.Should().HaveCount(1);
       fileHistory.Entries[0].AuthorName.Should().Be("Zenek");
-      fileHistory.Entries[0].ChangeDate.Should().Be(DateTimeOffset.MaxValue);
+      fileHistory.Entries[0].ChangeDate.Should().Be(date);
+      fileHistory.Entries[0].Complexity.Value.Should().Be(5);
+      //bug add to test data fileHistory.Entries[0].Comment.Should().Be("5");
     }
   }
 }

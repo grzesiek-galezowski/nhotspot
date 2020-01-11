@@ -104,7 +104,7 @@ namespace ApplicationLogicSpecification
       testNodeVisitor.PackagesByPath[csharpProject2].Files.Count().Should().Be(1);
     }
 
-    [Test] 
+    [Test, Explicit] 
     public void METHOD()
     {
       string file1 = Any.String();

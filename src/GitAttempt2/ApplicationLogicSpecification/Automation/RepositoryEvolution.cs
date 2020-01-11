@@ -49,22 +49,9 @@ namespace ApplicationLogicSpecification.Automation
       return _commits;
     }
 
-    public DirProxy Dir(string dirName)
-    {
-      return new DirProxy(RelativeDirectoryPath.Value(dirName), this);
-    }
-
-    public DirProxy Dir(string dirName, Action<DirProxy> dirProxyAction)
-    {
-      var dirProxy = Dir(dirName);
-      dirProxyAction(dirProxy);
-      return dirProxy;
-    }
-
     public void Commit(Action<DirProxy> action)
     {
-      var relativeDirectoryPath = RelativeDirectoryPath.Value("");
-      var dirProxy = new DirProxy(relativeDirectoryPath, this);
+      var dirProxy = new DirProxy(RelativeDirectoryPath.Value(""), this, new CommitContext());
       action(dirProxy);
       this.CommitChanges();
     }
