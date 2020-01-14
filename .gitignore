@@ -330,3 +330,4 @@ ASALocalRun/
 .mfractor/
 *.ncrunchsolution
 src/GitAttempt2/ResultRendering/HtmlTemplate.cs
+output/*

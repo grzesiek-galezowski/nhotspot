@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Grzegorz Gałęzowski</Authors>
+    <AssemblyName>NHotSpot.GitAnalysis</AssemblyName>
+    <RootNamespace>NHotSpot.GitAnalysis</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

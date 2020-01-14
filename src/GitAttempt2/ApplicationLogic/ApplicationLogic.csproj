@@ -2,7 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Authors>Grzegorz Gałęzowski</Authors>
+    <AssemblyName>NHotSpot.ApplicationLogic</AssemblyName>
+    <RootNamespace>NHotSpot.ApplicationLogic</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
