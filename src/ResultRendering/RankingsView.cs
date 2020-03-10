@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using static ResultRendering.Html;
+using static NHotSpot.ResultRendering.Html;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public class RankingsView
   {

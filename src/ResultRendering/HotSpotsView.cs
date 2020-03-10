@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using ApplicationLogic;
-using static ResultRendering.Html;
+using NHotSpot.ApplicationLogic;
+using static NHotSpot.ResultRendering.Html;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public static class HotSpotsView
   {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ApplicationLogic;
+using NHotSpot.ApplicationLogic;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public class RankingViewModel
   {

@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
   public static class PackageTreeFactory
   {

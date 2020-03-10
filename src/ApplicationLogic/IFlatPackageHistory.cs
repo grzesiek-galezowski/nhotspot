@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using AtmaFileSystem;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
   public interface IFlatPackageHistory : IItemHistory<RelativeDirectoryPath>
   {

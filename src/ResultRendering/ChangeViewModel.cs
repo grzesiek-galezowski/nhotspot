@@ -1,6 +1,6 @@
 using System;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public class ChangeViewModel
   {

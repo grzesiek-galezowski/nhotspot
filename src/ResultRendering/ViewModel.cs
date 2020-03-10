@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public class ViewModel
   {

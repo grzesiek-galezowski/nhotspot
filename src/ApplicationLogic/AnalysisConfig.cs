@@ -1,4 +1,4 @@
-﻿namespace ApplicationLogic
+﻿namespace NHotSpot.ApplicationLogic
 {
   public class AnalysisConfig
   {

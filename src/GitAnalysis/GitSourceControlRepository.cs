@@ -3,11 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApplicationLogic;
 using LibGit2Sharp;
+using NHotSpot.ApplicationLogic;
 using static AtmaFileSystem.AtmaFileSystemPaths;
 
-namespace GitAnalysis
+namespace NHotSpot.GitAnalysis
 {
   public class GitSourceControlRepository : ISourceControlRepository
   {

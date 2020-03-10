@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using ApplicationLogic;
-using static ResultRendering.Html;
+using NHotSpot.ApplicationLogic;
+using static NHotSpot.ResultRendering.Html;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public static class ResultsView
   {

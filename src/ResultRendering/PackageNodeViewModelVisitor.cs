@@ -1,7 +1,6 @@
-using System;
-using ApplicationLogic;
+using NHotSpot.ApplicationLogic;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public class PackageNodeViewModelVisitor : INodeVisitor
   {

@@ -1,6 +1,6 @@
 using System;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
   public class RealClock : IClock
   {

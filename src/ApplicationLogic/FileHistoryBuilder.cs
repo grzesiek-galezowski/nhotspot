@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using AtmaFileSystem;
 using Functional.Maybe;
 using Functional.Maybe.Just;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
 
   public interface IFileHistoryBuilder

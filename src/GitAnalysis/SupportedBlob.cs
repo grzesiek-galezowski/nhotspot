@@ -1,9 +1,9 @@
 using System;
-using ApplicationLogic;
 using LibGit2Sharp;
+using NHotSpot.ApplicationLogic;
 using static AtmaFileSystem.AtmaFileSystemPaths;
 
-namespace GitAnalysis
+namespace NHotSpot.GitAnalysis
 {
   public class SupportedBlob : IBlob
   {

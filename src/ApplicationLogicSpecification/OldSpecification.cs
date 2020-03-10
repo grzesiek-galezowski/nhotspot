@@ -1,12 +1,12 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using ApplicationLogic;
 using ApplicationLogicSpecification.Automation;
 using FluentAssertions;
-using GitAnalysis;
+using NHotSpot.ApplicationLogic;
+using NHotSpot.GitAnalysis;
+using NHotSpot.ResultRendering;
 using NUnit.Framework;
-using ResultRendering;
 using TddXt.AnyRoot.Strings;
 using static AtmaFileSystem.AtmaFileSystemPaths;
 using static TddXt.AnyRoot.Root;

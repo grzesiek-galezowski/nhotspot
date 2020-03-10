@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ApplicationLogic;
+using NHotSpot.ApplicationLogic;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
     public class HistogramViewModel
     {

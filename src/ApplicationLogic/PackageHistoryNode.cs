@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
   public interface IPackageHistoryNode
   {

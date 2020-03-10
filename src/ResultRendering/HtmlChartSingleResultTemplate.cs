@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using ApplicationLogic;
+using NHotSpot.ApplicationLogic;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public static class HtmlChartSingleResultTemplate
   {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using ApplicationLogic;
 using AtmaFileSystem;
+using NHotSpot.ApplicationLogic;
 
 namespace ApplicationLogicSpecification.Automation
 {

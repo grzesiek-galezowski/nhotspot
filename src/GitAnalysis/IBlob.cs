@@ -1,8 +1,8 @@
 using System;
-using ApplicationLogic;
 using LibGit2Sharp;
+using NHotSpot.ApplicationLogic;
 
-namespace GitAnalysis
+namespace NHotSpot.GitAnalysis
 {
   public interface IBlob
   {

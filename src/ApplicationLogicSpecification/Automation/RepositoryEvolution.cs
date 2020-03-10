@@ -1,6 +1,6 @@
 using System;
-using ApplicationLogic;
 using AtmaFileSystem;
+using NHotSpot.ApplicationLogic;
 
 namespace ApplicationLogicSpecification.Automation
 {

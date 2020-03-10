@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using AtmaFileSystem;
 using Functional.Maybe;
 using Functional.Maybe.Just;
 using static AtmaFileSystem.AtmaFileSystemPaths;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
   public class PackagesTree
   {

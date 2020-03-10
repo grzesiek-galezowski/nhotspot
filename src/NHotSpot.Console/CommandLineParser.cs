@@ -1,5 +1,5 @@
-using ApplicationLogic;
 using Fclp;
+using NHotSpot.ApplicationLogic;
 
 namespace NHotSpot.Console
 {

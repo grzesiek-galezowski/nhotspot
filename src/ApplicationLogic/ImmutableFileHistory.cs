@@ -4,7 +4,7 @@ using System.Linq;
 using AtmaFileSystem;
 using Functional.Maybe;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
     public interface IFileHistory : IItemHistory<RelativeFilePath>
     {

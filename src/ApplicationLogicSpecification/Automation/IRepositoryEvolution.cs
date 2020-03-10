@@ -1,5 +1,5 @@
 using System;
-using ApplicationLogic;
+using NHotSpot.ApplicationLogic;
 
 namespace ApplicationLogicSpecification.Automation
 {

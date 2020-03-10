@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AtmaFileSystem;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
   public class AnalysisResult
   {

@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Functional.Maybe;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
   public static class ComplexityMetrics
   {

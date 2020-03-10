@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApplicationLogic;
 using AtmaFileSystem;
+using NHotSpot.ApplicationLogic;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public class HtmlAnalysisDocument
   {

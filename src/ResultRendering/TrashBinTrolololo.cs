@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
     //silly name on purpose, to remember to clean it up as soon as possible
     public static class TrashBinTrolololo

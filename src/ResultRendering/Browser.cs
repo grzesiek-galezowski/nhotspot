@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public static class Browser
   {

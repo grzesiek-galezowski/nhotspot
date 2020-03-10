@@ -1,5 +1,5 @@
 using System;
-using ApplicationLogic;
+using NHotSpot.ApplicationLogic;
 using TddXt.AnyRoot;
 
 namespace ApplicationLogicSpecification.Automation

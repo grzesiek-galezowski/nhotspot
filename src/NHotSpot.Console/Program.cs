@@ -1,7 +1,7 @@
 using System;
 using System.IO;
-using GitAnalysis;
-using ResultRendering;
+using NHotSpot.GitAnalysis;
+using NHotSpot.ResultRendering;
 
 namespace NHotSpot.Console
 {

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public static class SpacesExtensions
   {

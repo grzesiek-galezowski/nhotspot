@@ -1,7 +1,7 @@
 using System;
 using static AtmaFileSystem.AtmaFileSystemPaths;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
   public static class ChangeFactory
   {

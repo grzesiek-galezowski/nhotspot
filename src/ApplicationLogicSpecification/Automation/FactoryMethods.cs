@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using ApplicationLogic;
+using NHotSpot.ApplicationLogic;
 
 namespace ApplicationLogicSpecification.Automation
 {

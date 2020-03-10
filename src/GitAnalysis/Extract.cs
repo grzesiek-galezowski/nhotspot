@@ -1,6 +1,6 @@
 using LibGit2Sharp;
 
-namespace GitAnalysis
+namespace NHotSpot.GitAnalysis
 {
   public static class Extract
   {

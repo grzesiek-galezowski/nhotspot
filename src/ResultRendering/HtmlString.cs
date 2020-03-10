@@ -1,4 +1,4 @@
-﻿namespace ResultRendering
+﻿namespace NHotSpot.ResultRendering
 {
   public class HtmlString : IHtmlContent
   {

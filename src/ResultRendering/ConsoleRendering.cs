@@ -1,6 +1,6 @@
-using ApplicationLogic;
+using NHotSpot.ApplicationLogic;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public class ConsoleRendering
   {

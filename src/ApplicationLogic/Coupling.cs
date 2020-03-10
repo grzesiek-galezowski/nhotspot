@@ -1,6 +1,6 @@
 using AtmaFileSystem;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
   public class Coupling
   {

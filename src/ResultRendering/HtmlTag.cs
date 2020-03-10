@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ResultRendering
+namespace NHotSpot.ResultRendering
 {
   public class HtmlTag : IHtmlContent
   {

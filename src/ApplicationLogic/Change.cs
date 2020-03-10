@@ -1,7 +1,7 @@
 ﻿using System;
 using AtmaFileSystem;
 
-namespace ApplicationLogic
+namespace NHotSpot.ApplicationLogic
 {
     public sealed class Change
     {
