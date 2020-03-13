@@ -6,6 +6,8 @@
     <Authors>Grzegorz Gałęzowski</Authors>
     <AssemblyName>NHotSpot.ResultRendering</AssemblyName>
     <RootNamespace>NHotSpot.ResultRendering</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,8 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Functional.Maybe.Just" Version="1.5.0" />
     <PackageReference Include="HtmlBuilders" Version="5.0.0" />
-    <PackageReference Include="System.CodeDom" Version="4.6.0" />
+    <PackageReference Include="System.CodeDom" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>

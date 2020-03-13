@@ -7,11 +7,15 @@ namespace NHotSpot.ResultRendering
 {
   public class RankingViewModel
   {
-    public string Title { get; set; }
+    public string? Title { get; set; }
     public List<RankingEntryViewModel> Entries { get; } = new List<RankingEntryViewModel>();
 
-    public static RankingViewModel NewRankingViewModel<TValue, TChangeLog, TPathType>(IEnumerable<TChangeLog> entries, Func<TChangeLog, TValue> valueFun,
-      string heading) where TChangeLog : IItemWithPath<TPathType>
+    public static RankingViewModel NewRankingViewModel<TValue, TChangeLog, TPathType>(
+      IEnumerable<TChangeLog> entries, 
+      Func<TChangeLog, TValue> valueFun,
+      string heading) 
+      where TChangeLog : IItemWithPath<TPathType>
+      where TValue : notnull
     {
       var rankingViewModel = new RankingViewModel {Title = heading};
       foreach (var changeLog in entries)

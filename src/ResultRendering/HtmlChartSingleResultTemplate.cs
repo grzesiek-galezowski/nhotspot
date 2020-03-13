@@ -10,7 +10,7 @@ namespace NHotSpot.ResultRendering
       public static HotSpotViewModel FillWith(
         int elementNum, 
         IFileHistory fileHistory,
-        IEnumerable<Coupling> fileCouplings)
+        IEnumerable<CouplingBetweenFiles> fileCouplings)
     {
       var hotSpotViewModel = new HotSpotViewModel
       {

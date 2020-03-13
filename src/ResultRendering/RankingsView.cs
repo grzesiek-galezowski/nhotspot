@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NullableReferenceTypesExtensions;
 using static NHotSpot.ResultRendering.Html;
 
 namespace NHotSpot.ResultRendering
 {
-  public class RankingsView
+  public static class RankingsView
   {
     public static IHtmlContent RenderFrom(IEnumerable<RankingViewModel> viewModelRankings)
     {
@@ -19,7 +20,7 @@ namespace NHotSpot.ResultRendering
 
     private static IHtmlContent RenderRankingHeader(RankingViewModel ranking)
     {
-      return Tag("summary", H(2, Attribute("style", "display: inline"), ranking.Title));
+      return Tag("summary", H(2, Attribute("style", "display: inline"), ranking.Title.OrThrow()));
     }
 
     private static IHtmlContent RenderRankingEntries(RankingViewModel ranking)

@@ -22,6 +22,25 @@ namespace NHotSpot.ApplicationLogic
     }
 
     public IEnumerable<IFileHistory> Files => _files;
+    public IEnumerable<string> ChangeIds()
+    {
+      return _changeIds;
+    }
+
+    //bug may be commonalized with IFileHistory
+    public CouplingBetweenPackages CalculateCouplingTo(IFlatPackageHistory otherHistory, int totalCommits)
+    {
+      var couplingCount = ChangeIds().Intersect(otherHistory.ChangeIds()).Count();
+      return new CouplingBetweenPackages(
+        _packagePath, 
+        otherHistory.PathOfCurrentVersion(), 
+        couplingCount,
+        CouplingPercentages.CalculateUsing(
+          ChangesCount(), 
+          otherHistory.ChangesCount(), 
+          couplingCount,
+          totalCommits));
+    }
 
     public int ChangesCount()
     {

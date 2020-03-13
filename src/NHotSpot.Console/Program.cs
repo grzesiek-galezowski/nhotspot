@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using NHotSpot.GitAnalysis;
 using NHotSpot.ResultRendering;
+using NullableReferenceTypesExtensions;
 
 namespace NHotSpot.Console
 {
@@ -11,8 +12,8 @@ namespace NHotSpot.Console
         {
             var analysisConfig = CommandLineParser.Parse(args);
             var analysisResult = GitRepoAnalysis.Analyze(
-                analysisConfig.RepoPath,
-                analysisConfig.Branch,
+                analysisConfig.RepoPath.OrThrow(),
+                analysisConfig.Branch.OrThrow(),
                 analysisConfig.MinChangeCount,
                 //DateTime.Now - TimeSpan.FromDays(366));
                 SinceBeginning());
@@ -21,7 +22,7 @@ namespace NHotSpot.Console
                 .RenderString(analysisResult);
       
             File.WriteAllText(analysisConfig.OutputFile, readyDocument);
-            Browser.Open(analysisConfig.OutputFile);
+            Browser.Open(analysisConfig.OutputFile.OrThrow());
         }
 
         private static DateTime SinceBeginning()

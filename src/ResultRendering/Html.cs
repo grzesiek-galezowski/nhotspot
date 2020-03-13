@@ -1,16 +1,28 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace NHotSpot.ResultRendering
 {
   public static class Html
   {
-    public static IHtmlContent Text<T>(T obj)
+    public static IHtmlContent Text<T>(T obj) where T : notnull
     {
       return new HtmlString(obj.ToString(), new PrettyFormat());
     }
 
-    public static IHtmlContent VerbatimText<T>(T obj)
+    public static IHtmlContent Text(params object[] objects)
+    {
+      var strBuilder = new StringBuilder();
+      foreach (var obj in objects)
+      {
+        strBuilder.Append(obj);
+      }
+
+      return new HtmlString(strBuilder.ToString(), new PrettyFormat());
+    }
+
+    public static IHtmlContent VerbatimText<T>(T obj) where T : notnull
     {
       return new HtmlString(obj.ToString(), new VerbatimFormat());
     }
@@ -64,6 +76,11 @@ namespace NHotSpot.ResultRendering
     {
       return Tr(new HtmlAttribute[] { }, children);
     }
+
+    public static IHtmlContent Th(params IHtmlContent[] children)
+    {
+      return Th(new HtmlAttribute[] { }, children);
+    }
     
     public static IHtmlContent Td(HtmlAttribute[] attributes, params IHtmlContent[] children)
     {
@@ -73,6 +90,11 @@ namespace NHotSpot.ResultRendering
     public static IHtmlContent Tr(HtmlAttribute[] attributes, params IHtmlContent[] children)
     {
       return Tag("tr", attributes, children);
+    }
+
+    public static IHtmlContent Th(HtmlAttribute[] attributes, params IHtmlContent[] children)
+    {
+      return Tag("th", attributes, children);
     }
 
     public static HtmlAttribute[] Attribute(string name, string value)

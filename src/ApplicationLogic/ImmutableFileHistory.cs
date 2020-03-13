@@ -6,13 +6,12 @@ using Functional.Maybe;
 
 namespace NHotSpot.ApplicationLogic
 {
-    public interface IFileHistory : IItemHistory<RelativeFilePath>
+    public interface IFileHistory : IItemHistory<RelativeFilePath>, ICouplingSource<CouplingBetweenFiles, IFileHistory>
     {
         DateTimeOffset LastChangeDate();
         TimeSpan ActivityPeriod();
         IEnumerable<string> ChangeIds();
-        Coupling CalculateCouplingTo(IFileHistory otherHistory, int totalCommits);
-        IEnumerable<Coupling> Filter(IEnumerable<Coupling> couplingMetrics);
+        IEnumerable<CouplingBetweenFiles> Filter(IEnumerable<CouplingBetweenFiles> couplingMetrics);
         DateTimeOffset CreationDate();
         TimeSpan TimeSinceLastChange();
         TimeSpan Age();
@@ -80,21 +79,18 @@ namespace NHotSpot.ApplicationLogic
         public IEnumerable<Contribution> Contributions() => _contributions;
         public Maybe<RelativeDirectoryPath> LatestPackagePath() => _latestPackagePath;
 
-        public Coupling CalculateCouplingTo(IFileHistory otherHistory, int totalCommits)
+        public CouplingBetweenFiles CalculateCouplingTo(IFileHistory otherHistory, int totalCommits)
         {
             //performance-critical fragment
             var couplingCount = ChangeIds().Intersect(otherHistory.ChangeIds()).Count();
-            return new Coupling(
-                PathOfCurrentVersion(), 
-                otherHistory.PathOfCurrentVersion(), 
-                couplingCount,
-                (couplingCount * 100)/ChangesCount(),
-                (couplingCount * 100)/otherHistory.ChangesCount(),
-                (couplingCount * 100)/totalCommits
-            );
+            return new CouplingBetweenFiles(
+              PathOfCurrentVersion(), 
+              otherHistory.PathOfCurrentVersion(), 
+              couplingCount, 
+              CouplingPercentages.CalculateUsing(ChangesCount(), otherHistory.ChangesCount(), couplingCount, totalCommits));
         }
 
-        public IEnumerable<Coupling> Filter(IEnumerable<Coupling> couplingMetrics)
+        public IEnumerable<CouplingBetweenFiles> Filter(IEnumerable<CouplingBetweenFiles> couplingMetrics)
         {
             var couplingsLeft = couplingMetrics.Where(c => c.Left == PathOfCurrentVersion());
             var couplingsRight = couplingMetrics.Where(c => c.Right == PathOfCurrentVersion())
@@ -102,7 +98,7 @@ namespace NHotSpot.ApplicationLogic
             return couplingsLeft.Concat(couplingsRight).OrderByDescending(c => c.CouplingCount);
         }
 
-        private static Func<Coupling, Coupling> CouplingWithSwitchedSides()
+        private static Func<CouplingBetweenFiles, CouplingBetweenFiles> CouplingWithSwitchedSides()
         {
             return c => c.WithSwitchedSides();
         }

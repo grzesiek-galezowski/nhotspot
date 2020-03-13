@@ -18,8 +18,8 @@ namespace NHotSpot.ResultRendering
     }
 
     public List<PackageTreeNodeViewModel> Children { get; } = new List<PackageTreeNodeViewModel>();
-    public PackageTreeNodeViewModel Parent { get; set; }
-    public string Name { get; }
+    public PackageTreeNodeViewModel? Parent { get; set; }
+    public string? Name { get; }
 
     public double HotSpotRating
     {

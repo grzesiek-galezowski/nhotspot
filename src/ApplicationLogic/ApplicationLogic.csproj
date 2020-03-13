@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Grzegorz Gałęzowski</Authors>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
     <AssemblyName>NHotSpot.ApplicationLogic</AssemblyName>
     <RootNamespace>NHotSpot.ApplicationLogic</RootNamespace>
   </PropertyGroup>
@@ -11,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="AtmaFileSystem" Version="3.0.0" />
     <PackageReference Include="Functional.Maybe" Version="2.0.18" />
+    <PackageReference Include="Functional.Maybe.Just" Version="1.5.0" />
   </ItemGroup>
 
 

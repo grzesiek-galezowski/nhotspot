@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AtmaFileSystem;
 
 namespace NHotSpot.ApplicationLogic
 {
@@ -30,11 +31,16 @@ namespace NHotSpot.ApplicationLogic
       var immutableFileHistories = fileHistories;
       var packageHistoryNode = Rankings.GatherPackageTreeMetricsByPath(immutableFileHistories);
 
+      var flatPackageHistoriesByPath = Rankings.GatherFlatPackageHistoriesByPath(immutableFileHistories);
       return new AnalysisResult(immutableFileHistories, 
-        Rankings.GatherFlatPackageHistoriesByPath(immutableFileHistories), 
+        flatPackageHistoriesByPath, 
         repositoryPath,
         packageHistoryNode, 
-        ComplexityMetrics.CalculateCoupling(immutableFileHistories, totalCommits));
+        ComplexityMetrics.CalculateCoupling
+          <CouplingBetweenFiles, IFileHistory, RelativeFilePath>(immutableFileHistories, totalCommits),
+        ComplexityMetrics.CalculateCoupling
+          <CouplingBetweenPackages, IFlatPackageHistory, RelativeDirectoryPath>(flatPackageHistoriesByPath.Values, totalCommits)
+        );
     }
   }
 }

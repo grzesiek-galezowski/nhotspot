@@ -11,7 +11,8 @@ namespace NHotSpot.ResultRendering
     public int PercentageOfRightCommits { get; }
     public int PercentageOfTotalCommits { get; }
 
-    public CouplingViewModel(string left,
+    public CouplingViewModel(
+      string left,
       string right,
       int couplingCount,
       int percentageOfLeftCommits,
@@ -26,7 +27,7 @@ namespace NHotSpot.ResultRendering
       PercentageOfTotalCommits = percentageOfTotalCommits;
     }
 
-    public static CouplingViewModel From(Coupling c)
+    public static CouplingViewModel From<TPath>(ICoupling<TPath> c) where TPath : notnull
     {
       return new CouplingViewModel(
         c.Left.ToString(), 

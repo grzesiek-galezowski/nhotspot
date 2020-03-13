@@ -7,7 +7,8 @@ namespace NHotSpot.ApplicationLogic
   public class AnalysisResult
   {
     private readonly IPackageHistoryNode _packageHistoryRootNode;
-    private readonly IEnumerable<Coupling> _changeCouplings;
+    private readonly IEnumerable<CouplingBetweenFiles> _fileCouplings;
+    private readonly IEnumerable<CouplingBetweenPackages> _packageCouplings; //bug use it!
     private readonly IOrderedEnumerable<IFileHistory> _entriesByHotSpotRating;
     private readonly IEnumerable<IFileHistory> _entriesByDiminishingComplexity;
     private readonly IOrderedEnumerable<IFileHistory> _entriesByDiminishingChangesCount;
@@ -18,13 +19,15 @@ namespace NHotSpot.ApplicationLogic
 
     public AnalysisResult(IEnumerable<IFileHistory> fileHistories,
       Dictionary<RelativeDirectoryPath, IFlatPackageHistory> packageHistoriesByPath,
-      string normalizedPathToRepository, 
-      IPackageHistoryNode packageHistoryRootNode, 
-      IEnumerable<Coupling> changeCouplings)
+      string normalizedPathToRepository,
+      IPackageHistoryNode packageHistoryRootNode,
+      IEnumerable<CouplingBetweenFiles> fileCouplings, 
+      IEnumerable<CouplingBetweenPackages> packageCouplings)
     {
       PathToRepository = normalizedPathToRepository;
       _packageHistoryRootNode = packageHistoryRootNode;
-      _changeCouplings = changeCouplings;
+      _fileCouplings = fileCouplings;
+      _packageCouplings = packageCouplings;
       _entriesByHotSpotRating = fileHistories.OrderByDescending(h => h.HotSpotRating());
       _entriesByDiminishingComplexity = fileHistories.OrderByDescending(h => h.ComplexityOfCurrentVersion());
       _entriesByDiminishingChangesCount = fileHistories.OrderByDescending(h => h.ChangesCount());
@@ -41,9 +44,14 @@ namespace NHotSpot.ApplicationLogic
       return _packageHistoryRootNode;
     }
 
-    public IEnumerable<Coupling> CouplingMetrics()
+    public IEnumerable<CouplingBetweenFiles> FileCouplingMetrics()
     {
-      return _changeCouplings;
+      return _fileCouplings;
+    }
+
+    public IEnumerable<CouplingBetweenPackages> PackageCouplingMetrics()
+    {
+      return _packageCouplings;
     }
 
     public IEnumerable<IFileHistory> EntriesByHotSpotRating()

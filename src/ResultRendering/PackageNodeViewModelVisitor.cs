@@ -1,15 +1,16 @@
 using NHotSpot.ApplicationLogic;
+using NullableReferenceTypesExtensions;
 
 namespace NHotSpot.ResultRendering
 {
   public class PackageNodeViewModelVisitor : INodeVisitor
   {
-    private PackageTreeNodeViewModel _currentTreeNode;
-    private PackageTreeNodeViewModel _root;
+    private PackageTreeNodeViewModel? _currentTreeNode;
+    private PackageTreeNodeViewModel? _root;
 
     public PackageTreeNodeViewModel ToPackageNodeViewModel()
     {
-      return _root;
+      return _root.OrThrow();
     }
 
     public void BeginVisiting(IFlatPackageHistory value)
@@ -32,12 +33,12 @@ namespace NHotSpot.ResultRendering
 
     public void EndVisiting(IFlatPackageHistory value)
     {
-      _currentTreeNode = _currentTreeNode.Parent;
+      _currentTreeNode = _currentTreeNode.OrThrow().Parent;
     }
 
     public void Visit(IFileHistory fileHistory)
     {
-      _currentTreeNode.Children.Add(new PackageTreeNodeViewModel(fileHistory.HotSpotRating(), fileHistory.PathOfCurrentVersion().ToString()));
+      _currentTreeNode.OrThrow().Children.Add(new PackageTreeNodeViewModel(fileHistory.HotSpotRating(), fileHistory.PathOfCurrentVersion().ToString()));
     }
   }
 }

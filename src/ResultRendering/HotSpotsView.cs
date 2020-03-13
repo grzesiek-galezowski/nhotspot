@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using NHotSpot.ApplicationLogic;
+using NullableReferenceTypesExtensions;
 using static NHotSpot.ResultRendering.Html;
 
 namespace NHotSpot.ResultRendering
@@ -26,9 +27,9 @@ namespace NHotSpot.ResultRendering
         return Tag("div",
         H(2, $"{hotSpot.Rating}. {hotSpot.Path}"),
         Tag("table",
-          KeyValueRow("Rating", hotSpot.Rating),
-          KeyValueRow("Complexity", hotSpot.Complexity),
-          KeyValueRow("Changes", hotSpot.ChangesCount),
+          KeyValueRow("Rating", hotSpot.Rating.OrThrow()),
+          KeyValueRow("Complexity", hotSpot.Complexity.OrThrow()),
+          KeyValueRow("Changes", hotSpot.ChangesCount.OrThrow()),
           KeyValueRow("Created", hotSpot.Age + " ago"),
           KeyValueRow("Last Changed", hotSpot.TimeSinceLastChanged + " ago"),
           KeyValueRow("Active for", $"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})")
@@ -58,7 +59,7 @@ namespace NHotSpot.ResultRendering
 
     private static string JavaScriptCanvas(HotSpotViewModel hotSpot, ChartView chartView)
     {
-        return chartView.ChartScript(hotSpot.Labels, hotSpot.Data, hotSpot.ChartValueDescription);
+        return chartView.ChartScript(hotSpot.Labels.OrThrow(), hotSpot.Data.OrThrow(), hotSpot.ChartValueDescription.OrThrow());
     }
 
     private static IEnumerable<IHtmlContent> ContributionRows(HotSpotViewModel hotSpot)

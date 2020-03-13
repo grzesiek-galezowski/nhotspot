@@ -2,7 +2,7 @@
 
 namespace NHotSpot.ResultRendering
 {
-  public class DocumentHeaderView
+  public static class DocumentHeaderView
   {
     public static IHtmlContent Render()
     {

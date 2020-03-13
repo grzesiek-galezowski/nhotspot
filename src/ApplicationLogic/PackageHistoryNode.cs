@@ -15,7 +15,7 @@ namespace NHotSpot.ApplicationLogic
     private readonly IFlatPackageHistory _value;
     private readonly IEnumerable<FileHistoryNode> _files;
     private readonly List<IPackageHistoryNode> _childPackages = new List<IPackageHistoryNode>();
-    private IPackageHistoryNode _parent;
+    private IPackageHistoryNode? _parent;
 
     public PackageHistoryNode(IFlatPackageHistory value, IEnumerable<FileHistoryNode> files)
     {
