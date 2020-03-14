@@ -24,7 +24,7 @@ namespace NHotSpot.ResultRendering
 
           return new HistogramViewModel(
             "Change count histogram",
-            TrashBinTrolololo.AsJavaScriptArrayString(labels), 
+            TrashBinTrolololo.AsJavaScriptArrayString(labels),
             TrashBinTrolololo.AsJavaScriptArrayString(values));
         }
     }

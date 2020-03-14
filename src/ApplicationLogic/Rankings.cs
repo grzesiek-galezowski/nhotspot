@@ -53,9 +53,9 @@ namespace NHotSpot.ApplicationLogic
       {
         return new NoFilesOrPackages();
       }
-      if (potentialRoots.Count() > 1)
+      if (potentialRoots.Length > 1)
       {
-        throw new Exception($"Detected {potentialRoots.Count()} potential roots. Programmer error");
+        throw new Exception($"Detected {potentialRoots.Length} potential roots. Programmer error");
       }
 
       return potentialRoots.Single();

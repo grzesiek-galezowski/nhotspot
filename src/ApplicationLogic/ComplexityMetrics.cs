@@ -15,7 +15,6 @@ namespace NHotSpot.ApplicationLogic
 
     public static double CalculateComplexityFor(string contentText)
     {
-      
       return CalculateComplexityFor(NewlineRegex.Split(contentText));
     }
 
@@ -59,7 +58,7 @@ namespace NHotSpot.ApplicationLogic
 
     public static double CalculateHotSpotRating(int complexityRank, int changeCountRank)
     {
-      return (2 * changeCountRank + complexityRank) / 2d;
+      return 2 * changeCountRank + complexityRank / 2d;
     }
 
     /*public static IEnumerable<CouplingBetweenFiles> CalculateCoupling(IEnumerable<IFileHistory> fileHistories, int totalCommits)
@@ -89,9 +88,9 @@ namespace NHotSpot.ApplicationLogic
     }*/
 
     public static IEnumerable<TCoupling> CalculateCoupling<TCoupling, THistory, TPath>(
-      IEnumerable<THistory> packageHistories, int totalCommits) 
-      where THistory : ICouplingSource<TCoupling, THistory>
+      IEnumerable<THistory> packageHistories, int totalCommits)
       where TCoupling : ICoupling<TPath>
+      where THistory : ICouplingSource<TCoupling, THistory>
     {
       var couplingMetric = new List<TCoupling>();
       Console.WriteLine("Calculating coupling");

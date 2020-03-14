@@ -14,7 +14,7 @@ namespace NHotSpot.ApplicationLogic
     public CouplingBetweenFiles(
       RelativeFilePath left,
       RelativeFilePath right,
-      int couplingCount, 
+      int couplingCount,
       CouplingPercentages couplingPercentages)
     {
       Left = left;

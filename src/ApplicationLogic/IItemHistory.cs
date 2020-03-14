@@ -5,6 +5,5 @@ namespace NHotSpot.ApplicationLogic
     double HotSpotRating();
     int ChangesCount();
     double ComplexityOfCurrentVersion();
-
   }
 }

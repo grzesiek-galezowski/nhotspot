@@ -21,7 +21,7 @@ namespace NHotSpot.ApplicationLogic
       Dictionary<RelativeDirectoryPath, IFlatPackageHistory> packageHistoriesByPath,
       string normalizedPathToRepository,
       IPackageHistoryNode packageHistoryRootNode,
-      IEnumerable<CouplingBetweenFiles> fileCouplings, 
+      IEnumerable<CouplingBetweenFiles> fileCouplings,
       IEnumerable<CouplingBetweenPackages> packageCouplings)
     {
       PathToRepository = normalizedPathToRepository;
@@ -88,7 +88,5 @@ namespace NHotSpot.ApplicationLogic
     {
       return _packagesByDiminishingHotSpotRating;
     }
-
-    
   }
 }

@@ -30,9 +30,9 @@ namespace NHotSpot.ResultRendering
     public static CouplingViewModel From<TPath>(ICoupling<TPath> c) where TPath : notnull
     {
       return new CouplingViewModel(
-        c.Left.ToString(), 
-        c.Right.ToString(), 
-        c.CouplingCount, 
+        c.Left.ToString(),
+        c.Right.ToString(),
+        c.CouplingCount,
         c.PercentageOfLeftCommits, 
         c.PercentageOfRightCommits, 
         c.PercentageOfTotalCommits);

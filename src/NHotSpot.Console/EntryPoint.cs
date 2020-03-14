@@ -2,7 +2,7 @@
 
 namespace NHotSpot.Console
 {
-  public class EntryPoint
+  public static class  EntryPoint
   {
     //TODO histogram of age (how many files live each number of months)
     //TODO count complexity increase/decrease numbers and increase ratio (how many complexity drops vs complexity increases)

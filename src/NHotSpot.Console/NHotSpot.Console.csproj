@@ -6,13 +6,15 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Grzegorz Gałęzowski</Authors>
     <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>nhotspot</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentCommandLineParser" Version="1.4.3" />
     <PackageReference Include="Functional.Maybe" Version="2.0.18" />
     <PackageReference Include="Functional.Maybe.Just" Version="1.5.0" />
-    <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,5 +22,4 @@
     <ProjectReference Include="..\GitAnalysis\GitAnalysis.csproj" />
     <ProjectReference Include="..\ResultRendering\ResultRendering.csproj" />
   </ItemGroup>
-
 </Project>

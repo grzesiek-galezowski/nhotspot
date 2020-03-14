@@ -45,8 +45,8 @@ namespace NHotSpot.GitAnalysis
       ConcurrentDictionary<int, TreeChanges> changesPerIndex = new ConcurrentDictionary<int, TreeChanges>();
       Parallel.For(1, Commits.Count, i =>
       {
-        var previousCommit = Commits.ElementAt(i - 1);
-        var currentCommit = Commits.ElementAt(i);
+        var previousCommit = Commits[i - 1];
+        var currentCommit = Commits[i];
         changesPerIndex[i] = Repo.Diff.Compare<TreeChanges>(previousCommit.Tree, currentCommit.Tree);
       });
       return changesPerIndex;

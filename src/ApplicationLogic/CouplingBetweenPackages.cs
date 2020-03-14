@@ -30,15 +30,13 @@ namespace NHotSpot.ApplicationLogic
     public CouplingBetweenPackages WithSwitchedSides()
     {
       return new CouplingBetweenPackages(
-        Right, 
-        Left, 
-        CouplingCount, 
+        Right,
+        Left,
+        CouplingCount,
         new CouplingPercentages(
-          PercentageOfRightCommits, 
-          PercentageOfLeftCommits, 
+          PercentageOfRightCommits,
+          PercentageOfLeftCommits,
           PercentageOfTotalCommits));
     }
-
-
   }
 }

@@ -31,5 +31,4 @@ namespace NHotSpot.ApplicationLogic
 
         public string Comment { get; }
     }
-}
-    
+}    
