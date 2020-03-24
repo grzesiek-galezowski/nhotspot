@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using Fclp;
 using NHotSpot.ApplicationLogic;
 
@@ -42,6 +44,11 @@ namespace NHotSpot.Console
         .SetDefault(100)
         .Callback(maxHotSpotCount => inputArguments.MaxHotSpotCount = maxHotSpotCount);
 
+      p.Setup<string>("start-date")
+        .WithDescription("Start date of the analysis (yyyy-MM-dd)")
+        .SetDefault(SinceBeginning().ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))
+        .Callback(date => inputArguments.StartDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture));
+
       p.Setup<string>('o', "output-file")
         .WithDescription("Path to output file")
         .SetDefault("output.html")
@@ -50,6 +57,11 @@ namespace NHotSpot.Console
       p.SetupHelp("?", "help")
         .Callback(text => System.Console.WriteLine(text));
       return p;
+    }
+
+    private static DateTime SinceBeginning()
+    {
+        return DateTime.MinValue + TimeSpan.FromDays(300);
     }
   }
 }

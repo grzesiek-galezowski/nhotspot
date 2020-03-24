@@ -1,4 +1,6 @@
-﻿namespace NHotSpot.ApplicationLogic
+﻿using System;
+
+namespace NHotSpot.ApplicationLogic
 {
   public class AnalysisConfig
   {
@@ -8,5 +10,6 @@
     public string? RepoPath { get; set; }
     public string? Branch { get; set; }
     public int MinChangeCount { get; set; }
+    public DateTime StartDate { get; set; }
   }
 }

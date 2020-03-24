@@ -15,8 +15,7 @@ namespace NHotSpot.Console
                 analysisConfig.RepoPath.OrThrow(),
                 analysisConfig.Branch.OrThrow(),
                 analysisConfig.MinChangeCount,
-                //DateTime.Now - TimeSpan.FromDays(366));
-                SinceBeginning());
+                analysisConfig.StartDate);
       
             var readyDocument = new HtmlAnalysisDocument(analysisConfig)
                 .RenderString(analysisResult);
