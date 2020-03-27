@@ -331,3 +331,4 @@ ASALocalRun/
 *.ncrunchsolution
 src/GitAttempt2/ResultRendering/HtmlTemplate.cs
 output/*
+src/NHotSpot.Console/output.html

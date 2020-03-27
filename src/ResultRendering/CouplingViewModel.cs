@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Linq;
 using NHotSpot.ApplicationLogic;
 
 namespace NHotSpot.ResultRendering
@@ -10,6 +13,9 @@ namespace NHotSpot.ResultRendering
     public int PercentageOfLeftCommits { get; }
     public int PercentageOfRightCommits { get; }
     public int PercentageOfTotalCommits { get; }
+    public string LongestCommonPrefix { get; }
+    public string LeftRest { get; }
+    public string RightRest { get; }
 
     public CouplingViewModel(
       string left,
@@ -17,14 +23,20 @@ namespace NHotSpot.ResultRendering
       int couplingCount,
       int percentageOfLeftCommits,
       int percentageOfRightCommits,
-      int percentageOfTotalCommits)
+      int percentageOfTotalCommits, 
+      string longestCommonPrefix, 
+      string leftRest, 
+      string rightRest)
     {
-      Left = left;
-      Right = right;
+      Left = left.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+      Right = right.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
       CouplingCount = couplingCount;
       PercentageOfLeftCommits = percentageOfLeftCommits;
       PercentageOfRightCommits = percentageOfRightCommits;
       PercentageOfTotalCommits = percentageOfTotalCommits;
+      LongestCommonPrefix = longestCommonPrefix.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+      LeftRest = leftRest.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+      RightRest = rightRest.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
     }
 
     public static CouplingViewModel From<TPath>(ICoupling<TPath> c) where TPath : notnull
@@ -35,7 +47,11 @@ namespace NHotSpot.ResultRendering
         c.CouplingCount,
         c.PercentageOfLeftCommits, 
         c.PercentageOfRightCommits, 
-        c.PercentageOfTotalCommits);
+        c.PercentageOfTotalCommits,
+        c.LongestCommonPathPrefix,
+        c.Left.ToString().Remove(0, c.LongestCommonPathPrefix.Length),
+        c.Right.ToString().Remove(0, c.LongestCommonPathPrefix.Length)
+      );
     }
   }
 }

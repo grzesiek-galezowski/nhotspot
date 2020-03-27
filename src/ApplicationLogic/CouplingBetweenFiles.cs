@@ -1,4 +1,5 @@
 using AtmaFileSystem;
+using Functional.Maybe;
 
 namespace NHotSpot.ApplicationLogic
 {
@@ -10,6 +11,7 @@ namespace NHotSpot.ApplicationLogic
     public int PercentageOfLeftCommits { get; }
     public int PercentageOfRightCommits { get; }
     public int PercentageOfTotalCommits { get; }
+    public string LongestCommonPathPrefix { get; }
 
     public CouplingBetweenFiles(
       RelativeFilePath left,
@@ -23,6 +25,7 @@ namespace NHotSpot.ApplicationLogic
       PercentageOfLeftCommits = couplingPercentages.PercentageOfLeftCommits;
       PercentageOfRightCommits = couplingPercentages.PercentageOfRightCommits;
       PercentageOfTotalCommits = couplingPercentages.PercentageOfTotalCommits;
+      LongestCommonPathPrefix = left.FindCommonRelativeDirectoryPathWith(right).Select(p => p.ToString()).OrElse(string.Empty);
     }
 
     public CouplingBetweenFiles WithSwitchedSides()

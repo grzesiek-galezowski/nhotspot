@@ -10,5 +10,6 @@ namespace NHotSpot.ApplicationLogic
     int PercentageOfLeftCommits { get; }
     int PercentageOfRightCommits { get; }
     int PercentageOfTotalCommits { get; }
+    string LongestCommonPathPrefix { get; }
   }
 }

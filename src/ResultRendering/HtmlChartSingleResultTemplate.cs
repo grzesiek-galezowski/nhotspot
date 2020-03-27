@@ -35,7 +35,11 @@ namespace NHotSpot.ResultRendering
             c.CouplingCount, 
             c.PercentageOfLeftCommits, 
             c.PercentageOfRightCommits, 
-            c.PercentageOfTotalCommits))
+            c.PercentageOfTotalCommits,
+            c.LongestCommonPathPrefix,
+            c.Left.ToString().Remove(0, c.LongestCommonPathPrefix.Length),
+            c.Right.ToString().Remove(0, c.LongestCommonPathPrefix.Length)
+            ))
       };
 
       return hotSpotViewModel;
