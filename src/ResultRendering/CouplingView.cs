@@ -20,9 +20,9 @@ namespace NHotSpot.ResultRendering
             Html.Tr(
               Html.Td(Html.Text(model.CouplingCount)),
               Html.Td(Html.Text(model.PercentageOfLeftCommits + "%")),
-              Html.Td(Html.Tag("strong", Html.VerbatimText(model.LongestCommonPrefix)), Html.VerbatimText(model.LeftRest)),
+              Html.Td(Html.Strong(Html.VerbatimText(model.LongestCommonPrefix)), Html.VerbatimText(model.LeftRest)),
               Html.Td(Html.Text(model.PercentageOfRightCommits + "%")),
-              Html.Td(Html.Tag("strong", Html.VerbatimText(model.LongestCommonPrefix)), Html.VerbatimText(model.RightRest)),
+              Html.Td(Html.Strong(Html.VerbatimText(model.LongestCommonPrefix)), Html.VerbatimText(model.RightRest)),
               Html.Td(Html.Text(model.PercentageOfTotalCommits + "%"))
             )));
       return Html.Tag("div",

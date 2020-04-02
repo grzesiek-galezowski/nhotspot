@@ -116,5 +116,10 @@ namespace NHotSpot.ResultRendering
     {
         return VerbatimTag("h"+i, attribute, VerbatimText(text));
     }
+
+    public static IHtmlContent Strong(IHtmlContent content)
+    {
+      return Html.Tag("strong", content);
+    }
   }
 }
