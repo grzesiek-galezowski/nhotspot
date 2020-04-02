@@ -37,7 +37,7 @@ namespace NHotSpot.ResultRendering
         chartView.ChartDiv(80),
         UnrollableTable("Contributions", ContributionRows(hotSpot)),
         UnrollableTable("History", HistoryRows(hotSpot)),
-        UnrollableTable($"Coupling (Top {maxCouplingPerHotSpot})", 
+        UnrollableTable($"Coupling (Top {maxCouplingPerHotSpot})",
             CouplingRows(hotSpot, maxCouplingPerHotSpot)),
         Tag("script", Text(JavaScriptCanvas(hotSpot, chartView)))
       );
@@ -97,7 +97,7 @@ namespace NHotSpot.ResultRendering
           Tag("th", Text("% Total Changes"))
           ).Concat(hotSpot.ChangeCoupling.Take(count).Select(change =>
         Tr(
-          Td(TdAttributes, Html.Strong(Html.VerbatimText(change.LongestCommonPrefix)), Html.VerbatimText(change.RightRest)),
+          Td(TdAttributes, Strong(VerbatimText(change.LongestCommonPrefix)), VerbatimText(change.RightRest)),
           Td(TdAttributes, Text(change.CouplingCount)),
           Td(TdAttributes, Text(change.PercentageOfLeftCommits + "%")),
           Td(TdAttributes, Text(change.PercentageOfTotalCommits + "%"))
