@@ -10,7 +10,7 @@
     <ToolCommandName>nhotspot</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageId>TddXt.NHotSpot.Console</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Product>NHotSpot</Product>
     <Copyright>Grzegorz Gałęzowski</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
