@@ -2,7 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using ApplicationLogicSpecification.Automation;
+using AtmaFileSystem;
 using FluentAssertions;
+using Functional.Maybe;
 using NHotSpot.ApplicationLogic;
 using NHotSpot.GitAnalysis;
 using NHotSpot.ResultRendering;
@@ -117,7 +119,8 @@ namespace ApplicationLogicSpecification
         ChangeDate = changeDate1,
       }.Build();
 
-      var analysisResult = new RepoAnalysis(clock, 200).ExecuteOn(new MockSourceControlRepository(repoPath, v =>
+      var analysisResult = new RepoAnalysis(clock, 200, Maybe<RelativeDirectoryPath>.Nothing)
+          .ExecuteOn(new MockSourceControlRepository(repoPath, v =>
       {
         v.Add(change1);
         v.CommitChanges();
@@ -155,6 +158,7 @@ namespace ApplicationLogicSpecification
             //RepoPath = @"C:\Users\ftw637\Documents\GitHub\any"
             //RepoPath = @"C:\Users\ftw637\Documents\GitHub\botbuilder-dotnet\"
             RepoPath = @"C:\Users\grzes\Documents\GitHub\NSubstitute\",
+            Subfolder = Maybe<RelativeDirectoryPath>.Nothing
         };
 
         Stopwatch sw = new Stopwatch();
@@ -164,7 +168,7 @@ namespace ApplicationLogicSpecification
         //var analysisResult = GitRepoAnalysis.Analyze(@"C:\Users\grzes\Documents\GitHub\nscan\", "master");
         //var analysisResult = GitRepoAnalysis.Analyze(@"c:\Users\ftw637\source\repos\vp-bots\", "master");
 
-        var analysisResult = GitRepoAnalysis.Analyze(analysisConfig.RepoPath, analysisConfig.Branch, 200, DateTime.Parse("2018-01-01"));
+        var analysisResult = GitRepoAnalysis.Analyze(analysisConfig.RepoPath, analysisConfig.Subfolder, analysisConfig.Branch, 200, DateTime.Parse("2018-01-01"));
         sw.Stop();
         System.Console.WriteLine(sw.ElapsedMilliseconds);
         sw.Reset();

@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
+using AtmaFileSystem;
 using Fclp;
+using Functional.Maybe;
 using NHotSpot.ApplicationLogic;
 
 namespace NHotSpot.Console
@@ -23,6 +25,11 @@ namespace NHotSpot.Console
         .WithDescription("Path to repository root")
         .Callback(repositoryPath => inputArguments.RepoPath = repositoryPath)
         .Required();
+
+      p.Setup<string?>('p', "subfolder-path")
+          .WithDescription("Subpath in repository (relative path)")
+          .Callback(path => inputArguments.Subfolder = path.ToMaybe().Select(RelativeDirectoryPath.Value))
+          .SetDefault(null);
       
       p.Setup<string>('b', "branch")
         .WithDescription("branch name")

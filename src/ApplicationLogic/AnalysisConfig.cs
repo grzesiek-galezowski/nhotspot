@@ -1,4 +1,6 @@
 ﻿using System;
+using AtmaFileSystem;
+using Functional.Maybe;
 
 namespace NHotSpot.ApplicationLogic
 {
@@ -11,5 +13,6 @@ namespace NHotSpot.ApplicationLogic
     public string? Branch { get; set; }
     public int MinChangeCount { get; set; }
     public DateTime StartDate { get; set; }
+    public Maybe<RelativeDirectoryPath> Subfolder { get; set; }
   }
 }

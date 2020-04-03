@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AtmaFileSystem;
+using Functional.Maybe;
 
 namespace NHotSpot.ApplicationLogic
 {
@@ -18,12 +19,14 @@ namespace NHotSpot.ApplicationLogic
   {
     private readonly IClock _clock;
     private readonly int _minChangeCount;
+    private readonly Maybe<RelativeDirectoryPath> _subfolder;
 
-    public CollectFileChangeRateFromCommitVisitor(IClock clock, int minChangeCount)
+    public CollectFileChangeRateFromCommitVisitor(IClock clock, int minChangeCount, Maybe<RelativeDirectoryPath> subfolder)
     {
       AnalysisMetadata = new Dictionary<RelativeFilePath, FileHistoryBuilder>();
       _clock = clock;
       _minChangeCount = minChangeCount;
+      _subfolder = subfolder;
     }
 
     private Dictionary<RelativeFilePath, FileHistoryBuilder> AnalysisMetadata { get; }
@@ -133,9 +136,15 @@ namespace NHotSpot.ApplicationLogic
       var trunkFiles = AnalysisMetadata
         .Where(x => x.Value.ChangesCount() >= _minChangeCount)
         .Where(IsNotIgnoredFileType)
+        .Where(IsInSpecifiedSubfolder)
         .Select(x => x.Value).ToList();
       var immutableFileHistoriesFrom = CreateImmutableFileHistoriesFrom(trunkFiles);
       return immutableFileHistoriesFrom;
+    }
+
+    private bool IsInSpecifiedSubfolder(KeyValuePair<RelativeFilePath, FileHistoryBuilder> arg)
+    {
+        return _subfolder.Select(sf => arg.Key.StartsWith(sf)).OrElse(true);
     }
   }
 }
