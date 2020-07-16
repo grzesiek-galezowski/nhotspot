@@ -109,7 +109,12 @@ namespace NHotSpot.GitAnalysis
 
     public static GitSourceControlRepository FromBranch(string branchName, Repository repo, DateTime startDate)
     {
-      var commits = repo.Branches[branchName].Commits.Reverse().SkipWhile(c => c.Author.When < startDate).ToList();
+      var commits = repo.Commits.QueryBy(new CommitFilter()
+      {
+        IncludeReachableFrom = branchName,
+        FirstParentOnly = true,
+        SortBy = CommitSortStrategies.Topological
+      }).Reverse().SkipWhile(c => c.Author.When < startDate).ToList();
       Console.WriteLine("Starting analysis from commit " + commits.First().Sha);
       var sourceControlRepository = new GitSourceControlRepository(repo, commits);
       return sourceControlRepository;

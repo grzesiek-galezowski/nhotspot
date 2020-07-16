@@ -31,17 +31,16 @@ namespace NHotSpot.ApplicationLogic
     private static AnalysisResult CreateAnalysisResult(IEnumerable<IFileHistory> fileHistories, string repositoryPath,
       int totalCommits)
     {
-      var immutableFileHistories = fileHistories;
-      var packageHistoryNode = Rankings.GatherPackageTreeMetricsByPath(immutableFileHistories);
+      var packageHistoryNode = Rankings.GatherPackageTreeMetricsByPath(fileHistories);
 
-      var flatPackageHistoriesByPath = Rankings.GatherFlatPackageHistoriesByPath(immutableFileHistories);
-      return new AnalysisResult(immutableFileHistories, 
+      var flatPackageHistoriesByPath = Rankings.GatherFlatPackageHistoriesByPath(fileHistories);
+      return new AnalysisResult(fileHistories, 
         flatPackageHistoriesByPath, 
         repositoryPath,
         packageHistoryNode, 
         ComplexityMetrics.CalculateCoupling
           <CouplingBetweenFiles, IFileHistory, RelativeFilePath>(
-                immutableFileHistories, 
+                fileHistories, 
                 totalCommits),
         ComplexityMetrics.CalculateCoupling
           <CouplingBetweenPackages, IFlatPackageHistory, RelativeDirectoryPath>(
