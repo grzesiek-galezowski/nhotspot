@@ -9,10 +9,10 @@ namespace Build
     static void Main(string[] args)
     {
       var repositoryRoot = AbsoluteDirectoryPath(Git.CurrentRepositoryPath());
-      var slnPath = repositoryRoot + DirectoryName("src") + DirectoryName("GitAttempt2");
+      var slnPath = repositoryRoot + DirectoryName("src");
       var consoleAppPath = slnPath + DirectoryName("NHotSpot.Console");
       var outputPath = repositoryRoot + DirectoryName("output");
-      const string version = "0.1.0";
+      const string version = "0.4.0";
       
       Target("clean", () =>
       {

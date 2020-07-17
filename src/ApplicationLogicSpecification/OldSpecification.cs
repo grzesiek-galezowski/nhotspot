@@ -90,11 +90,11 @@ namespace ApplicationLogicSpecification
       testNodeVisitor.PackagesByPath[root]          .HotSpotRating().Should().Be(0);
       testNodeVisitor.PackagesByPath[src]           .HotSpotRating().Should().Be(0);
       testNodeVisitor.PackagesByPath[java]          .HotSpotRating().Should().Be(0);
-      testNodeVisitor.PackagesByPath[javasrc]       .HotSpotRating().Should().Be(4.5);
-      testNodeVisitor.PackagesByPath[javatest]      .HotSpotRating().Should().Be(6);
+      testNodeVisitor.PackagesByPath[javasrc]       .HotSpotRating().Should().Be(7.5);
+      testNodeVisitor.PackagesByPath[javatest]      .HotSpotRating().Should().Be(10);
       testNodeVisitor.PackagesByPath[csharp]        .HotSpotRating().Should().Be(0);
-      testNodeVisitor.PackagesByPath[csharpProject1].HotSpotRating().Should().Be(1.5);
-      testNodeVisitor.PackagesByPath[csharpProject2].HotSpotRating().Should().Be(3);
+      testNodeVisitor.PackagesByPath[csharpProject1].HotSpotRating().Should().Be(2.5);
+      testNodeVisitor.PackagesByPath[csharpProject2].HotSpotRating().Should().Be(5);
 
       testNodeVisitor.PackagesByPath[root]          .Files.Count().Should().Be(0);
       testNodeVisitor.PackagesByPath[src]           .Files.Count().Should().Be(0);
