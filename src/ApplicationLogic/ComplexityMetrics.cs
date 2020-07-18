@@ -96,11 +96,11 @@ namespace NHotSpot.ApplicationLogic
       Console.WriteLine("Calculating coupling");
       var stopwatch = new Stopwatch();
       stopwatch.Start();
-      var i = 0;
+      var processedHistoriesCount = 0;
       foreach(var history in packageHistories)
       {
-        i++;
-        foreach (var otherHistory in packageHistories.Skip(i))
+        processedHistoriesCount++;
+        foreach (var otherHistory in packageHistories.Skip(processedHistoriesCount))
         {
           var coupling = history.CalculateCouplingTo(otherHistory, totalCommits);
           if (coupling.CouplingCount != 0)

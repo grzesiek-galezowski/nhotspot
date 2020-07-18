@@ -18,7 +18,6 @@ namespace NHotSpot.ResultRendering
     public string? Labels { get; set; }
     public string? ChartValueDescription { get; set; }
     public string? Data { get; set; }
-    public IEnumerable<ChangeViewModel>? Changes { get; set; }
     public IEnumerable<CouplingViewModel>? ChangeCoupling { get; set; }
     public IEnumerable<ContributionViewModel>? Contributions { get; set; }
 

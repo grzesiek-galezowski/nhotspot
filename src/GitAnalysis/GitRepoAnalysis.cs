@@ -6,17 +6,29 @@ using NHotSpot.ApplicationLogic;
 
 namespace NHotSpot.GitAnalysis
 {
-  public static class GitRepoAnalysis
+  public class GitRepoAnalysis : IDisposable
   {
-    public static AnalysisResult Analyze(string repositoryPath, Maybe<RelativeDirectoryPath> subfolder, string branchName, int minChangeCount,
-        DateTime startDate)
+    private readonly Repository _repo;
+
+    public GitRepoAnalysis(string repoPath)
     {
-      using (var repo = new Repository(repositoryPath))
-      {
-        var sourceControlRepository = GitSourceControlRepository.FromBranch(branchName, repo, startDate);
+      _repo = new Repository(repoPath);
+    }
+
+    public AnalysisResult Analyze(
+      Maybe<RelativeDirectoryPath> subfolder, 
+      string branchName, 
+      int minChangeCount,
+      DateTime startDate)
+    {
+        var sourceControlRepository = GitSourceControlRepository.FromBranch(branchName, _repo, startDate);
         return new RepoAnalysis(new RealClock(), minChangeCount, subfolder)
             .ExecuteOn(sourceControlRepository);
-      }
+    }
+
+    public void Dispose()
+    {
+      _repo.Dispose();
     }
   }
 }

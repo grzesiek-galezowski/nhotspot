@@ -36,7 +36,6 @@ namespace NHotSpot.ResultRendering
           ), 
         chartView.ChartDiv(80),
         UnrollableTable("Contributions", ContributionRows(hotSpot)),
-        UnrollableTable("History", HistoryRows(hotSpot)),
         UnrollableTable($"Coupling (Top {maxCouplingPerHotSpot})",
             CouplingRows(hotSpot, maxCouplingPerHotSpot)),
         Tag("script", Text(JavaScriptCanvas(hotSpot, chartView)))
@@ -76,16 +75,6 @@ namespace NHotSpot.ResultRendering
                   Td(TdAttributes, Text(contributionViewModel.ChangeCount)),
                   Td(TdAttributes, Text(contributionViewModel.ChangePercentage.ToString("F2") + "%"))))
           );
-    }
-
-    private static IEnumerable<IHtmlContent> HistoryRows(HotSpotViewModel hotSpot)
-    {
-      return hotSpot.Changes.Select(change =>
-        Tr(Td(TdAttributes, 
-                Pre(change.ChangeDate.ToString(Constants.CommitDateFormat, CultureInfo.InvariantCulture))),
-          Td(TdAttributes, Pre(change.Author)),
-          Td(TdAttributes, Pre(change.Comment))
-          ));
     }
 
     private static IEnumerable<IHtmlContent> CouplingRows(HotSpotViewModel hotSpot, int count)

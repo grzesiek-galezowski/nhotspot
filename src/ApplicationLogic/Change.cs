@@ -8,27 +8,21 @@ namespace NHotSpot.ApplicationLogic
         public RelativeFilePath Path { get; }
         public DateTimeOffset ChangeDate { get; }
         public string AuthorName { get; }
-        public string Text { get; }
         public Lazy<double> Complexity { get; }
         public string Id { get; }
 
-        public Change(RelativeFilePath path,
-          string text,
+        public Change(
+          RelativeFilePath path,
           Lazy<double> complexity,
           DateTimeOffset changeDate,
           string authorName,
-          string comment,
           string id)
         {
             Path = path;
             ChangeDate = changeDate;
             AuthorName = authorName;
-            Comment = comment;
             Id = id;
-            Text = text;
             Complexity = complexity;
         }
-
-        public string Comment { get; }
     }
 }    

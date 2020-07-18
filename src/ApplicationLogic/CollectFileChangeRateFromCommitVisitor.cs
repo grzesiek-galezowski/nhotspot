@@ -114,6 +114,7 @@ namespace NHotSpot.ApplicationLogic
 
     private static IEnumerable<IFileHistory> CreateImmutableFileHistoriesFrom(IReadOnlyList<FileHistoryBuilder> trunkFiles)
     {
+      //bug this method has side effects and returns a result!
       Rankings.UpdateComplexityRankingBasedOnOrderOf(OrderByComplexity(trunkFiles));
       Rankings.UpdateChangeCountRankingBasedOnOrderOf(OrderByChangesCount(trunkFiles));
 

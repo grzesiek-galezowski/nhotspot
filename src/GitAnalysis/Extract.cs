@@ -1,3 +1,4 @@
+using System;
 using LibGit2Sharp;
 
 namespace NHotSpot.GitAnalysis
@@ -13,9 +14,9 @@ namespace NHotSpot.GitAnalysis
       var blob = (Blob)currentCommit[treeEntryPath].Target;
       if (blob.IsBinary)
       {
-        return new SupportedBlob(string.Empty);
+        return new SupportedBlob( new Lazy<string>(() => string.Empty));
       }
-      return new SupportedBlob(blob.GetContentText());
+      return new SupportedBlob(new Lazy<string>(() => blob.GetContentText()));
     }
   }
 }

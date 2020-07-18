@@ -11,9 +11,8 @@ namespace NHotSpot.Console
         public static void Run(string[] args)
         {
             var analysisConfig = CommandLineParser.Parse(args);
-            var analysisResult = GitRepoAnalysis.Analyze(
-                analysisConfig.RepoPath.OrThrow(),
-                analysisConfig.Subfolder,
+            using var gitRepoAnalysis = new GitRepoAnalysis(analysisConfig.RepoPath.OrThrow());
+            var analysisResult = gitRepoAnalysis.Analyze(analysisConfig.Subfolder,
                 analysisConfig.Branch.OrThrow(),
                 analysisConfig.MinChangeCount,
                 analysisConfig.StartDate);

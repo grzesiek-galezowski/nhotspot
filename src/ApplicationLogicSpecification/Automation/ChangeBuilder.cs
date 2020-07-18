@@ -12,10 +12,9 @@ namespace ApplicationLogicSpecification.Automation
     {
       return ChangeFactory.CreateChange(
         Path, 
-        FileText, 
-        AuthorName, 
-        ChangeDate, 
-        ChangeComment, 
+        new Lazy<string>(() =>FileText), 
+        AuthorName,
+        ChangeDate,
         Id);
     }
 

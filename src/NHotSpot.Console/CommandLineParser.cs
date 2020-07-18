@@ -39,16 +39,17 @@ namespace NHotSpot.Console
       p.Setup<int>("min-change-count")
         .WithDescription("Minimum change count that makes a file count")
         .Callback(minChangeCount => inputArguments.MinChangeCount = minChangeCount)
+        .SetDefault(1)
         .Required();
 
       p.Setup<int>("max-coupling-per-hospot")
         .WithDescription("Maximum rendered change couplings per hotspot")
-        .SetDefault(20)
+        .SetDefault(10)
         .Callback(maxCouplingsPerHotSpot => inputArguments.MaxCouplingsPerHotSpot = maxCouplingsPerHotSpot);
 
       p.Setup<int>("max-hostpot-count")
         .WithDescription("Maximum count of rendered hotspots")
-        .SetDefault(100)
+        .SetDefault(10)
         .Callback(maxHotSpotCount => inputArguments.MaxHotSpotCount = maxHotSpotCount);
 
       p.Setup<string>("start-date")

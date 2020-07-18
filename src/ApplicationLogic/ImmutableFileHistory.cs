@@ -79,7 +79,9 @@ namespace NHotSpot.ApplicationLogic
         public IEnumerable<Contribution> Contributions() => _contributions;
         public Maybe<RelativeDirectoryPath> LatestPackagePath() => _latestPackagePath;
 
-        public CouplingBetweenFiles CalculateCouplingTo(IFileHistory otherHistory, int totalCommits)
+        public CouplingBetweenFiles CalculateCouplingTo(
+          IFileHistory otherHistory, 
+          int totalCommits)
         {
             //performance-critical fragment
             var couplingCount = ChangeIds().Intersect(otherHistory.ChangeIds()).Count();

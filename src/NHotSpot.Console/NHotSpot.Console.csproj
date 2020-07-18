@@ -6,11 +6,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Grzegorz Gałęzowski</Authors>
     <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>nhotspot</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageId>TddXt.NHotSpot.Console</PackageId>
-    <Version>0.3.0</Version>
     <Product>NHotSpot</Product>
     <Copyright>Grzegorz Gałęzowski</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

@@ -5,17 +5,18 @@ namespace NHotSpot.ApplicationLogic
 {
   public static class ChangeFactory
   {
-    public static Change CreateChange(string path, string fileText, string authorName, DateTimeOffset changeDate,
-      string changeComment,
+    public static Change CreateChange(
+      string path, 
+      Lazy<string> fileText, 
+      string authorName, 
+      DateTimeOffset changeDate,
       string id)
     {
       return new Change(
         RelativeFilePath(path), 
-        fileText, 
-        new Lazy<double>(() => ComplexityMetrics.CalculateComplexityFor(fileText)), 
+        new Lazy<double>(() => ComplexityMetrics.CalculateComplexityFor(fileText.Value)), 
         changeDate,
-        authorName,
-        changeComment, 
+        authorName, 
         id);
     }
   }
