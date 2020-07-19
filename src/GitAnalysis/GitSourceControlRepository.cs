@@ -100,6 +100,11 @@ namespace NHotSpot.GitAnalysis
             blob.OnCopied(treeVisitor, treeEntryPath, changeDate, authorName, currentCommit.Sha);
             break;
           }
+          case ChangeKind.TypeChanged:
+          {
+            Console.WriteLine(" type of file " + treeEntry.OldPath + " -> " + treeEntry.Path + " type changed. Ignoring...");
+            break;
+          }
           default:
             throw new ArgumentOutOfRangeException();
         }
