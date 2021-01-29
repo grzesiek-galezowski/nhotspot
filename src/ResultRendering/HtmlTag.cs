@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NHotSpot.ResultRendering
 {
@@ -35,12 +36,18 @@ namespace NHotSpot.ResultRendering
 
     private string RenderAttributes()
     {
-      return String.Join(" ", _attributes.Select(a => a.Render()));
+      return string.Join(" ", _attributes.Select(a => a.Render()));
     }
 
     private string RenderChildren(int nesting)
     {
-      return String.Join(" ", _children.Select(i => i.Render(nesting + 1) + _renderingFormat.AfterChild()));
+      var tasks = _children.Select(i =>
+      {
+        return Task.Run(() => i.Render(nesting + 1) + _renderingFormat.AfterChild());
+      }).ToArray();
+
+      Task.WaitAll(tasks);
+      return string.Join(" ", tasks.Select(t => t.Result));
     }
 
     private readonly string _tagName;

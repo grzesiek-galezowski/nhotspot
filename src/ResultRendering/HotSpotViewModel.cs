@@ -29,7 +29,7 @@ namespace NHotSpot.ResultRendering
         log.Filter(couplingMetrics));
     }
 
-    public static IEnumerable<HotSpotViewModel> FromAsync(IEnumerable<IFileHistory> entries, IEnumerable<CouplingBetweenFiles> couplingMetrics)
+    public static IEnumerable<HotSpotViewModel> From(IEnumerable<IFileHistory> entries, IEnumerable<CouplingBetweenFiles> couplingMetrics)
     {
       return entries.Select((history, i) => HotSpotViewModel.From(couplingMetrics, i, history));
     }

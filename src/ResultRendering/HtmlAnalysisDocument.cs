@@ -18,8 +18,12 @@ namespace NHotSpot.ResultRendering
 
     public string RenderString(AnalysisResult analysisResults)
     {
+      Console.WriteLine("Creating ViewModel");
       var viewModel = CreateViewModel(analysisResults);
+      Console.WriteLine("Creating ViewModel finished");
+      Console.WriteLine("Rendering ViewModel");
       var contents = ResultsView.Render(viewModel, _analysisConfig);
+      Console.WriteLine("Rendering ViewModel finished");
       return contents;
     }
 
@@ -29,7 +33,7 @@ namespace NHotSpot.ResultRendering
       AddCouplingRanking(analysisResults.FileCouplingMetrics(), viewModel.FileCouplings);
       AddCouplingRanking(analysisResults.PackageCouplingMetrics(), viewModel.PackageCouplings);
       var chartDataTask = Task.Run(() => 
-        HotSpotViewModel.FromAsync(
+        HotSpotViewModel.From(
           analysisResults.EntriesByHotSpotRating(), 
           analysisResults.FileCouplingMetrics()));
       var rankingTasks = RankingTasks(analysisResults);

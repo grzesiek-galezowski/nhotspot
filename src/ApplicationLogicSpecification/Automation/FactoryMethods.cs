@@ -11,7 +11,7 @@ namespace ApplicationLogicSpecification.Automation
       return new ChangeBuilder
       {
         Path = fileName,
-        FileText = String.Join(Environment.NewLine, Enumerable.Repeat(" a", complexity))
+        FileText = string.Join(Environment.NewLine, Enumerable.Repeat(" a", complexity))
       }.Build();
     }
   }
