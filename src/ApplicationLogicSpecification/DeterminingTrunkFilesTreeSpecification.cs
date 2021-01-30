@@ -4,12 +4,29 @@ using System.Linq;
 using System.Text;
 using ApplicationLogicSpecification.Automation;
 using FluentAssertions;
+using NHotSpot.ApplicationLogic;
 using NUnit.Framework;
 
 namespace ApplicationLogicSpecification
 {
   public class DeterminingTrunkFilesTreeSpecification
   {
+    [Test]
+    public void ShouldContainNoDataWhenNoCommitsDetected()
+    {
+      var analysisResult = new RepoAnalysisDriver().Analyze(_ => { });
+
+      analysisResult.EntriesByDiminishingActivityPeriod().Should().BeEmpty();
+      analysisResult.EntriesByDiminishingChangesCount().Should().BeEmpty();
+      analysisResult.EntriesByDiminishingComplexity().Should().BeEmpty();
+      analysisResult.EntriesByHotSpotRating().Should().BeEmpty();
+      analysisResult.EntriesFromMostAncientlyChanged().Should().BeEmpty();
+      analysisResult.EntriesFromMostRecentlyChanged().Should().BeEmpty();
+      analysisResult.FileCouplingMetrics().Should().BeEmpty();
+      analysisResult.PackageCouplingMetrics().Should().BeEmpty();
+      analysisResult.PackageTree().Should().BeOfType<NoFilesOrPackages>();
+    }
+
     [Test]
     public void METHOD()
     {
@@ -34,7 +51,7 @@ namespace ApplicationLogicSpecification
       fileHistory.Entries.Should().HaveCount(1);
       fileHistory.Entries[0].AuthorName.Should().Be("Zenek");
       fileHistory.Entries[0].ChangeDate.Should().Be(date);
-      fileHistory.Entries[0].Complexity.Value.Should().Be(5);
+      fileHistory.Entries[0]. Complexity.Value.Should().Be(5);
       //bug add to test data fileHistory.Entries[0].Comment.Should().Be("5");
     }
   }

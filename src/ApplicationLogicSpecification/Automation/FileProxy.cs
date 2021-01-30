@@ -1,5 +1,6 @@
 using System;
 using AtmaFileSystem;
+using NHotSpot.ApplicationLogic;
 using static System.Environment;
 using static System.Linq.Enumerable;
 using static TddXt.AnyRoot.Root;
@@ -23,14 +24,25 @@ namespace ApplicationLogicSpecification.Automation
 
     public void Added()
     {
-      _context.Add(new ChangeBuilder
+      _context.Add(Change());
+    }
+
+    public void Modified()
+    {
+      _context.Modify(Change());
+    }
+
+    private Change Change()
+    {
+      return new ChangeBuilder
       {
         Path = _fileName.ToString(),
         AuthorName = _author,
         FileText = string.Join(NewLine, Repeat(" a", _complexity)),
         ChangeDate = _commitContext.Date,
-      }.Build());
+      }.Build();
     }
+
 
     public FileProxy Complexity(int complexity)
     {
@@ -43,5 +55,6 @@ namespace ApplicationLogicSpecification.Automation
       _author = name;
       return this;
     }
+
   }
 }
