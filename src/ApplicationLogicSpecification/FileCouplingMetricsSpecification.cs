@@ -17,7 +17,7 @@ namespace ApplicationLogicSpecification
     }
 
     [Test]
-    public void ShouldContainFoundFiledWithTheSameActivityTogether()
+    public void ShouldCorrectlyCalculateCouplingForASingleCommit()
     {
       var analysisResult = new RepoAnalysisDriver().Analyze(flow =>
       {
@@ -40,7 +40,7 @@ namespace ApplicationLogicSpecification
     }
     
     [Test]
-    public void CalculatePercentagesAcrossCommits()
+    public void ShouldCalculatePercentagesAcrossCommits()
     {
       var analysisResult = new RepoAnalysisDriver().Analyze(flow =>
       {
@@ -67,7 +67,7 @@ namespace ApplicationLogicSpecification
     }
     
     [Test]
-    public void CalculatePercentagesForDifferentCouplingOfSameFile()
+    public void ShouldCalculatePercentagesForDifferentCouplingOfSameFile()
     {
       var analysisResult = new RepoAnalysisDriver().Analyze(flow =>
       {
