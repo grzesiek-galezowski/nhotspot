@@ -1,13 +1,10 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using ApplicationLogicSpecification.Automation;
 using AtmaFileSystem;
 using FluentAssertions;
 using Functional.Maybe;
 using NHotSpot.ApplicationLogic;
-using NHotSpot.GitAnalysis;
-using NHotSpot.ResultRendering;
 using NUnit.Framework;
 using TddXt.AnyRoot.Strings;
 using static AtmaFileSystem.AtmaFileSystemPaths;

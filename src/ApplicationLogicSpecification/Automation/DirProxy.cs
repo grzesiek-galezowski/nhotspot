@@ -1,5 +1,7 @@
 using System;
 using AtmaFileSystem;
+using TddXt.AnyRoot.Strings;
+using static TddXt.AnyRoot.Root;
 
 namespace ApplicationLogicSpecification.Automation
 {
@@ -42,5 +44,6 @@ namespace ApplicationLogicSpecification.Automation
   public class CommitContext
   {
     public DateTime Date { get; set; } = DateTime.UtcNow;
+    public string ChangeId { get; } = Any.String();
   }
 }

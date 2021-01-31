@@ -1,4 +1,3 @@
-using System;
 using AtmaFileSystem;
 using NHotSpot.ApplicationLogic;
 using static System.Environment;
@@ -40,6 +39,7 @@ namespace ApplicationLogicSpecification.Automation
         AuthorName = _author,
         FileText = string.Join(NewLine, Repeat(" a", _complexity)),
         ChangeDate = _commitContext.Date,
+        Id = _commitContext.ChangeId
       }.Build();
     }
 

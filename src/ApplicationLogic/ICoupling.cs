@@ -1,5 +1,3 @@
-using AtmaFileSystem;
-
 namespace NHotSpot.ApplicationLogic
 {
   public interface ICoupling<TPath>

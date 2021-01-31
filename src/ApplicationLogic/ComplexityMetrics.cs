@@ -62,77 +62,21 @@ namespace NHotSpot.ApplicationLogic
       return 2 * changeCountRank + complexityRank / 2d;
     }
 
-    /*public static IEnumerable<CouplingBetweenFiles> CalculateCoupling(IEnumerable<IFileHistory> fileHistories, int totalCommits)
-    {
-      var couplingMetric = new List<CouplingBetweenFiles>();
-      Console.WriteLine("Calculating file coupling");
-      var stopwatch = new Stopwatch();
-      stopwatch.Start();
-      var i = 0;
-      foreach(var history in fileHistories)
-      {
-        i++;
-        foreach (var otherHistory in fileHistories.Skip(i))
-        {
-          var coupling = history.CalculateCouplingTo(otherHistory, totalCommits);
-          if (coupling.CouplingCount != 0)
-          {
-            couplingMetric.Add(coupling);
-          }
-        }
-      }
-      stopwatch.Stop();
-      Console.WriteLine("Calculating file coupling finished " + stopwatch.ElapsedMilliseconds);
-      return couplingMetric
-        .Where(c => c.CouplingCount > ArbitraryLimit)
-        .OrderByDescending(c => c.CouplingCount);
-    }*/
-
-    
-    /* old algorithm - gives slightly different results. Need to compare them!
     public static IEnumerable<TCoupling> CalculateCoupling<TCoupling, THistory, TPath>(
-      IEnumerable<THistory> packageHistories, int totalCommits)
-      where TCoupling : ICoupling<TPath>
-      where THistory : ICouplingSource<TCoupling, THistory>
-    {
-      var couplingMetric = new List<TCoupling>();
-      Console.WriteLine("Calculating coupling");
-      var stopwatch = new Stopwatch();
-      stopwatch.Start();
-      var processedHistoriesCount = 0;
-      foreach(var history in packageHistories)
-      {
-        processedHistoriesCount++;
-        foreach (var otherHistory in packageHistories.Skip(processedHistoriesCount))
-        {
-          var coupling = history.CalculateCouplingTo(otherHistory, totalCommits);
-          if (coupling.CouplingCount > ArbitraryLimit)
-          {
-            couplingMetric.Add(coupling);
-          }
-        }
-      }
-      stopwatch.Stop();
-      Console.WriteLine("Calculating coupling finished " + stopwatch.ElapsedMilliseconds);
-      return couplingMetric.OrderByDescending(c => c.CouplingCount);
-
-    }*/
-
-    public static IEnumerable<TCoupling> CalculateCoupling<TCoupling, THistory, TPath>(
-      IEnumerable<THistory> packageHistories, int totalCommits)
+      IEnumerable<THistory> histories, int totalCommits)
       where TCoupling : ICoupling<TPath>
       where THistory : ICouplingSource<TCoupling, THistory>
     {
       var couplingMetric = new ConcurrentBag<TCoupling>();
+      var historiesAsList = histories.ToList();
       Console.WriteLine("Calculating coupling");
       var stopwatch = new Stopwatch();
-      var packageHistoriesList = packageHistories.ToList();
       stopwatch.Start();
-      Parallel.For(0, packageHistoriesList.Count, i =>
+      Parallel.For(0, historiesAsList.Count, i =>
       {
-        var history = packageHistoriesList[i];
-        foreach (var coupling in packageHistoriesList.Skip(i + 1)
-          .Select(otherHistory => history.CalculateCouplingTo(otherHistory, totalCommits))
+        var currentHistory = historiesAsList[i];
+        foreach (var coupling in historiesAsList.Skip(i + 1)
+          .Select(otherHistory => currentHistory.CalculateCouplingTo(otherHistory, totalCommits))
           .Where(c => c.CouplingCount > ArbitraryLimit))
         {
           couplingMetric.Add(coupling);

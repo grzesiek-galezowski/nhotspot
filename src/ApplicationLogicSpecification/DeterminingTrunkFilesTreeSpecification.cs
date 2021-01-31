@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ApplicationLogicSpecification.Automation;
 using FluentAssertions;
 using NHotSpot.ApplicationLogic;

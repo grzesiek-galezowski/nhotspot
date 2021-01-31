@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using ApplicationLogicSpecification.Automation;
 using AtmaFileSystem;
 using FluentAssertions;
 using FluentAssertions.Extensions;
-using NHotSpot.ApplicationLogic;
 using NUnit.Framework;
 using TddXt.AnyRoot.Time;
 using static TddXt.AnyRoot.Root;
@@ -42,7 +38,7 @@ namespace ApplicationLogicSpecification
     }
     
     [Test]
-    public void ShouldSortEntriesFromMostRecentActiveToOldestActive()
+    public void ShouldSortEntriesFromLongestToShortestActiveDespiteTheAgeOfEachFile()
     {
       var analysisResult = new RepoAnalysisDriver().Analyze(flow =>
       {
