@@ -6,14 +6,14 @@ using NUnit.Framework;
 
 namespace ApplicationLogicSpecification
 {
-  public class EntriesByDiminishingChangeCountSpecification
+  public class EntriesByDiminishingComplexitySpecification
   {
     [Test]
     public void ShouldContainNoDataWhenNoCommitsDetected()
     {
       var analysisResult = new RepoAnalysisDriver().Analyze(_ => { });
 
-      analysisResult.EntriesByDiminishingChangesCount().Should().BeEmpty();
+      analysisResult.EntriesByDiminishingComplexity().Should().BeEmpty();
     }
 
     [Test]
@@ -23,44 +23,39 @@ namespace ApplicationLogicSpecification
       {
         flow.Commit(commit =>
         {
-          commit.File("A.cs").Added();
-          commit.File("B.cs").Added();
+          commit.File("A.cs").Complexity(1).Added();
+          commit.File("B.cs").Complexity(2).Added();
         });
       });
 
-      var entries = analysisResult.EntriesByDiminishingChangesCount();
+      var entries = analysisResult.EntriesByDiminishingComplexity();
       entries.Should().HaveCount(2);
-      entries.ElementAt(0).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("A.cs"));
-      entries.ElementAt(0).ChangesCount().Should().Be(1);
-      entries.ElementAt(1).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("B.cs"));
-      entries.ElementAt(1).ChangesCount().Should().Be(1);
+      entries.ElementAt(0).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("B.cs"));
+      entries.ElementAt(0).ComplexityOfCurrentVersion().Should().Be(2);
+      entries.ElementAt(1).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("A.cs"));
+      entries.ElementAt(1).ComplexityOfCurrentVersion().Should().Be(1);
     }
     
     [Test]
-    public void ShouldSortEntriesFromMostOftenChangedToLeastOftenChangedDespiteTheAgeOfEachFile()
+    public void ShouldCalculateCorrectValuesAcrossCommits()
     {
       var analysisResult = new RepoAnalysisDriver().Analyze(flow =>
       {
         flow.Commit(commit =>
         {
-          commit.File("A.cs").Added();
-          commit.File("B.cs").Added();
-          commit.File("C.cs").Added();
+          commit.File("A.cs").Complexity(1).Added();
+          commit.File("B.cs").Complexity(2).Added();
+          commit.File("C.cs").Complexity(3).Added();
         });
         flow.Commit(commit =>
         {
-          commit.File("A.cs").Modified();
-          commit.File("B.cs").Modified();
-        });
-        flow.Commit(commit =>
-        {
-          commit.File("B.cs").Modified();
-          commit.File("D.cs").Added();
+          commit.File("B.cs").Complexity(5).Modified();
+          commit.File("C.cs").Complexity(6).Modified();
         });
       });
 
-      var entries = analysisResult.EntriesByDiminishingChangesCount();
-      entries.Should().HaveCount(4);
+      var entries = analysisResult.EntriesByDiminishingComplexity();
+      entries.Should().HaveCount(3);
       entries.ElementAt(0).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("B.cs"));
       entries.ElementAt(0).ChangesCount().Should().Be(3);
       entries.ElementAt(1).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("A.cs"));
