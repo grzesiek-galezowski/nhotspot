@@ -6,14 +6,15 @@ using NUnit.Framework;
 
 namespace ApplicationLogicSpecification
 {
-  public class EntriesByDiminishingComplexitySpecification
+  public class EntriesFromMostAncientlyChangedSpecification
   {
+    //BUG these tests are copy - paste. Need to be changed
     [Test]
     public void ShouldContainNoDataWhenNoCommitsDetected()
     {
       var analysisResult = new RepoAnalysisDriver().Analyze(_ => { });
 
-      analysisResult.EntriesByDiminishingComplexity().Should().BeEmpty();
+      analysisResult.EntriesFromMostAncientlyChanged().Should().BeEmpty();
     }
 
     [Test]
