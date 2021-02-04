@@ -11,15 +11,14 @@ using static TddXt.AnyRoot.Root;
 
 namespace ApplicationLogicSpecification
 {
-  public class EntriesFromMostAncientlyChangedSpecification
+  public class EntriesFromMostRecentlyChangedSpecification
   {
-    //BUG these tests are copy - paste. Need to be changed
     [Test]
     public void ShouldContainNoDataWhenNoCommitsDetected()
     {
       var analysisResult = new RepoAnalysisDriver().Analyze(_ => { });
 
-      analysisResult.EntriesFromMostAncientlyChanged().Should().BeEmpty();
+      analysisResult.EntriesFromMostRecentlyChanged().Should().BeEmpty();
     }
 
     [Test]
@@ -50,12 +49,12 @@ namespace ApplicationLogicSpecification
         });
       });
 
-      var entries = analysisResult.EntriesFromMostAncientlyChanged();
+      var entries = analysisResult.EntriesFromMostRecentlyChanged();
       entries.Should().HaveCount(2);
-      entries.ElementAt(0).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("B.cs"));
-      entries.ElementAt(0).LastChangeDate().Should().Be(now - 2.Days());
-      entries.ElementAt(1).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("A.cs"));
-      entries.ElementAt(1).LastChangeDate().Should().Be(now - 1.Days());
+      entries.ElementAt(0).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("A.cs"));
+      entries.ElementAt(0).LastChangeDate().Should().Be(now - 1.Days());
+      entries.ElementAt(1).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("B.cs"));
+      entries.ElementAt(1).LastChangeDate().Should().Be(now - 2.Days());
     }
   }
 }
