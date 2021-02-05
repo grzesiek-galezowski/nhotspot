@@ -16,7 +16,7 @@ namespace ApplicationLogicSpecification
       analysisResult.PackageCouplingMetrics().Should().BeEmpty();
     }
 
-    [Test] //bug finish the test
+    [Test]
     public void ShouldCorrectlyCalculateCouplingForASingleCommit()
     {
       var analysisResult = new RepoAnalysisDriver().Analyze(flow =>
