@@ -33,6 +33,7 @@ namespace NHotSpot.Console
       
       p.Setup<string>('b', "branch")
         .WithDescription("branch name")
+        .SetDefault("master")
         .Callback(branch => inputArguments.Branch = branch)
         .Required();
 
