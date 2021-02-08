@@ -45,13 +45,13 @@ namespace ApplicationLogicSpecification
         flow.Commit(commit =>
         {
           commit.File("A.cs").Complexity(1).Added();
-          commit.File("B.cs").Complexity(2).Added();
-          commit.File("C.cs").Complexity(3).Added();
+          commit.Dir("A").File("B.cs").Complexity(2).Added();
+          commit.Dir("A").File("C.cs").Complexity(3).Added();
         });
         flow.Commit(commit =>
         {
-          commit.File("B.cs").Complexity(5).Modified();
-          commit.File("C.cs").Complexity(6).Modified();
+          commit.Dir("A").File("B.cs").Complexity(5).Modified();
+          commit.Dir("A").File("C.cs").Complexity(6).Modified();
         });
         flow.Commit(commit =>
         {
@@ -63,14 +63,12 @@ namespace ApplicationLogicSpecification
         });
       });
 
-      var entries = analysisResult.EntriesByHotSpotRating();
-      entries.Should().HaveCount(3);
-      entries.ElementAt(0).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("A.cs"));
-      entries.ElementAt(0).HotSpotRating().Should().Be(6.5);
-      entries.ElementAt(1).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("C.cs"));
-      entries.ElementAt(1).HotSpotRating().Should().Be(5.5);
-      entries.ElementAt(2).PathOfCurrentVersion().Should().Be(RelativeFilePath.Value("B.cs"));
-      entries.ElementAt(2).HotSpotRating().Should().Be(3);
+      var entries = analysisResult.PackagesByDiminishingHotSpotRating();
+      entries.Should().HaveCount(2);
+      entries.ElementAt(0).PathOfCurrentVersion().Should().Be(RelativeDirectoryPath.Value("ROOT\\A"));
+      entries.ElementAt(0).HotSpotRating().Should().Be(8.5);
+      entries.ElementAt(1).PathOfCurrentVersion().Should().Be(RelativeDirectoryPath.Value("ROOT"));
+      entries.ElementAt(1).HotSpotRating().Should().Be(6.5);
     }
   }
 }
