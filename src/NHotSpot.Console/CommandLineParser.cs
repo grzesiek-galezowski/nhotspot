@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using AtmaFileSystem;
 using Fclp;
+using Functional.Either;
 using Functional.Maybe;
 using NHotSpot.ApplicationLogic;
 
@@ -9,12 +10,16 @@ namespace NHotSpot.Console
 {
   public static class CommandLineParser
   {
-    public static AnalysisConfig Parse(string[] args)
+    public static Either<AnalysisConfig, ICommandLineParserResult> Parse(string[] args)
     {
       var analysisConfig = new AnalysisConfig();
       var parser = CreateCliParser(analysisConfig);
-      parser.Parse(args);
-      return analysisConfig;
+      var commandLineParserResult = parser.Parse(args);
+      if (commandLineParserResult.HasErrors)
+      {
+        return commandLineParserResult.ToError<AnalysisConfig, ICommandLineParserResult>();
+      }
+      return analysisConfig.ToResult<AnalysisConfig, ICommandLineParserResult>();
     }
 
     private static FluentCommandLineParser CreateCliParser(AnalysisConfig inputArguments)

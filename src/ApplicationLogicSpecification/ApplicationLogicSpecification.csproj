@@ -7,16 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Any" Version="5.1.0" />
+    <PackageReference Include="Any" Version="6.2.1" />
     <PackageReference Include="Functional.Maybe.Just" Version="1.5.0" />
     <PackageReference Include="NSubstitute" Version="4.2.2" />
-    <PackageReference Include="nunit" Version="3.13.0" />
+    <PackageReference Include="nunit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
-    <PackageReference Include="XNSubstitute" Version="1.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="XNSubstitute" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>

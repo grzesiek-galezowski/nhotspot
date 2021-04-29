@@ -4,7 +4,7 @@ using static Bullseye.Targets;
 using static SimpleExec.Command;
 
 const string consoleAppName = "NHotSpot.Console";
-const string version = "0.7.0";
+const string version = "0.7.1";
 var repositoryRoot = AbsoluteDirectoryPath(Git.CurrentRepositoryPath());
 var slnPath = repositoryRoot + DirectoryName("src");
 var consoleAppPath = slnPath + DirectoryName(consoleAppName);
