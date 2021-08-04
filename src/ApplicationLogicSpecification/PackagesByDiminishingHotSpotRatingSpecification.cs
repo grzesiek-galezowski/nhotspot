@@ -65,7 +65,7 @@ namespace ApplicationLogicSpecification
 
       var entries = analysisResult.PackagesByDiminishingHotSpotRating();
       entries.Should().HaveCount(2);
-      entries.ElementAt(0).PathOfCurrentVersion().Should().Be(RelativeDirectoryPath.Value("ROOT\\A"));
+      entries.ElementAt(0).PathOfCurrentVersion().Should().Be(RelativeDirectoryPath.Value("ROOT") + DirectoryName.Value("A"));
       entries.ElementAt(0).HotSpotRating().Should().Be(8.5);
       entries.ElementAt(1).PathOfCurrentVersion().Should().Be(RelativeDirectoryPath.Value("ROOT"));
       entries.ElementAt(1).HotSpotRating().Should().Be(6.5);

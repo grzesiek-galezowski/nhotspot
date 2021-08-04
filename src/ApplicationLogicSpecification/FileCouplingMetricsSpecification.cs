@@ -3,6 +3,7 @@ using ApplicationLogicSpecification.Automation;
 using AtmaFileSystem;
 using FluentAssertions;
 using NUnit.Framework;
+using static System.IO.Path;
 
 namespace ApplicationLogicSpecification
 {
@@ -23,17 +24,17 @@ namespace ApplicationLogicSpecification
       {
         flow.Commit(commit =>
         {
-          commit.Dir("A1\\A2\\A3\\").File("A.cs").Added();
-          commit.Dir("A1\\A2\\A21\\A3").File("B.cs").Added();
+          commit.Dir($"A1{DirectorySeparatorChar}A2{DirectorySeparatorChar}A3{DirectorySeparatorChar}").File("A.cs").Added();
+          commit.Dir($"A1{DirectorySeparatorChar}A2{DirectorySeparatorChar}A21{DirectorySeparatorChar}A3").File("B.cs").Added();
         });
       });
 
       var entries = analysisResult.FileCouplingMetrics().ToList();
       entries.Should().HaveCount(1);
       entries.ElementAt(0).CouplingCount.Should().Be(1);
-      entries.ElementAt(0).Left.Should().Be(RelativeFilePath.Value("A1\\A2\\A3\\A.cs"));
-      entries.ElementAt(0).Right.Should().Be(RelativeFilePath.Value("A1\\A2\\A21\\A3\\B.cs"));
-      entries.ElementAt(0).LongestCommonPathPrefix.Should().Be("A1\\A2");
+      entries.ElementAt(0).Left.Should().Be(RelativeFilePath.Value($"A1{DirectorySeparatorChar}A2{DirectorySeparatorChar}A3{DirectorySeparatorChar}A.cs"));
+      entries.ElementAt(0).Right.Should().Be(RelativeFilePath.Value($"A1{DirectorySeparatorChar}A2{DirectorySeparatorChar}A21{DirectorySeparatorChar}A3{DirectorySeparatorChar}B.cs"));
+      entries.ElementAt(0).LongestCommonPathPrefix.Should().Be($"A1{DirectorySeparatorChar}A2");
       entries.ElementAt(0).PercentageOfLeftCommits.Should().Be(100);
       entries.ElementAt(0).PercentageOfRightCommits.Should().Be(100);
       entries.ElementAt(0).PercentageOfTotalCommits.Should().Be(100);
