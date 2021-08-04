@@ -33,7 +33,8 @@ namespace NHotSpot.Console
 
       p.Setup<string?>('p', "subfolder-path")
           .WithDescription("Subpath in repository (relative path)")
-          .Callback(path => inputArguments.Subfolder = path.ToMaybe().Select(RelativeDirectoryPath.Value))
+          .Callback(path => inputArguments.Subfolder = 
+            path!.ToMaybe().Select(RelativeDirectoryPath.Value))
           .SetDefault(null);
       
       p.Setup<string>('b', "branch")

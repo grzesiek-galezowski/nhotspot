@@ -23,8 +23,9 @@ namespace NHotSpot.Console
                 var readyDocument = new HtmlAnalysisDocument(analysisConfig)
                   .RenderString(analysisResult);
 
-                File.WriteAllText(analysisConfig.OutputFile, readyDocument);
-                Browser.Open(analysisConfig.OutputFile.OrThrow());
+                var reportPath = analysisConfig.OutputFile.OrThrow();
+                File.WriteAllText(reportPath, readyDocument);
+                Browser.Open(reportPath);
               },
               result =>
               {

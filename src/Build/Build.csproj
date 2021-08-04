@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AtmaFilesystem" Version="4.7.0" />
-    <PackageReference Include="Bullseye" Version="3.7.0" />
-    <PackageReference Include="Functional.Maybe.Just" Version="1.5.0" />
-    <PackageReference Include="SimpleExec" Version="7.0.0" />
+    <PackageReference Include="AtmaFilesystem" Version="4.8.0" />
+    <PackageReference Include="Bullseye" Version="3.7.1" />
+    <PackageReference Include="Functional.Maybe.Just" Version="1.6.0" />
+    <PackageReference Include="SimpleExec" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

@@ -69,8 +69,9 @@ namespace NHotSpot.ResultRendering
     }
 
     private static void AddCouplingRanking<TPath>(IEnumerable<ICoupling<TPath>> couplingMetrics, ICollection<CouplingViewModel> couplings)
+    where TPath : notnull
     {
-      foreach (var couplingViewModel in couplingMetrics.Select(CouplingViewModel.From)
+      foreach (var couplingViewModel in couplingMetrics.Select(coupling => CouplingViewModel.From(coupling))
           .OrderByDescending(c => c.CouplingCount))
       {
         couplings.Add(couplingViewModel);

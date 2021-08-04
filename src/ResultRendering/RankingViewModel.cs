@@ -33,7 +33,9 @@ namespace NHotSpot.ResultRendering
     public static Task<RankingViewModel> GetRankingAsync<TValue, TChangeLog, TPathType>(
       IEnumerable<TChangeLog> entries, 
       Func<TChangeLog, TValue> valueFun, 
-      string heading) where TChangeLog : IItemWithPath<TPathType>
+      string heading) 
+      where TChangeLog : IItemWithPath<TPathType>
+      where TValue : notnull
     {
       return Task.Run(() => 
         RankingViewModel.NewRankingViewModel<TValue, TChangeLog, TPathType>(

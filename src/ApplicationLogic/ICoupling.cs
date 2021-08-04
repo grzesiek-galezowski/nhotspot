@@ -1,6 +1,6 @@
 namespace NHotSpot.ApplicationLogic
 {
-  public interface ICoupling<TPath>
+  public interface ICoupling<out TPath> where TPath : notnull
   {
     int CouplingCount { get; }
     TPath Left { get; }

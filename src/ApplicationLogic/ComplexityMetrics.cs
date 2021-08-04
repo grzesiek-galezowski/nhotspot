@@ -66,6 +66,7 @@ namespace NHotSpot.ApplicationLogic
       IEnumerable<THistory> histories, int totalCommits)
       where TCoupling : ICoupling<TPath>
       where THistory : ICouplingSource<TCoupling, THistory>
+      where TPath : notnull
     {
       var couplingMetric = new ConcurrentBag<TCoupling>();
       var historiesAsList = histories.ToList();
