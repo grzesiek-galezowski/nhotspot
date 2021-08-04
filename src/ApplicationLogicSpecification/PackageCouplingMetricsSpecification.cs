@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using ApplicationLogicSpecification.Automation;
 using AtmaFileSystem;
 using FluentAssertions;
@@ -32,9 +33,9 @@ namespace ApplicationLogicSpecification
       entries.Should().HaveCount(1);
       
       entries.ElementAt(0).CouplingCount.Should().Be(1);
-      entries.ElementAt(0).Left.Should().Be(RelativeDirectoryPath.Value("ROOT\\A1\\A2\\A3"));
-      entries.ElementAt(0).Right.Should().Be(RelativeDirectoryPath.Value("ROOT\\A1\\A2\\A21\\A3"));
-      entries.ElementAt(0).LongestCommonPathPrefix.Should().Be("ROOT\\A1\\A2");
+      entries.ElementAt(0).Left.Should().Be(RelativeDirectoryPath.Value($"ROOT{Path.DirectorySeparatorChar}A1{Path.DirectorySeparatorChar}A2{Path.DirectorySeparatorChar}A3"));
+      entries.ElementAt(0).Right.Should().Be(RelativeDirectoryPath.Value($"ROOT{Path.DirectorySeparatorChar}A1{Path.DirectorySeparatorChar}A2{Path.DirectorySeparatorChar}A21{Path.DirectorySeparatorChar}A3"));
+      entries.ElementAt(0).LongestCommonPathPrefix.Should().Be($"ROOT{Path.DirectorySeparatorChar}A1{Path.DirectorySeparatorChar}A2");
       entries.ElementAt(0).PercentageOfLeftCommits.Should().Be(100);
       entries.ElementAt(0).PercentageOfRightCommits.Should().Be(100);
       entries.ElementAt(0).PercentageOfTotalCommits.Should().Be(100);
