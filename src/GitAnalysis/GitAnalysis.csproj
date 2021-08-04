@@ -7,7 +7,7 @@
     <AssemblyName>NHotSpot.GitAnalysis</AssemblyName>
     <RootNamespace>NHotSpot.GitAnalysis</RootNamespace>
     <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

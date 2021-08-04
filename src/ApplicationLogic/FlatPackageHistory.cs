@@ -54,7 +54,7 @@ namespace NHotSpot.ApplicationLogic
 
     public double HotSpotRating()
     {
-      //bug 
+      //bug maybe calculate instead of just summing up
 
       return _files.Sum(f => f.HotSpotRating());
     }

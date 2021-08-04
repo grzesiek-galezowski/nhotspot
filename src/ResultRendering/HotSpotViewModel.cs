@@ -4,22 +4,22 @@ using NHotSpot.ApplicationLogic;
 
 namespace NHotSpot.ResultRendering
 {
-  public class HotSpotViewModel
+  public record HotSpotViewModel(
+    string Complexity,
+    string ChangesCount,
+    string Rating,
+    string Path,
+    string Age,
+    string TimeSinceLastChanged,
+    string ActivePeriod,
+    string CreationDate,
+    string LastChangedDate,
+    string Labels,
+    string ChartValueDescription,
+    string Data,
+    IEnumerable<CouplingViewModel> ChangeCoupling,
+    IEnumerable<ContributionViewModel> Contributions)
   {
-    public string? Rating { get; set; }
-    public string? Path { get; set; }
-    public string? Complexity { get; set; }
-    public string? ChangesCount { get; set; }
-    public string? Age { get; set; }
-    public string? TimeSinceLastChanged { get; set; }
-    public string? ActivePeriod { get; set; }
-    public string? CreationDate { get; set; }
-    public string? LastChangedDate { get; set; }
-    public string? Labels { get; set; }
-    public string? ChartValueDescription { get; set; }
-    public string? Data { get; set; }
-    public IEnumerable<CouplingViewModel>? ChangeCoupling { get; set; }
-    public IEnumerable<ContributionViewModel>? Contributions { get; set; }
 
     public static HotSpotViewModel From(IEnumerable<CouplingBetweenFiles> couplingMetrics, int i, IFileHistory log)
     {
@@ -31,7 +31,7 @@ namespace NHotSpot.ResultRendering
 
     public static IEnumerable<HotSpotViewModel> From(IEnumerable<IFileHistory> entries, IEnumerable<CouplingBetweenFiles> couplingMetrics)
     {
-      return entries.Select((history, i) => HotSpotViewModel.From(couplingMetrics, i, history));
+      return entries.Select((history, i) => From(couplingMetrics, i, history));
     }
   }
 }

@@ -12,22 +12,20 @@ namespace NHotSpot.ResultRendering
       IFileHistory fileHistory,
       IEnumerable<CouplingBetweenFiles> fileCouplings)
     {
-      var hotSpotViewModel = new HotSpotViewModel
-      {
-        Complexity = fileHistory.ComplexityOfCurrentVersion().ToString(CultureInfo.InvariantCulture),
-        ChangesCount = fileHistory.ChangesCount().ToString(),
-        CreationDate = fileHistory.CreationDate().ToString("d"),
-        LastChangedDate = fileHistory.LastChangeDate().ToString("d"),
-        TimeSinceLastChanged = (int) fileHistory.TimeSinceLastChange().TotalDays + " days",
-        ActivePeriod = (int) fileHistory.ActivityPeriod().TotalDays + " days",
-        Age = (int) fileHistory.Age().TotalDays + " days",
-        Contributions = ContributionsFrom(fileHistory),
-        Path = fileHistory.PathOfCurrentVersion().ToString(),
-        Rating = elementNum.ToString(),
-        ChartValueDescription = "Complexity per change",
-        Data = Data(fileHistory),
-        Labels = Labels(fileHistory),
-        ChangeCoupling = fileCouplings.Select(c =>
+      var hotSpotViewModel = new HotSpotViewModel(
+        ChartValueDescription: "Complexity per change",
+        Path: fileHistory.PathOfCurrentVersion().ToString(),
+        Rating: elementNum.ToString(),
+        Complexity: fileHistory.ComplexityOfCurrentVersion().ToString(CultureInfo.InvariantCulture),
+        ChangesCount: fileHistory.ChangesCount().ToString(),
+        Age: (int)fileHistory.Age().TotalDays + " days",
+        TimeSinceLastChanged: (int)fileHistory.TimeSinceLastChange().TotalDays + " days",
+        ActivePeriod: (int)fileHistory.ActivityPeriod().TotalDays + " days",
+        CreationDate: fileHistory.CreationDate().ToString("d"),
+        LastChangedDate: fileHistory.LastChangeDate().ToString("d"),
+        Labels: Labels(fileHistory),
+        Data: Data(fileHistory),
+        ChangeCoupling: fileCouplings.Select(c =>
           new CouplingViewModel(
             c.Left.ToString(),
             c.Right.ToString(),
@@ -38,8 +36,8 @@ namespace NHotSpot.ResultRendering
             c.LongestCommonPathPrefix,
             c.Left.ToString().Remove(0, c.LongestCommonPathPrefix.Length),
             c.Right.ToString().Remove(0, c.LongestCommonPathPrefix.Length)
-          ))
-      };
+          )),
+        Contributions: ContributionsFrom(fileHistory));
 
       return hotSpotViewModel;
     }

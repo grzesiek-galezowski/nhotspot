@@ -68,7 +68,7 @@ namespace NHotSpot.ResultRendering
         };
     }
 
-    private void AddCouplingRanking<TPath>(IEnumerable<ICoupling<TPath>> couplingMetrics, ICollection<CouplingViewModel> couplings)
+    private static void AddCouplingRanking<TPath>(IEnumerable<ICoupling<TPath>> couplingMetrics, ICollection<CouplingViewModel> couplings)
     {
       foreach (var couplingViewModel in couplingMetrics.Select(CouplingViewModel.From)
           .OrderByDescending(c => c.CouplingCount))

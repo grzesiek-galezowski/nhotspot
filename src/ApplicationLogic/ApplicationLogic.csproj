@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Grzegorz Gałęzowski</Authors>
     <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <AssemblyName>NHotSpot.ApplicationLogic</AssemblyName>
     <RootNamespace>NHotSpot.ApplicationLogic</RootNamespace>
   </PropertyGroup>

@@ -1,5 +1,6 @@
 using System.IO;
 using NHotSpot.ApplicationLogic;
+using NullableReferenceTypesExtensions;
 
 namespace NHotSpot.ResultRendering
 {
@@ -39,16 +40,18 @@ namespace NHotSpot.ResultRendering
 
     public static CouplingViewModel From<TPath>(ICoupling<TPath> c) where TPath : notnull
     {
+      var leftAsString = c.Left.ToString().OrThrow();
+      var rightAsString = c.Right.ToString().OrThrow();
       return new CouplingViewModel(
-        c.Left.ToString(),
-        c.Right.ToString(),
+        leftAsString,
+        rightAsString,
         c.CouplingCount,
         c.PercentageOfLeftCommits, 
         c.PercentageOfRightCommits, 
         c.PercentageOfTotalCommits,
         c.LongestCommonPathPrefix,
-        c.Left.ToString().Remove(0, c.LongestCommonPathPrefix.Length),
-        c.Right.ToString().Remove(0, c.LongestCommonPathPrefix.Length)
+        leftAsString.Remove(0, c.LongestCommonPathPrefix.Length),
+        rightAsString.Remove(0, c.LongestCommonPathPrefix.Length)
       );
     }
   }

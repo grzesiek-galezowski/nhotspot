@@ -6,7 +6,7 @@
     <Authors>Grzegorz Gałęzowski</Authors>
     <AssemblyName>NHotSpot.ResultRendering</AssemblyName>
     <RootNamespace>NHotSpot.ResultRendering</RootNamespace>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
