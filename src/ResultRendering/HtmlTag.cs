@@ -13,12 +13,12 @@ namespace NHotSpot.ResultRendering
 
     public static HtmlTag PrettyPrinted(string tagName, IEnumerable<IHtmlContent> children)
     {
-      return PrettyPrinted(tagName, new HtmlAttribute[] { }, children);
+      return PrettyPrinted(tagName, System.Array.Empty<HtmlAttribute>(), children);
     }
 
     public static HtmlTag VerbatimPrinted(string tagName, IHtmlContent child)
     {
-      return new HtmlTag(tagName, new HtmlAttribute[] { }, new[] { child }, new VerbatimFormat());
+      return new HtmlTag(tagName, System.Array.Empty<HtmlAttribute>(), new[] { child }, new VerbatimFormat());
     }
 
     public override string ToString()
@@ -69,8 +69,8 @@ namespace NHotSpot.ResultRendering
     public static IHtmlContent VerbatimPrinted(string tagName, IHtmlContent[] children)
     {
       return new HtmlTag(
-        tagName, 
-        new HtmlAttribute[] { }, 
+        tagName,
+        System.Array.Empty<HtmlAttribute>(), 
         children, 
         new VerbatimFormat());
     }
@@ -86,7 +86,7 @@ namespace NHotSpot.ResultRendering
 
     public static HtmlTag AsyncTag(IEnumerable<IHtmlContent> children)
     {
-      return new HtmlTag("body", new HtmlAttribute[] { }, children, new PrettyFormat());
+      return new HtmlTag("body", System.Array.Empty<HtmlAttribute>(), children, new PrettyFormat());
     }
   }
 }

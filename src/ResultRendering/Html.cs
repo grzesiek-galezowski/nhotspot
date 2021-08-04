@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NullableReferenceTypesExtensions;
 
 namespace NHotSpot.ResultRendering
 {
@@ -8,7 +10,7 @@ namespace NHotSpot.ResultRendering
   {
     public static IHtmlContent Text<T>(T obj) where T : notnull
     {
-      return new HtmlString(obj.ToString(), new PrettyFormat());
+      return new HtmlString(obj.ToString().OrThrow(), new PrettyFormat());
     }
 
     public static IHtmlContent Text(params object[] objects)
@@ -24,7 +26,7 @@ namespace NHotSpot.ResultRendering
 
     public static IHtmlContent VerbatimText<T>(T obj) where T : notnull
     {
-      return new HtmlString(obj.ToString(), new VerbatimFormat());
+      return new HtmlString(obj.ToString().OrThrow(), new VerbatimFormat());
     }
 
     public static IHtmlContent Tag(string tagName, params IHtmlContent[] children)
@@ -69,17 +71,17 @@ namespace NHotSpot.ResultRendering
 
     public static IHtmlContent Td(params IHtmlContent[] children)
     {
-      return Td(new HtmlAttribute[]{ }, children);
+      return Td(Array.Empty<HtmlAttribute>(), children);
     }
     
     public static IHtmlContent Tr(params IHtmlContent[] children)
     {
-      return Tr(new HtmlAttribute[] { }, children);
+      return Tr(Array.Empty<HtmlAttribute>(), children);
     }
 
     public static IHtmlContent Th(params IHtmlContent[] children)
     {
-      return Th(new HtmlAttribute[] { }, children);
+      return Th(Array.Empty<HtmlAttribute>(), children);
     }
     
     public static IHtmlContent Td(HtmlAttribute[] attributes, params IHtmlContent[] children)
@@ -109,7 +111,7 @@ namespace NHotSpot.ResultRendering
 
     public static IHtmlContent H(int i, string text)
     {
-        return H(i, new HtmlAttribute[]{ }, text);
+        return H(i, Array.Empty<HtmlAttribute>(), text);
     }
 
     public static IHtmlContent H(int i, HtmlAttribute[] attribute, string text)
@@ -119,7 +121,7 @@ namespace NHotSpot.ResultRendering
 
     public static IHtmlContent Strong(IHtmlContent content)
     {
-      return Html.Tag("strong", content);
+      return Tag("strong", content);
     }
   }
 }

@@ -16,7 +16,7 @@ namespace NHotSpot.ApplicationLogic
 
   public class FileHistoryBuilder : IFileHistoryBuilder
   {
-        private readonly List<Change> _entries = new List<Change>();
+        private readonly List<Change> _entries = new();
         private Maybe<int> _complexityRank = Maybe<int>.Nothing;
         private Maybe<int> _changeCountRank = Maybe<int>.Nothing;
         private readonly IClock _clock;

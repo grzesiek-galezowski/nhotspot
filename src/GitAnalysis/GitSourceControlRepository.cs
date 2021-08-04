@@ -42,7 +42,7 @@ namespace NHotSpot.GitAnalysis
 
     private ConcurrentDictionary<int, TreeChanges> CalculateDiffsPerCommitIndex()
     {
-      ConcurrentDictionary<int, TreeChanges> changesPerIndex = new ConcurrentDictionary<int, TreeChanges>();
+      var changesPerIndex = new ConcurrentDictionary<int, TreeChanges>();
       Parallel.For(1, Commits.Count, i =>
       {
         var previousCommit = Commits[i - 1];
@@ -105,8 +105,15 @@ namespace NHotSpot.GitAnalysis
             Console.WriteLine(" type of file " + treeEntry.OldPath + " -> " + treeEntry.Path + " type changed. Ignoring...");
             break;
           }
+          case ChangeKind.Ignored:
+          case ChangeKind.Untracked:
+          case ChangeKind.Unreadable:
+          case ChangeKind.Conflicted:
+          {
+            throw new NotSupportedException("Never needed to support " + treeEntry.Status + " but maybe I should?");
+          } 
           default:
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException(nameof(treeEntry.Status));
         }
       }
     }

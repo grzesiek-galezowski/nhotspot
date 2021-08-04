@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using NHotSpot.ApplicationLogic;
+using NullableReferenceTypesExtensions;
 
 namespace NHotSpot.ResultRendering
 {
@@ -16,15 +18,15 @@ namespace NHotSpot.ResultRendering
       string heading) 
       where TChangeLog : IItemWithPath<TPathType>
       where TValue : notnull
+      where TPathType : notnull
     {
       var rankingViewModel = new RankingViewModel {Title = heading};
       foreach (var changeLog in entries)
       {
-        rankingViewModel.Entries.Add(new RankingEntryViewModel()
-        {
-          Name = changeLog.PathOfCurrentVersion().ToString(),
-          Value = valueFun(changeLog).ToString()
-        });
+        rankingViewModel.Entries.Add(
+          new RankingEntryViewModel(
+            Name: changeLog.PathOfCurrentVersion().ToString().OrThrow(),
+            Value: valueFun(changeLog).ToString().OrThrow()));
       }
 
       return rankingViewModel;
@@ -35,10 +37,11 @@ namespace NHotSpot.ResultRendering
       Func<TChangeLog, TValue> valueFun, 
       string heading) 
       where TChangeLog : IItemWithPath<TPathType>
+      where TPathType : notnull
       where TValue : notnull
     {
       return Task.Run(() => 
-        RankingViewModel.NewRankingViewModel<TValue, TChangeLog, TPathType>(
+        NewRankingViewModel<TValue, TChangeLog, TPathType>(
           entries, valueFun, heading));
     }
   }

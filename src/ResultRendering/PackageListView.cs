@@ -28,12 +28,12 @@ namespace NHotSpot.ResultRendering
     {
       if (childPackage.Children.Any())
       {
-        return Tag("details", Tag("summary", Text(childPackage.Name.OrThrow(), " (", childPackage.HotSpotRating, ")")),
+        return Tag("details", Tag("summary", Text(childPackage.Name, " (", childPackage.HotSpotRating, ")")),
           RenderChildFrom(childPackage));
       }
       else
       {
-        return Tag("span", Text(childPackage.Name.OrThrow(), " (", childPackage.HotSpotRating, ")"));
+        return Tag("span", Text(childPackage.Name, " (", childPackage.HotSpotRating, ")"));
       }
     }
   }

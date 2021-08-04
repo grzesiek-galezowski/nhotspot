@@ -2,7 +2,7 @@ using SimpleExec;
 
 namespace Build
 {
-  static internal class Git
+  internal static class Git
   {
     public static string CurrentRepositoryPath()
     {

@@ -1,44 +1,51 @@
+using Functional.Maybe;
+using Functional.Maybe.Just;
 using NHotSpot.ApplicationLogic;
-using NullableReferenceTypesExtensions;
 
 namespace NHotSpot.ResultRendering
 {
   public class PackageNodeViewModelVisitor : INodeVisitor
   {
-    private PackageTreeNodeViewModel? _currentTreeNode;
-    private PackageTreeNodeViewModel? _root;
+    private Maybe<PackageTreeNodeViewModel> _currentTreeNode;
+    private Maybe<PackageTreeNodeViewModel> _root;
 
     public PackageTreeNodeViewModel ToPackageNodeViewModel()
     {
-      return _root.OrThrow();
+      return _root.Value;
     }
 
     public void BeginVisiting(IFlatPackageHistory value)
     {
       var packageNodeViewModel = new PackageTreeNodeViewModel(
-          value.HotSpotRating(), 
-          value.PathOfCurrentVersion().ToString());
-      if (_currentTreeNode != null)
+          value.HotSpotRating(),
+          value.PathOfCurrentVersion().ToString(),
+          _currentTreeNode);
+
+      if (_currentTreeNode.HasValue)
       {
-        _currentTreeNode.Children.Add(packageNodeViewModel);
+        _currentTreeNode.Value.Children.Add(packageNodeViewModel);
       }
       else
       {
-        _root = packageNodeViewModel;
+        _root = packageNodeViewModel.Just();
       }
 
-      packageNodeViewModel.Parent = _currentTreeNode;
-      _currentTreeNode = packageNodeViewModel;
+      _currentTreeNode = packageNodeViewModel.Just();
     }
 
     public void EndVisiting(IFlatPackageHistory value)
     {
-      _currentTreeNode = _currentTreeNode.OrThrow().Parent;
+      _currentTreeNode = _currentTreeNode.Select(n => n.Parent);
     }
 
     public void Visit(IFileHistory fileHistory)
     {
-      _currentTreeNode.OrThrow().Children.Add(new PackageTreeNodeViewModel(fileHistory.HotSpotRating(), fileHistory.PathOfCurrentVersion().ToString()));
+      _currentTreeNode.Value
+        .Children.Add(
+          new PackageTreeNodeViewModel(
+            fileHistory.HotSpotRating(), 
+            fileHistory.PathOfCurrentVersion().ToString(), 
+            Maybe<PackageTreeNodeViewModel>.Nothing));
     }
   }
 }
