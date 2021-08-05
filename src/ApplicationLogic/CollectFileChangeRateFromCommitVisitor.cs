@@ -122,12 +122,12 @@ namespace NHotSpot.ApplicationLogic
       return immutableFileHistories;
     }
 
-    private static IOrderedEnumerable<IFileHistoryBuilder> OrderByChangesCount(IEnumerable<IFileHistoryBuilder> trunkFiles)
+    private static IEnumerable<IFileHistoryBuilder> OrderByChangesCount(IEnumerable<IFileHistoryBuilder> trunkFiles)
     {
       return trunkFiles.ToList().OrderBy(h => h.ChangesCount());
     }
 
-    private static IOrderedEnumerable<IFileHistoryBuilder> OrderByComplexity(IEnumerable<IFileHistoryBuilder> trunkFiles)
+    private static IEnumerable<IFileHistoryBuilder> OrderByComplexity(IEnumerable<IFileHistoryBuilder> trunkFiles)
     {
       return trunkFiles.ToList().OrderBy(h => h.ComplexityOfCurrentVersion());
     }
