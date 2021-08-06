@@ -5,7 +5,7 @@ using NullableReferenceTypesExtensions;
 
 namespace NHotSpot.Console
 {
-    internal static class Program
+  public static class Program
     {
         public static void Run(string[] args)
         {
