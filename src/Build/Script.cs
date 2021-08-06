@@ -43,7 +43,7 @@ Target("push", DependsOn("pack"), () =>
   Run("dotnet", Args($"nuget push {absoluteFilePath}", "--source https://api.nuget.org/v3/index.json"));
 });
 
-Target("default", DependsOn("pack"));
+Target("default", DependsOn("test"));
 
 RunTargetsAndExit(args);
 
