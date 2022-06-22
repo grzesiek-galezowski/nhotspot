@@ -1,36 +1,35 @@
 using System.IO;
 using NHotSpot.GitAnalysis;
 using NHotSpot.ResultRendering;
-using NullableReferenceTypesExtensions;
+using Core.NullableReferenceTypesExtensions;
 
-namespace NHotSpot.Console
+namespace NHotSpot.Console;
+
+public static class Program
 {
-  public static class Program
+    public static void Run(string[] args)
     {
-        public static void Run(string[] args)
-        {
-            var analysisConfigOrError = CommandLineParser.Parse(args);
+        var analysisConfigOrError = CommandLineParser.Parse(args);
 
-            analysisConfigOrError.Match(
-              analysisConfig =>
-              {
+        analysisConfigOrError.Match(
+            analysisConfig =>
+            {
                 using var gitRepoAnalysis = new GitRepoAnalysis(analysisConfig.RepoPath.OrThrow());
                 var analysisResult = gitRepoAnalysis.Analyze(analysisConfig.Subfolder,
-                  analysisConfig.Branch.OrThrow(),
-                  analysisConfig.MinChangeCount,
-                  analysisConfig.StartDate);
+                    analysisConfig.Branch.OrThrow(),
+                    analysisConfig.MinChangeCount,
+                    analysisConfig.StartDate);
 
                 var readyDocument = new HtmlAnalysisDocument(analysisConfig)
-                  .RenderString(analysisResult);
+                    .RenderString(analysisResult);
 
                 var reportPath = analysisConfig.OutputFile.OrThrow();
                 File.WriteAllText(reportPath, readyDocument);
                 Browser.Open(reportPath);
-              },
-              result =>
-              {
+            },
+            result =>
+            {
                 System.Console.Error.WriteLine(result.ErrorText);
-              });
-        }
+            });
     }
 }

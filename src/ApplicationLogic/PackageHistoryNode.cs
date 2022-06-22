@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 
-namespace NHotSpot.ApplicationLogic
+namespace NHotSpot.ApplicationLogic;
+
+public interface IPackageHistoryNode
 {
-  public interface IPackageHistoryNode
-  {
     bool HasParent();
     void Accept(INodeVisitor visitor);
     void AddChild(IPackageHistoryNode newNode);
     void SetParent(IPackageHistoryNode packageHistoryNode);
-  }
+}
 
-  public class PackageHistoryNode : IPackageHistoryNode
-  {
+public class PackageHistoryNode : IPackageHistoryNode
+{
     private readonly IFlatPackageHistory _value;
     private readonly IEnumerable<FileHistoryNode> _files;
     private readonly List<IPackageHistoryNode> _childPackages = new List<IPackageHistoryNode>();
@@ -19,38 +19,37 @@ namespace NHotSpot.ApplicationLogic
 
     public PackageHistoryNode(IFlatPackageHistory value, IEnumerable<FileHistoryNode> files)
     {
-      _value = value;
-      _files = files;
+        _value = value;
+        _files = files;
     }
 
     public void AddChild(IPackageHistoryNode newNode)
     {
-      _childPackages.Add(newNode);
-      newNode.SetParent(this);
+        _childPackages.Add(newNode);
+        newNode.SetParent(this);
     }
 
     public void SetParent(IPackageHistoryNode packageHistoryNode)
     {
-      _parent = packageHistoryNode;
+        _parent = packageHistoryNode;
     }
 
     public bool HasParent()
     {
-      return !(_parent is null);
+        return !(_parent is null);
     }
 
     public void Accept(INodeVisitor visitor)
     {
-      visitor.BeginVisiting(_value);
-      foreach (var childFile in _files)
-      {
-        childFile.Accept(visitor);
-      }
-      foreach (var childPackage in _childPackages)
-      {
-        childPackage.Accept(visitor);
-      }
-      visitor.EndVisiting(_value);
+        visitor.BeginVisiting(_value);
+        foreach (var childFile in _files)
+        {
+            childFile.Accept(visitor);
+        }
+        foreach (var childPackage in _childPackages)
+        {
+            childPackage.Accept(visitor);
+        }
+        visitor.EndVisiting(_value);
     }
-  }
 }

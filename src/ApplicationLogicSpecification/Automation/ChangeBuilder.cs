@@ -3,19 +3,19 @@ using NHotSpot.ApplicationLogic;
 using TddXt.AnyRoot.Strings;
 using static TddXt.AnyRoot.Root;
 
-namespace ApplicationLogicSpecification.Automation
+namespace ApplicationLogicSpecification.Automation;
+
+public class ChangeBuilder
 {
-  public class ChangeBuilder
-  {
 
     public Change Build()
     {
-      return ChangeFactory.CreateChange(
-        Path, 
-        new Lazy<string>(() =>FileText), 
-        AuthorName,
-        ChangeDate,
-        Id);
+        return ChangeFactory.CreateChange(
+            Path, 
+            new Lazy<string>(() =>FileText), 
+            AuthorName,
+            ChangeDate,
+            Id);
     }
 
     public string AuthorName { get; set; } = Any.Instance<string>();
@@ -29,5 +29,4 @@ namespace ApplicationLogicSpecification.Automation
     public DateTimeOffset ChangeDate { set; private get; } = Any.Instance<DateTimeOffset>();
 
     public string FileText { set; private get; } = Any.String();
-  }
 }

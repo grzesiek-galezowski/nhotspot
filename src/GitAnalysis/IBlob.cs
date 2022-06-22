@@ -2,20 +2,19 @@ using System;
 using LibGit2Sharp;
 using NHotSpot.ApplicationLogic;
 
-namespace NHotSpot.GitAnalysis
+namespace NHotSpot.GitAnalysis;
+
+public interface IBlob
 {
-  public interface IBlob
-  {
     void OnAdded(ITreeVisitor treeVisitor, string treeEntryPath,
-      DateTimeOffset changeDate, string authorName, string id);
+        DateTimeOffset changeDate, string authorName, string id);
 
     void OnModified(ITreeVisitor treeVisitor, string treeEntryPath,
-      DateTimeOffset changeDate, string authorName, string id);
+        DateTimeOffset changeDate, string authorName, string id);
 
     void OnRenamed(ITreeVisitor treeVisitor, TreeEntryChanges treeEntry,
-      string treeEntryPath, DateTimeOffset changeDate, string authorName, string id);
+        string treeEntryPath, DateTimeOffset changeDate, string authorName, string id);
 
     void OnCopied(ITreeVisitor treeVisitor, string treeEntryPath,
-      DateTimeOffset changeDate, string authorName, string id);
-  }
+        DateTimeOffset changeDate, string authorName, string id);
 }

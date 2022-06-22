@@ -1,15 +1,15 @@
-﻿namespace NHotSpot.ResultRendering
+﻿namespace NHotSpot.ResultRendering;
+
+public class HtmlString : IHtmlContent
 {
-  public class HtmlString : IHtmlContent
-  {
     public override string ToString()
     {
-      return _tagContent;
+        return _tagContent;
     }
 
     public string Render(int nesting)
     {
-      return _format.BeforeText(nesting) + _tagContent;
+        return _format.BeforeText(nesting) + _tagContent;
     }
 
     private readonly string _tagContent;
@@ -17,8 +17,7 @@
 
     public HtmlString(string tagContent, IRenderingFormat format)
     {
-      _tagContent = tagContent;
-      _format = format;
+        _tagContent = tagContent;
+        _format = format;
     }
-  }
 }

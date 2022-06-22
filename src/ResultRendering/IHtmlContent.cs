@@ -1,8 +1,7 @@
-﻿namespace NHotSpot.ResultRendering
+﻿namespace NHotSpot.ResultRendering;
+
+public interface IHtmlContent
 {
-  public interface IHtmlContent
-  {
     string ToString();
     string Render(int nesting);
-  }
 }

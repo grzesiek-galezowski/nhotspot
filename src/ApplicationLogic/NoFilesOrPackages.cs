@@ -1,10 +1,10 @@
-namespace NHotSpot.ApplicationLogic
+namespace NHotSpot.ApplicationLogic;
+
+public class NoFilesOrPackages : IPackageHistoryNode
 {
-  public class NoFilesOrPackages : IPackageHistoryNode
-  {
     public bool HasParent()
     {
-      return false;
+        return false;
     }
 
     public void Accept(INodeVisitor visitor)
@@ -21,5 +21,4 @@ namespace NHotSpot.ApplicationLogic
     {
       
     }
-  }
 }

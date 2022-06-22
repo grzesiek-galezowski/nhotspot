@@ -1,9 +1,8 @@
 using System;
 
-namespace NHotSpot.ApplicationLogic
+namespace NHotSpot.ApplicationLogic;
+
+public interface IClock
 {
-  public interface IClock
-  {
     DateTime Now();
-  }
 }

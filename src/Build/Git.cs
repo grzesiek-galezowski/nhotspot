@@ -1,12 +1,12 @@
+using System.Threading.Tasks;
 using SimpleExec;
 
-namespace Build
+namespace Build;
+
+internal static class Git
 {
-  internal static class Git
-  {
-    public static string CurrentRepositoryPath()
+    public static async Task<string> CurrentRepositoryPath()
     {
-      return Command.Read("git", " rev-parse --show-toplevel").Replace("\n", "");
+        return (await Command.ReadAsync("git", " rev-parse --show-toplevel")).StandardOutput.Replace("\n", "");
     }
-  }
 }

@@ -1,7 +1,7 @@
-namespace NHotSpot.ApplicationLogic
+namespace NHotSpot.ApplicationLogic;
+
+public interface ICoupling<out TPath> where TPath : notnull
 {
-  public interface ICoupling<out TPath> where TPath : notnull
-  {
     int CouplingCount { get; }
     TPath Left { get; }
     TPath Right { get; }
@@ -9,5 +9,4 @@ namespace NHotSpot.ApplicationLogic
     int PercentageOfRightCommits { get; }
     int PercentageOfTotalCommits { get; }
     string LongestCommonPathPrefix { get; }
-  }
 }

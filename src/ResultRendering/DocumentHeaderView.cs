@@ -1,22 +1,22 @@
 ﻿using static NHotSpot.ResultRendering.Html;
 
-namespace NHotSpot.ResultRendering
+namespace NHotSpot.ResultRendering;
+
+public static class DocumentHeaderView
 {
-  public static class DocumentHeaderView
-  {
     public static IHtmlContent Render()
     {
-      return Tag("head",
-        VerbatimText("<meta charset=\"UTF-8\">"),
-        Tag("style", Text(StyleSheet())),
-        VerbatimTag("title", VerbatimText("Line ChartText")),
-        VerbatimTag("script", Attribute("src", "https://cdn.jsdelivr.net/npm/chart.js@2.8.0"))
-      );
+        return Tag("head",
+            VerbatimText("<meta charset=\"UTF-8\">"),
+            Tag("style", Text(StyleSheet())),
+            VerbatimTag("title", VerbatimText("Line ChartText")),
+            VerbatimTag("script", Attribute("src", "https://cdn.jsdelivr.net/npm/chart.js@2.8.0"))
+        );
     }
 
     private static string StyleSheet()
     {
-      return @"p {
+        return @"p {
 			  padding: 0;
 			  margin: 0;
 		  }
@@ -33,5 +33,4 @@ namespace NHotSpot.ResultRendering
 			  font-family: Arial !important;
 		  }";
     }
-  }
 }

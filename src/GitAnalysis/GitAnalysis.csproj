@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Grzegorz Gałęzowski</Authors>
     <AssemblyName>NHotSpot.GitAnalysis</AssemblyName>
@@ -11,8 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Functional.Maybe" Version="2.0.20" />
-    <PackageReference Include="Functional.Maybe.Just" Version="1.6.0" />
+    <PackageReference Include="Core.Maybe" Version="4.0.0" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
   </ItemGroup>
 

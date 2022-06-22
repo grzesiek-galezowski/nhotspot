@@ -1,11 +1,11 @@
 ﻿using System;
 using AtmaFileSystem;
-using Functional.Maybe;
+using Core.Maybe;
 
-namespace NHotSpot.ApplicationLogic
+namespace NHotSpot.ApplicationLogic;
+
+public class AnalysisConfig
 {
-  public class AnalysisConfig
-  {
     public int MaxHotSpotCount { get; set; }
     public int MaxCouplingsPerHotSpot { get; set; }
     public string? OutputFile { get; set; }
@@ -14,5 +14,4 @@ namespace NHotSpot.ApplicationLogic
     public int MinChangeCount { get; set; }
     public DateTime StartDate { get; set; }
     public Maybe<RelativeDirectoryPath> Subfolder { get; set; }
-  }
 }

@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NHotSpot.ApplicationLogic;
-using NullableReferenceTypesExtensions;
+using Core.NullableReferenceTypesExtensions;
 using static NHotSpot.ResultRendering.Html;
 
-namespace NHotSpot.ResultRendering
+namespace NHotSpot.ResultRendering;
+
+public static class HotSpotsView
 {
-  public static class HotSpotsView
-  {
     private static readonly HtmlAttribute[] TdAttributes = Attribute("style", "border-bottom: 1pt solid gray;");
 
     public static IHtmlContent RenderFrom(IEnumerable<HotSpotViewModel> viewModelHotSpots, AnalysisConfig analysisConfig)
     {
-      return Tag("div", 
-        H(1,"Hot Spots").Concat(
-        viewModelHotSpots
-          .Take(analysisConfig.MaxHotSpotCount).AsParallel().AsOrdered()
-          .Select(model => RenderHotSpot(model, analysisConfig))));
+        return Tag("div", 
+            H(1,"Hot Spots").Concat(
+                viewModelHotSpots
+                    .Take(analysisConfig.MaxHotSpotCount).AsParallel().AsOrdered()
+                    .Select(model => RenderHotSpot(model, analysisConfig))));
     }
 
     private static IHtmlContent RenderHotSpot(HotSpotViewModel hotSpot, AnalysisConfig analysisConfig)
@@ -24,21 +24,21 @@ namespace NHotSpot.ResultRendering
         var chartView = new ChartView($"myChart{hotSpot.Rating}");
         var maxCouplingPerHotSpot = analysisConfig.MaxCouplingsPerHotSpot;
         return Tag("div",
-        H(2, $"{hotSpot.Rating}. {hotSpot.Path}"),
-        Tag("table",
-          KeyValueRow("Rating", hotSpot.Rating.OrThrow()),
-          KeyValueRow("Complexity", hotSpot.Complexity.OrThrow()),
-          KeyValueRow("Changes", hotSpot.ChangesCount.OrThrow()),
-          KeyValueRow("Created", hotSpot.Age + " ago"),
-          KeyValueRow("Last Changed", hotSpot.TimeSinceLastChanged + " ago"),
-          KeyValueRow("Active for", $"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})")
-          ), 
-        chartView.ChartDiv(80),
-        UnrollableTable("Contributions", ContributionRows(hotSpot)),
-        UnrollableTable($"Coupling (Top {maxCouplingPerHotSpot})",
-            CouplingRows(hotSpot, maxCouplingPerHotSpot)),
-        Tag("script", Text(JavaScriptCanvas(hotSpot, chartView)))
-      );
+            H(2, $"{hotSpot.Rating}. {hotSpot.Path}"),
+            Tag("table",
+                KeyValueRow("Rating", hotSpot.Rating.OrThrow()),
+                KeyValueRow("Complexity", hotSpot.Complexity.OrThrow()),
+                KeyValueRow("Changes", hotSpot.ChangesCount.OrThrow()),
+                KeyValueRow("Created", hotSpot.Age + " ago"),
+                KeyValueRow("Last Changed", hotSpot.TimeSinceLastChanged + " ago"),
+                KeyValueRow("Active for", $"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})")
+            ), 
+            chartView.ChartDiv(80),
+            UnrollableTable("Contributions", ContributionRows(hotSpot)),
+            UnrollableTable($"Coupling (Top {maxCouplingPerHotSpot})",
+                CouplingRows(hotSpot, maxCouplingPerHotSpot)),
+            Tag("script", Text(JavaScriptCanvas(hotSpot, chartView)))
+        );
     }
 
     private static IHtmlContent KeyValueRow(string rating, string hotSpotRating)
@@ -63,35 +63,34 @@ namespace NHotSpot.ResultRendering
     private static IEnumerable<IHtmlContent> ContributionRows(HotSpotViewModel hotSpot)
     {
         return Tag("tr", 
-          Tag("th", Text("Contributor")), 
-          Tag("th", Text("# Contributions")), 
-          Tag("th", Text("% Contributions"))
+            Tag("th", Text("Contributor")), 
+            Tag("th", Text("# Contributions")), 
+            Tag("th", Text("% Contributions"))
         ).Concat(
-          hotSpot.Contributions.OrderByDescending(c => c.ChangePercentage)
-            .Select(contributionViewModel =>
-                Tr(
-                  Td(TdAttributes, Text(contributionViewModel.AuthorName)),
-                  Td(TdAttributes, Text(contributionViewModel.ChangeCount)),
-                  Td(TdAttributes, Text(contributionViewModel.ChangePercentage.ToString("F2") + "%"))))
-          );
+            hotSpot.Contributions.OrderByDescending(c => c.ChangePercentage)
+                .Select(contributionViewModel =>
+                    Tr(
+                        Td(TdAttributes, Text(contributionViewModel.AuthorName)),
+                        Td(TdAttributes, Text(contributionViewModel.ChangeCount)),
+                        Td(TdAttributes, Text(contributionViewModel.ChangePercentage.ToString("F2") + "%"))))
+        );
     }
 
     private static IEnumerable<IHtmlContent> CouplingRows(HotSpotViewModel hotSpot, int count)
     {
-      return Tag("tr", 
-          Tag("th", Text("Filename")), 
-          Tag("th", Text("Change Coupling")), 
-          Tag("th", Text("% Total File Changes")),
-          Tag("th", Text("% Total Changes"))
-          ).Concat(hotSpot.ChangeCoupling.Take(count).Select(change =>
-        Tr(
-          Td(TdAttributes, Strong(VerbatimText(change.LongestCommonPrefix)), VerbatimText(change.RightRest)),
-          Td(TdAttributes, Text(change.CouplingCount)),
-          Td(TdAttributes, Text(change.PercentageOfLeftCommits + "%")),
-          Td(TdAttributes, Text(change.PercentageOfTotalCommits + "%"))
-        )
-      ));
+        return Tag("tr", 
+            Tag("th", Text("Filename")), 
+            Tag("th", Text("Change Coupling")), 
+            Tag("th", Text("% Total File Changes")),
+            Tag("th", Text("% Total Changes"))
+        ).Concat(hotSpot.ChangeCoupling.Take(count).Select(change =>
+            Tr(
+                Td(TdAttributes, Strong(VerbatimText(change.LongestCommonPrefix)), VerbatimText(change.RightRest)),
+                Td(TdAttributes, Text(change.CouplingCount)),
+                Td(TdAttributes, Text(change.PercentageOfLeftCommits + "%")),
+                Td(TdAttributes, Text(change.PercentageOfTotalCommits + "%"))
+            )
+        ));
     }
 
-  }
 }

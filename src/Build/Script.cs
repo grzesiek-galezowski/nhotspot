@@ -5,7 +5,7 @@ using static SimpleExec.Command;
 
 const string consoleAppName = "NHotSpot.Console";
 const string version = "0.7.2";
-var repositoryRoot = AbsoluteDirectoryPath(Git.CurrentRepositoryPath());
+var repositoryRoot = AbsoluteDirectoryPath(await Git.CurrentRepositoryPath());
 var slnPath = repositoryRoot + DirectoryName("src");
 var consoleAppPath = slnPath + DirectoryName(consoleAppName);
 var outputPath = repositoryRoot + DirectoryName("output");
@@ -45,7 +45,7 @@ Target("push", DependsOn("pack"), () =>
 
 Target("default", DependsOn("test"));
 
-RunTargetsAndExit(args);
+await RunTargetsAndExitAsync(args);
 
 
 //////////////////////

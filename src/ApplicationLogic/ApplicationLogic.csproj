@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Grzegorz Gałęzowski</Authors>
     <Nullable>enable</Nullable>
@@ -11,9 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AtmaFileSystem" Version="4.8.0" />
-    <PackageReference Include="Functional.Maybe" Version="2.0.20" />
-    <PackageReference Include="Functional.Maybe.Just" Version="1.6.0" />
+    <PackageReference Include="AtmaFileSystem" Version="6.0.0" />
+    <PackageReference Include="Core.Maybe" Version="4.0.0" />
   </ItemGroup>
 
 

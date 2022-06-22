@@ -1,17 +1,16 @@
-namespace NHotSpot.ApplicationLogic
+namespace NHotSpot.ApplicationLogic;
+
+public class FileHistoryNode
 {
-  public class FileHistoryNode
-  {
     private readonly IFileHistory _fileHistory;
 
     public FileHistoryNode(IFileHistory fileHistory)
     {
-      _fileHistory = fileHistory;
+        _fileHistory = fileHistory;
     }
 
     public void Accept(INodeVisitor visitor)
     {
-      visitor.Visit(_fileHistory);
+        visitor.Visit(_fileHistory);
     }
-  }
 }

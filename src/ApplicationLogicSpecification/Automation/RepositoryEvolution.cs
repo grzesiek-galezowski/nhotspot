@@ -2,58 +2,57 @@ using System;
 using AtmaFileSystem;
 using NHotSpot.ApplicationLogic;
 
-namespace ApplicationLogicSpecification.Automation
+namespace ApplicationLogicSpecification.Automation;
+
+public class RepositoryEvolution : IRepositoryEvolution
 {
-  public class RepositoryEvolution : IRepositoryEvolution
-  {
     private readonly ITreeVisitor _visitor;
     private int _commits = 0;
 
     public RepositoryEvolution(ITreeVisitor visitor)
     {
-      _visitor = visitor;
+        _visitor = visitor;
     }
 
     public void Modify(Change change)
     {
-      _visitor.OnModified(change);
+        _visitor.OnModified(change);
     }
 
     public void Rename(RelativeFilePath oldPath, Change change)
     {
-      _visitor.OnRenamed(oldPath, change);
+        _visitor.OnRenamed(oldPath, change);
     }
 
     public void Copy(Change change)
     {
-      _visitor.OnCopied(change);
+        _visitor.OnCopied(change);
     }
 
     public void Add(Change change)
     {
-      _visitor.OnAdded(change);
+        _visitor.OnAdded(change);
     }
 
     public void Remove(RelativeFilePath removedEntryPath)
     {
-      _visitor.OnRemoved(removedEntryPath);
+        _visitor.OnRemoved(removedEntryPath);
     }
 
     public void CommitChanges()
     {
-      _commits++;
+        _commits++;
     }
 
     public int CommitCount()
     {
-      return _commits;
+        return _commits;
     }
 
     public void Commit(Action<DirProxy> action)
     {
-      var dirProxy = new DirProxy(RelativeDirectoryPath.Value(""), this, new CommitContext());
-      action(dirProxy);
-      this.CommitChanges();
+        var dirProxy = new DirProxy(RelativeDirectoryPath.Value(""), this, new CommitContext());
+        action(dirProxy);
+        this.CommitChanges();
     }
-  }
 }

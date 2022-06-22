@@ -1,11 +1,11 @@
 using AtmaFileSystem;
-using Functional.Maybe;
+using Core.Maybe;
 
-namespace NHotSpot.ApplicationLogic
-{
-  public class CouplingBetweenPackages //bug
+namespace NHotSpot.ApplicationLogic;
+
+public class CouplingBetweenPackages //bug
     : ICoupling<RelativeDirectoryPath>
-  {
+{
     public RelativeDirectoryPath Left { get; }
     public RelativeDirectoryPath Right { get; }
     public int CouplingCount { get; }
@@ -15,31 +15,30 @@ namespace NHotSpot.ApplicationLogic
     public string LongestCommonPathPrefix { get; }
 
     public CouplingBetweenPackages(
-      RelativeDirectoryPath left,
-      RelativeDirectoryPath right,
-      int couplingCount,
-      CouplingPercentages couplingPercentages)
+        RelativeDirectoryPath left,
+        RelativeDirectoryPath right,
+        int couplingCount,
+        CouplingPercentages couplingPercentages)
     {
-      Left = left;
-      Right = right;
-      CouplingCount = couplingCount;
-      PercentageOfLeftCommits = couplingPercentages.PercentageOfLeftCommits;
-      PercentageOfRightCommits = couplingPercentages.PercentageOfRightCommits;
-      PercentageOfTotalCommits = couplingPercentages.PercentageOfTotalCommits;
-      LongestCommonPathPrefix = left.FindCommonDirectoryPathWith(right).Select(s => s.ToString()).OrElse(string.Empty);
+        Left = left;
+        Right = right;
+        CouplingCount = couplingCount;
+        PercentageOfLeftCommits = couplingPercentages.PercentageOfLeftCommits;
+        PercentageOfRightCommits = couplingPercentages.PercentageOfRightCommits;
+        PercentageOfTotalCommits = couplingPercentages.PercentageOfTotalCommits;
+        LongestCommonPathPrefix = left.FindCommonDirectoryPathWith(right).Select(s => s.ToString()).OrElse(string.Empty);
     }
 
 
     public CouplingBetweenPackages WithSwitchedSides()
     {
-      return new CouplingBetweenPackages(
-        Right,
-        Left,
-        CouplingCount,
-        new CouplingPercentages(
-          PercentageOfRightCommits,
-          PercentageOfLeftCommits,
-          PercentageOfTotalCommits));
+        return new CouplingBetweenPackages(
+            Right,
+            Left,
+            CouplingCount,
+            new CouplingPercentages(
+                PercentageOfRightCommits,
+                PercentageOfLeftCommits,
+                PercentageOfTotalCommits));
     }
-  }
 }
