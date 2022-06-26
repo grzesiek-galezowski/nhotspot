@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NHotSpot.ApplicationLogic;
+using NHotSpot.ResultRendering.HtmlGeneration;
 
 namespace NHotSpot.ResultRendering;
 
@@ -24,7 +25,7 @@ public class HistogramViewModel
 
         return new HistogramViewModel(
             "Change count histogram",
-            TrashBinTrolololo.AsJavaScriptArrayString(labels),
-            TrashBinTrolololo.AsJavaScriptArrayString(values));
+            JavaScript.ArrayWith(labels),
+            JavaScript.ArrayWith(values));
     }
 }

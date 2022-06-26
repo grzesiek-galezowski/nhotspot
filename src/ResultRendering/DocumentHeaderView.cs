@@ -1,4 +1,5 @@
-﻿using static NHotSpot.ResultRendering.Html;
+﻿using NHotSpot.ResultRendering.HtmlGeneration;
+using static NHotSpot.ResultRendering.HtmlGeneration.Html;
 
 namespace NHotSpot.ResultRendering;
 

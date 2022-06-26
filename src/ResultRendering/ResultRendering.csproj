@@ -13,7 +13,4 @@
   <ItemGroup>
     <ProjectReference Include="..\ApplicationLogic\ApplicationLogic.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-  </ItemGroup>
 </Project>

@@ -1,3 +1,5 @@
+using NHotSpot.ResultRendering.HtmlGeneration;
+
 namespace NHotSpot.ResultRendering;
 
 public class ChartView

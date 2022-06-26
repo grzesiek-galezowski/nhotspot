@@ -2,7 +2,8 @@
 using System.Linq;
 using NHotSpot.ApplicationLogic;
 using Core.NullableReferenceTypesExtensions;
-using static NHotSpot.ResultRendering.Html;
+using static NHotSpot.ResultRendering.HtmlGeneration.Html;
+using NHotSpot.ResultRendering.HtmlGeneration;
 
 namespace NHotSpot.ResultRendering;
 

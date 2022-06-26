@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using NHotSpot.ApplicationLogic;
+using NHotSpot.ResultRendering.HtmlGeneration;
 
 namespace NHotSpot.ResultRendering;
 
@@ -58,7 +59,7 @@ public static class HtmlChartSingleResultTemplate
     private static string FormatData(IFileHistory fileHistory)
     {
         var data = fileHistory.Entries.Select(ComplexityAsString);
-        return TrashBinTrolololo.AsJavaScriptArrayString(data);
+        return JavaScript.ArrayWith(data);
     }
 
     private static string ComplexityAsString(Change change)
@@ -68,7 +69,7 @@ public static class HtmlChartSingleResultTemplate
 
     private static string Labels(IFileHistory fileHistory)
     {
-        return TrashBinTrolololo.AsJavaScriptArrayString(fileHistory.Entries.Select(change =>
+        return JavaScript.ArrayWith(fileHistory.Entries.Select(change =>
             change.ChangeDate.ToString(Constants.CommitDateFormat, CultureInfo.InvariantCulture)));
     }
 }

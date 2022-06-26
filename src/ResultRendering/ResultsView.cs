@@ -1,7 +1,7 @@
 ﻿using System;
 using NHotSpot.ApplicationLogic;
 using Core.NullableReferenceTypesExtensions;
-using static NHotSpot.ResultRendering.Html;
+using static NHotSpot.ResultRendering.HtmlGeneration.Html;
 
 namespace NHotSpot.ResultRendering;
 
