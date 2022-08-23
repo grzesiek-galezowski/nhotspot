@@ -56,12 +56,12 @@ public static class CommandLineParser
             .SetDefault(1)
             .Required();
 
-        p.Setup<int>("max-coupling-per-hospot")
+        p.Setup<int>("max-coupling-per-hotspot")
             .WithDescription("Maximum rendered change couplings per hotspot. Used to shorten analysis time.")
             .SetDefault(10)
             .Callback(maxCouplingsPerHotSpot => inputArguments.MaxCouplingsPerHotSpot = maxCouplingsPerHotSpot);
 
-        p.Setup<int>("max-hostpot-count")
+        p.Setup<int>("max-hotspot-count")
             .WithDescription("Maximum count of rendered hotspots. Used to shorten analysis time.")
             .SetDefault(10)
             .Callback(maxHotSpotCount => inputArguments.MaxHotSpotCount = maxHotSpotCount);
