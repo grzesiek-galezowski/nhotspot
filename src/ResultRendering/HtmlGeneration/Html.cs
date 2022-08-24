@@ -123,4 +123,14 @@ public static class Html
   {
     return Tag("strong", content);
   }
+
+  public static IHtmlContent UnrollableTable(string summary, IEnumerable<IHtmlContent> rows)
+  {
+    return Tag("details",
+      Tag("summary", Text(summary)),
+      Tag("table", rows)
+    );
+  }
+
+  public static readonly HtmlAttribute[] TdAttributes = Html.Attribute("style", "border-bottom: 1pt solid gray;");
 }

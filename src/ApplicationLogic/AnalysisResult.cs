@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AtmaFileSystem;
@@ -87,5 +88,21 @@ public class AnalysisResult
     public IEnumerable<IFlatPackageHistory> PackagesByDiminishingHotSpotRating()
     {
         return _packagesByDiminishingHotSpotRating;
+    }
+
+    public IEnumerable<Contribution> ContributorsByOwnership()
+    {
+      var contributionsByAuthor = new List<Contribution>();
+      var allContributions = _entriesFromMostRecentlyChanged.SelectMany(e => e.Contributions()).ToList();
+      var dictionary = allContributions
+        .GroupBy(c => c.AuthorName).ToDictionary(g => g.Key, g => g.Select(e => e));
+      var allContributionsCount = allContributions.Sum(c => c.ChangeCount);
+      foreach (var (author, contributions) in dictionary)
+      {
+        var authorContributions = contributions.Sum(c => c.ChangeCount);
+        contributionsByAuthor.Add(new Contribution(author, authorContributions, allContributionsCount));
+      }
+
+      return contributionsByAuthor;
     }
 }

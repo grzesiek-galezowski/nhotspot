@@ -45,10 +45,7 @@ public static class HtmlChartSingleResultTemplate
 
     private static IEnumerable<ContributionViewModel> ContributionsFrom(IFileHistory fileHistory)
     {
-        return fileHistory.Contributions().Select(c => new ContributionViewModel(
-            c.ChangePercentage,
-            c.ChangeCount,
-            c.AuthorName));
+        return ContributionViewModel.ContributionsFrom(fileHistory.Contributions());
     }
 
     private static string Data(IFileHistory fileHistory)

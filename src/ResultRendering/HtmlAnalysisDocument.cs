@@ -16,13 +16,13 @@ public class HtmlAnalysisDocument
         _analysisConfig = analysisConfig;
     }
 
-    public string RenderString(AnalysisResult analysisResults)
+    public string RenderString(AnalysisResult analysisResults, string optionsStringForDisplay)
     {
         Console.WriteLine("Creating ViewModel");
         var viewModel = CreateViewModel(analysisResults);
         Console.WriteLine("Creating ViewModel finished");
         Console.WriteLine("Rendering ViewModel");
-        var contents = ResultsView.Render(viewModel, _analysisConfig);
+        var contents = ResultsView.Render(viewModel, _analysisConfig, optionsStringForDisplay);
         Console.WriteLine("Rendering ViewModel finished");
         return contents;
     }
@@ -30,6 +30,7 @@ public class HtmlAnalysisDocument
     private ViewModel CreateViewModel(AnalysisResult analysisResults)
     {
         var viewModel = new ViewModel();
+        AddContributionRanking(analysisResults.ContributorsByOwnership(), viewModel.Contributions);
         AddCouplingRanking(analysisResults.FileCouplingMetrics(), viewModel.FileCouplings);
         AddCouplingRanking(analysisResults.PackageCouplingMetrics(), viewModel.PackageCouplings);
         var chartDataTask = Task.Run(() => 
@@ -47,6 +48,11 @@ public class HtmlAnalysisDocument
         viewModel.Histogram = HistogramViewModel.For(analysisResults.EntriesByDiminishingChangesCount());
         viewModel.HotSpots = chartDataTask.Result;
         return viewModel;
+    }
+
+    private void AddContributionRanking(IEnumerable<Contribution> contributorsByOwnership, List<ContributionViewModel> viewModelContributions)
+    {
+      viewModelContributions.AddRange(ContributionViewModel.ContributionsFrom(contributorsByOwnership));
     }
 
     private IEnumerable<Task<RankingViewModel>> RankingTasks(AnalysisResult analysisResults)

@@ -10,8 +10,6 @@ namespace NHotSpot.ResultRendering;
 
 public static class HotSpotsView
 {
-  private static readonly HtmlAttribute[] TdAttributes = Attribute("style", "border-bottom: 1pt solid gray;");
-
   public static IHtmlContent RenderFrom(IEnumerable<HotSpotViewModel> viewModelHotSpots, AnalysisConfig analysisConfig)
   {
     return Tag("div",
@@ -36,8 +34,8 @@ public static class HotSpotsView
         KeyValueRow("Active for",
           $"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})")
       ),
-      chartView.ChartDiv(80),
-      UnrollableTable("Contributions", ContributionRows(hotSpot)),
+      chartView.ChartDiv(80), 
+      new ContributionsView("Contributions").Render(hotSpot.Contributions), 
       UnrollableTable($"Coupling (Top {maxCouplingPerHotSpot})",
         CouplingRows(hotSpot, maxCouplingPerHotSpot)),
       Tag("script", Text(JavaScriptCanvas(hotSpot, chartView)))
@@ -49,35 +47,11 @@ public static class HotSpotsView
     return Tr(Td(Text(rating)), Td(Text(hotSpotRating)));
   }
 
-  private static IHtmlContent UnrollableTable(string summary, IEnumerable<IHtmlContent> rows)
-  {
-    return Tag("details",
-      Tag("summary", Text(summary)),
-      Tag("table", rows)
-    );
-  }
-
 
   private static string JavaScriptCanvas(HotSpotViewModel hotSpot, ChartView chartView)
   {
     return chartView.ChartScript(hotSpot.Labels.OrThrow(), hotSpot.Data.OrThrow(),
       hotSpot.ChartValueDescription.OrThrow());
-  }
-
-  private static IEnumerable<IHtmlContent> ContributionRows(HotSpotViewModel hotSpot)
-  {
-    return Tag("tr",
-      Tag("th", Text("Contributor")),
-      Tag("th", Text("# Contributions")),
-      Tag("th", Text("% Contributions"))
-    ).Concat(
-      hotSpot.Contributions.OrderByDescending(c => c.ChangePercentage)
-        .Select(contributionViewModel =>
-          Tr(
-            Td(TdAttributes, Text(contributionViewModel.AuthorName)),
-            Td(TdAttributes, Text(contributionViewModel.ChangeCount)),
-            Td(TdAttributes, Text(contributionViewModel.ChangePercentage.ToString("F2") + "%"))))
-    );
   }
 
   private static IEnumerable<IHtmlContent> CouplingRows(HotSpotViewModel hotSpot, int count)

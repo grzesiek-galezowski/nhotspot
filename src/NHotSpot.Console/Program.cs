@@ -21,7 +21,7 @@ public static class Program
                     analysisConfig.StartDate);
 
                 var readyDocument = new HtmlAnalysisDocument(analysisConfig)
-                    .RenderString(analysisResult);
+                    .RenderString(analysisResult, string.Join(" ", args));
 
                 var reportPath = analysisConfig.OutputFile.OrThrow();
                 File.WriteAllText(reportPath, readyDocument);
