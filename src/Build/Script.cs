@@ -1,10 +1,11 @@
 ﻿using Build;
+using DotnetExeCommandLineBuilder;
 using static AtmaFileSystem.AtmaFileSystemPaths;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
 
 const string consoleAppName = "NHotSpot.Console";
-const string version = "0.7.5";
+const string version = "0.7.6";
 var repositoryRoot = AbsoluteDirectoryPath(await Git.CurrentRepositoryPath());
 var slnPath = repositoryRoot + DirectoryName("src");
 var consoleAppPath = slnPath + DirectoryName(consoleAppName);
@@ -12,15 +13,16 @@ var outputPath = repositoryRoot + DirectoryName("output");
 
 Target("clean", () =>
 {
-  Run("rm", $"-r {outputPath}");
+  DotNet(DotnetExeCommands.Clean(slnPath));
+  //Run("rm", $"-r {outputPath}");
 });
 
-Target("build", () =>
+Target("build", DependsOn("clean"), () =>
   DotNet(
     $"build {consoleAppPath} ",
     $"-p:VersionPrefix={version} ",
-    "-c Release ",
-    $"-o {outputPath} "
+    "-c Release "
+    //$"-o {outputPath} "
   )
 );
 
