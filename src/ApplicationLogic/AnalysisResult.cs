@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using AtmaFileSystem;
@@ -19,13 +19,15 @@ public class AnalysisResult
     private readonly IOrderedEnumerable<IFlatPackageHistory> _packagesByDiminishingHotSpotRating;
 
     public AnalysisResult(IEnumerable<IFileHistory> fileHistories,
-        Dictionary<RelativeDirectoryPath, IFlatPackageHistory> packageHistoriesByPath,
-        string normalizedPathToRepository,
-        IPackageHistoryNode packageHistoryRootNode,
-        IEnumerable<CouplingBetweenFiles> fileCouplings,
-        IEnumerable<CouplingBetweenPackages> packageCouplings)
+      List<Contribution> totalContributions,
+      Dictionary<RelativeDirectoryPath, IFlatPackageHistory> packageHistoriesByPath,
+      string normalizedPathToRepository,
+      IPackageHistoryNode packageHistoryRootNode,
+      IEnumerable<CouplingBetweenFiles> fileCouplings,
+      IEnumerable<CouplingBetweenPackages> packageCouplings)
     {
-        PathToRepository = normalizedPathToRepository;
+      TotalContributions = totalContributions;
+      PathToRepository = normalizedPathToRepository;
         _packageHistoryRootNode = packageHistoryRootNode;
         _fileCouplings = fileCouplings;
         _packageCouplings = packageCouplings;
@@ -38,6 +40,7 @@ public class AnalysisResult
         _packagesByDiminishingHotSpotRating = packageHistoriesByPath.Select(kv => kv.Value).OrderByDescending(cl => cl.HotSpotRating());
     }
 
+    public List<Contribution> TotalContributions { get; }
     public string PathToRepository { get; }
 
     public IPackageHistoryNode PackageTree()
@@ -90,10 +93,11 @@ public class AnalysisResult
         return _packagesByDiminishingHotSpotRating;
     }
 
-    public IEnumerable<Contribution> ContributorsByOwnership()
+    public IEnumerable<Contribution> ContributorsByOwnershipPerSingleFileChange()
     {
       var contributionsByAuthor = new List<Contribution>();
-      var allContributions = _entriesFromMostRecentlyChanged.SelectMany(e => e.Contributions()).ToList();
+      var allContributions = _entriesFromMostRecentlyChanged
+        .SelectMany(e => e.Contributions()).ToList();
       var dictionary = allContributions
         .GroupBy(c => c.AuthorName).ToDictionary(g => g.Key, g => g.Select(e => e));
       var allContributionsCount = allContributions.Sum(c => c.ChangeCount);

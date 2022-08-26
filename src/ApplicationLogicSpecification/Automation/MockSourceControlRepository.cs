@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NHotSpot.ApplicationLogic;
 using TddXt.AnyRoot;
 using TddXt.AnyRoot.Strings;
@@ -25,6 +25,10 @@ public class MockSourceControlRepository : ISourceControlRepository
         var mockTreeVisitor = new RepositoryEvolution(visitor);
         _action(mockTreeVisitor);
         TotalCommits = mockTreeVisitor.CommitCount();
+    }
+
+    public void CollectResults(ICollectCommittInfoVisitor committVisitor)
+    {
     }
 
     public string Path { get; }

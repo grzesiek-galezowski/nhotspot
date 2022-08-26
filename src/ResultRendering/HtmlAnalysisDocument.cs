@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +30,8 @@ public class HtmlAnalysisDocument
     private ViewModel CreateViewModel(AnalysisResult analysisResults)
     {
         var viewModel = new ViewModel();
-        AddContributionRanking(analysisResults.ContributorsByOwnership(), viewModel.Contributions);
+        AddContributionRanking(analysisResults.ContributorsByOwnershipPerSingleFileChange(), viewModel.Contributions);
+        AddContributionRanking(analysisResults.TotalContributions, viewModel.TotalContributions);
         AddCouplingRanking(analysisResults.FileCouplingMetrics(), viewModel.FileCouplings);
         AddCouplingRanking(analysisResults.PackageCouplingMetrics(), viewModel.PackageCouplings);
         var chartDataTask = Task.Run(() => 

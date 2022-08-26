@@ -4,7 +4,8 @@ namespace NHotSpot.ResultRendering;
 
 public class ViewModel
 {
-  public List<ContributionViewModel> Contributions { get; set; } = new List<ContributionViewModel>();
+  public List<ContributionViewModel> Contributions { get; } = new List<ContributionViewModel>();
+  public List<ContributionViewModel> TotalContributions { get; } = new List<ContributionViewModel>();
   public IEnumerable<HotSpotViewModel> HotSpots { get; set; } = new List<HotSpotViewModel>();
   public IEnumerable<RankingViewModel> Rankings { get; set; } = new List<RankingViewModel>();
   public string? RepoName { get; set; }

@@ -19,6 +19,8 @@ public static class ResultsView
                 histogramView.ChartDiv(80),
                 new ContributionsView("Contributions (calculated on per-file basis, not per-committ)")
                   .Render(viewModel.Contributions),
+                new ContributionsView("Contributions (calculated on per-committ basis)")
+                  .Render(viewModel.TotalContributions),
                 RankingsView.RenderFrom(viewModel.Rankings), 
                 CouplingView.RenderFrom(viewModel.FileCouplings, "File Coupling"),
                 CouplingView.RenderFrom(viewModel.PackageCouplings, "Package Coupling"),
