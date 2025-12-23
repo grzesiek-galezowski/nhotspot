@@ -24,18 +24,20 @@ public class GitSourceControlRepository : ISourceControlRepository
 
   public void CollectResults(ITreeVisitor visitor)
   {
+    // Start with latest commit tree (Commits[0] is now the newest)
     TreeNavigation.Traverse(Commits[0].Tree, Commits[0], visitor);
 
     var changesPerIndex = CalculateDiffsPerCommitIndex();
 
+    // Process changes going backwards in time
     for (var i = 1; i < Commits.Count; ++i)
     {
-      var currentCommit = Commits[i];
-      var changesBetweenCurrentAndLastCommit = changesPerIndex[i];
+      var olderCommit = Commits[i];
+      var changesBetweenCommits = changesPerIndex[i];
       AnalyzeChanges(
-        changesBetweenCurrentAndLastCommit,
+        changesBetweenCommits,
         visitor,
-        currentCommit
+        olderCommit
       );
     }
   }
@@ -44,10 +46,10 @@ public class GitSourceControlRepository : ISourceControlRepository
   {
     for (var i = 1; i < Commits.Count; ++i)
     {
-      var currentCommit = Commits[i];
+      var olderCommit = Commits[i];
       committVisitor.AddMetadata(
-        currentCommit.Author.Name,
-        currentCommit.Author.When);
+        olderCommit.Author.Name,
+        olderCommit.Author.When);
     }
   }
 
@@ -56,9 +58,10 @@ public class GitSourceControlRepository : ISourceControlRepository
     var changesPerIndex = new ConcurrentDictionary<int, TreeChanges>();
     Parallel.For(1, Commits.Count, i =>
     {
-      var previousCommit = Commits[i - 1];
-      var currentCommit = Commits[i];
-      changesPerIndex[i] = Repo.Diff.Compare<TreeChanges>(previousCommit.Tree, currentCommit.Tree);
+      var newerCommit = Commits[i - 1]; // newer in time (later chronologically)
+      var olderCommit = Commits[i]; // older in time (earlier chronologically)
+      // Compare older to newer to get changes going backwards in time
+      changesPerIndex[i] = Repo.Diff.Compare<TreeChanges>(olderCommit.Tree, newerCommit.Tree);
     });
     return changesPerIndex;
   }
@@ -66,16 +69,16 @@ public class GitSourceControlRepository : ISourceControlRepository
   public string Path { get; }
   public int TotalCommits { get; }
 
-  private static void AnalyzeChanges( //todo make this instance method with commit as a field
+  private static void AnalyzeChanges(
     TreeChanges treeChanges,
     ITreeVisitor treeVisitor,
-    Commit currentCommit)
+    Commit olderCommit)
   {
-    foreach (var treeEntry in treeChanges) //TODO can be made async?
+    foreach (var treeEntry in treeChanges)
     {
       var treeEntryPath = treeEntry.Path;
-      var changeDate = currentCommit.Author.When;
-      var authorName = currentCommit.Author.Name;
+      var changeDate = olderCommit.Author.When;
+      var authorName = olderCommit.Author.Name;
 
       switch (treeEntry.Status)
       {
@@ -83,32 +86,36 @@ public class GitSourceControlRepository : ISourceControlRepository
           break;
         case ChangeKind.Added:
         {
-          var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-          blob.OnAdded(treeVisitor, treeEntryPath, changeDate, authorName, currentCommit.Sha);
-
+          // When going backwards, "Added" means file was added in newer commit
+// So we need to treat it as "Deleted" (file doesn't exist in older commit)
+          treeVisitor.OnRemoved(RelativeFilePath(treeEntryPath));
           break;
         }
         case ChangeKind.Deleted:
         {
-          treeVisitor.OnRemoved(RelativeFilePath(treeEntryPath));
+          // When going backwards, "Deleted" means file was deleted in newer commit
+          // So we need to treat it as "Added" (file exists in older commit)
+          var blob = Extract.BlobFrom(olderCommit, treeEntry.OldPath);
+          blob.OnAdded(treeVisitor, treeEntry.OldPath, changeDate, authorName, olderCommit.Sha);
           break;
         }
         case ChangeKind.Modified:
         {
-          var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-          blob.OnModified(treeVisitor, treeEntryPath, changeDate, authorName, currentCommit.Sha);
+          var blob = Extract.BlobFrom(olderCommit, treeEntry.Path);
+          blob.OnModified(treeVisitor, treeEntryPath, changeDate, authorName, olderCommit.Sha);
           break;
         }
         case ChangeKind.Renamed:
         {
-          var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-          blob.OnRenamed(treeVisitor, treeEntry, treeEntryPath, changeDate, authorName, currentCommit.Sha);
+          // When going backwards, rename is reversed: new path -> old path
+          var blob = Extract.BlobFrom(olderCommit, treeEntry.OldPath);
+          blob.OnRenamed(treeVisitor, treeEntry, treeEntry.OldPath, changeDate, authorName, olderCommit.Sha);
           break;
         }
         case ChangeKind.Copied:
         {
-          var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-          blob.OnCopied(treeVisitor, treeEntryPath, changeDate, authorName, currentCommit.Sha);
+          // When going backwards, a copy doesn't make sense - treat as removal
+          treeVisitor.OnRemoved(RelativeFilePath(treeEntryPath));
           break;
         }
         case ChangeKind.TypeChanged:
@@ -135,8 +142,8 @@ public class GitSourceControlRepository : ISourceControlRepository
     var commits = repo.Commits.QueryBy(new CommitFilter
     {
       IncludeReachableFrom = branchName, FirstParentOnly = true, SortBy = CommitSortStrategies.Time
-    }).Reverse().SkipWhile(c => c.Author.When < startDate).ToList();
-    Console.WriteLine("Starting analysis from commit " + commits.First().Sha);
+    }).TakeWhile(c => c.Author.When >= startDate).ToList();
+    Console.WriteLine("Starting analysis from commit " + commits.First().Sha + " (latest)");
     var sourceControlRepository = new GitSourceControlRepository(repo, commits);
     return sourceControlRepository;
   }

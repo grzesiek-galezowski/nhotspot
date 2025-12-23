@@ -29,6 +29,7 @@ public class MockSourceControlRepository : ISourceControlRepository
 
     public void CollectResults(ICollectCommittInfoVisitor committVisitor)
     {
+      // Empty - does nothing!
     }
 
     public string Path { get; }
