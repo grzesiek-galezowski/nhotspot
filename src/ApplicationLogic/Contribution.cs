@@ -1,11 +1,11 @@
-namespace NHotSpot.ApplicationLogic;
+﻿namespace NHotSpot.ApplicationLogic;
 
 public record Contribution
 {
   public Contribution(string authorName, int commitsByAuthor, int totalFileCommits)
   {
     ChangeCount = commitsByAuthor;
-    ChangePercentage = commitsByAuthor / (decimal) totalFileCommits*100;
+    ChangePercentage = commitsByAuthor / (decimal)totalFileCommits * 100;
     AuthorName = authorName;
   }
 

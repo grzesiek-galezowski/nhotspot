@@ -5,32 +5,24 @@ using TddXt.AnyRoot.Strings;
 
 namespace ApplicationLogicSpecification.Automation;
 
-public class MockSourceControlRepository : ISourceControlRepository
+public class MockSourceControlRepository(string path, Action<IRepositoryEvolution> action) : ISourceControlRepository
 {
-    public static MockSourceControlRepository Default(Action<IRepositoryEvolution> action)
-    {
-        return new MockSourceControlRepository(Root.Any.String(), action);
-    }
+  public static MockSourceControlRepository Default(Action<IRepositoryEvolution> action)
+  {
+    return new MockSourceControlRepository(Root.Any.String(), action);
+  }
 
-    private readonly Action<IRepositoryEvolution> _action;
+  public void CollectResults(ITreeVisitor visitor)
+  {
+    var mockTreeVisitor = new RepositoryEvolution(visitor);
+    action(mockTreeVisitor);
+    TotalCommits = mockTreeVisitor.CommitCount();
+  }
 
-    public MockSourceControlRepository(string path, Action<IRepositoryEvolution> action)
-    {
-        _action = action;
-        Path = path;
-    }
+  public void CollectResults(ICollectCommittInfoVisitor committVisitor)
+  {
+  }
 
-    public void CollectResults(ITreeVisitor visitor)
-    {
-        var mockTreeVisitor = new RepositoryEvolution(visitor);
-        _action(mockTreeVisitor);
-        TotalCommits = mockTreeVisitor.CommitCount();
-    }
-
-    public void CollectResults(ICollectCommittInfoVisitor committVisitor)
-    {
-    }
-
-    public string Path { get; }
-    public int TotalCommits { get; set; } = 0;
+  public string Path { get; } = path;
+  public int TotalCommits { get; set; } = 0;
 }

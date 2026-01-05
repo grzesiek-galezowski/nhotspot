@@ -82,48 +82,48 @@ public class GitSourceControlRepository : ISourceControlRepository
         case ChangeKind.Unmodified:
           break;
         case ChangeKind.Added:
-        {
-          var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-          blob.OnAdded(treeVisitor, treeEntryPath, changeDate, authorName, currentCommit.Sha);
+          {
+            var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
+            blob.OnAdded(treeVisitor, treeEntryPath, changeDate, authorName, currentCommit.Sha);
 
-          break;
-        }
+            break;
+          }
         case ChangeKind.Deleted:
-        {
-          treeVisitor.OnRemoved(RelativeFilePath(treeEntryPath));
-          break;
-        }
+          {
+            treeVisitor.OnRemoved(RelativeFilePath(treeEntryPath));
+            break;
+          }
         case ChangeKind.Modified:
-        {
-          var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-          blob.OnModified(treeVisitor, treeEntryPath, changeDate, authorName, currentCommit.Sha);
-          break;
-        }
+          {
+            var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
+            blob.OnModified(treeVisitor, treeEntryPath, changeDate, authorName, currentCommit.Sha);
+            break;
+          }
         case ChangeKind.Renamed:
-        {
-          var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-          blob.OnRenamed(treeVisitor, treeEntry, treeEntryPath, changeDate, authorName, currentCommit.Sha);
-          break;
-        }
+          {
+            var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
+            blob.OnRenamed(treeVisitor, treeEntry, treeEntryPath, changeDate, authorName, currentCommit.Sha);
+            break;
+          }
         case ChangeKind.Copied:
-        {
-          var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
-          blob.OnCopied(treeVisitor, treeEntryPath, changeDate, authorName, currentCommit.Sha);
-          break;
-        }
+          {
+            var blob = Extract.BlobFrom(currentCommit, treeEntry.Path);
+            blob.OnCopied(treeVisitor, treeEntryPath, changeDate, authorName, currentCommit.Sha);
+            break;
+          }
         case ChangeKind.TypeChanged:
-        {
-          Console.WriteLine(" type of file " + treeEntry.OldPath + " -> " + treeEntry.Path +
-                            " type changed. Ignoring...");
-          break;
-        }
+          {
+            Console.WriteLine(" type of file " + treeEntry.OldPath + " -> " + treeEntry.Path +
+                              " type changed. Ignoring...");
+            break;
+          }
         case ChangeKind.Ignored:
         case ChangeKind.Untracked:
         case ChangeKind.Unreadable:
         case ChangeKind.Conflicted:
-        {
-          throw new NotSupportedException("Never needed to support " + treeEntry.Status + " but maybe I should?");
-        }
+          {
+            throw new NotSupportedException("Never needed to support " + treeEntry.Status + " but maybe I should?");
+          }
         default:
           throw new ArgumentOutOfRangeException(nameof(treeEntry.Status));
       }
@@ -134,7 +134,9 @@ public class GitSourceControlRepository : ISourceControlRepository
   {
     var commits = repo.Commits.QueryBy(new CommitFilter
     {
-      IncludeReachableFrom = branchName, FirstParentOnly = true, SortBy = CommitSortStrategies.Time
+      IncludeReachableFrom = branchName,
+      FirstParentOnly = true,
+      SortBy = CommitSortStrategies.Time
     }).Reverse().SkipWhile(c => c.Author.When < startDate).ToList();
     Console.WriteLine("Starting analysis from commit " + commits.First().Sha);
     var sourceControlRepository = new GitSourceControlRepository(repo, commits);

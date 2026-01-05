@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 
 namespace NHotSpot.ApplicationLogic;
 
 public class UtcClock : IClock
 {
-    public DateTime Now()
-    {
-        return DateTime.UtcNow;
-    }
+  public DateTime Now()
+  {
+    return DateTime.UtcNow;
+  }
 }

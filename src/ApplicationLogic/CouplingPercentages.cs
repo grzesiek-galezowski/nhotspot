@@ -1,39 +1,35 @@
-namespace NHotSpot.ApplicationLogic;
+﻿namespace NHotSpot.ApplicationLogic;
 
-public class CouplingPercentages
+public class CouplingPercentages(
+  int percentageOfLeftCommits,
+  int percentageOfRightCommits,
+  int percentageOfTotalCommits)
 {
-    public CouplingPercentages(int percentageOfLeftCommits, int percentageOfRightCommits, int percentageOfTotalCommits)
-    {
-        PercentageOfLeftCommits = percentageOfLeftCommits;
-        PercentageOfRightCommits = percentageOfRightCommits;
-        PercentageOfTotalCommits = percentageOfTotalCommits;
-    }
+  public int PercentageOfLeftCommits { get; } = percentageOfLeftCommits;
+  public int PercentageOfRightCommits { get; } = percentageOfRightCommits;
+  public int PercentageOfTotalCommits { get; } = percentageOfTotalCommits;
 
-    public int PercentageOfLeftCommits { get; }
-    public int PercentageOfRightCommits { get; }
-    public int PercentageOfTotalCommits { get; }
+  public static CouplingPercentages CalculateUsing(
+      int changesCount,
+      int otherChangesCount,
+      int couplingCount,
+      int totalCommits)
+  {
+    var percentageOfLeftCommits = CalculatePercentage(couplingCount, changesCount);
+    var percentageOfRightCommits = CalculatePercentage(couplingCount, otherChangesCount);
+    var percentageOfTotalCommits = CalculatePercentage(couplingCount, totalCommits);
+    return new CouplingPercentages(
+        percentageOfLeftCommits,
+        percentageOfRightCommits,
+        percentageOfTotalCommits);
+  }
 
-    public static CouplingPercentages CalculateUsing(
-        int changesCount,
-        int otherChangesCount,
-        int couplingCount,
-        int totalCommits)
+  private static int CalculatePercentage(int couplingCount, int changesCount)
+  {
+    if (changesCount == 0)
     {
-        var percentageOfLeftCommits = CalculatePercentage(couplingCount, changesCount);
-        var percentageOfRightCommits = CalculatePercentage(couplingCount, otherChangesCount);
-        var percentageOfTotalCommits = CalculatePercentage(couplingCount, totalCommits);
-        return new CouplingPercentages(
-            percentageOfLeftCommits, 
-            percentageOfRightCommits, 
-            percentageOfTotalCommits);
+      return 0; //bug really?
     }
-
-    private static int CalculatePercentage(int couplingCount, int changesCount)
-    {
-        if(changesCount == 0)
-        {
-            return 0; //bug really?
-        }
-        return (couplingCount * 100)/changesCount;
-    }
+    return (couplingCount * 100) / changesCount;
+  }
 }

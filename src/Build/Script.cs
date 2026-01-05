@@ -22,7 +22,7 @@ Target("build", ["clean"], () =>
     $"build {consoleAppPath} ",
     $"-p:VersionPrefix={version} ",
     "-c Release "
-    //$"-o {outputPath} "
+  //$"-o {outputPath} "
   )
 );
 

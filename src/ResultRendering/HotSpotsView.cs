@@ -33,8 +33,8 @@ public static class HotSpotsView
         KeyValueRow("Active for",
           $"{hotSpot.ActivePeriod}(First commit: {hotSpot.CreationDate}, Last: {hotSpot.LastChangedDate})")
       ),
-      chartView.ChartDiv(80), 
-      new ContributionsView("Contributions").Render(hotSpot.Contributions), 
+      chartView.ChartDiv(80),
+      new ContributionsView("Contributions").Render(hotSpot.Contributions),
       UnrollableTable($"Coupling (Top {maxCouplingPerHotSpot})",
         CouplingRows(hotSpot, maxCouplingPerHotSpot)),
       Tag("script", Text(JavaScriptCanvas(hotSpot, chartView)))

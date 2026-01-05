@@ -1,6 +1,6 @@
-namespace NHotSpot.ApplicationLogic;
+﻿namespace NHotSpot.ApplicationLogic;
 
-public interface ICouplingSource<TCoupling, THistory>  where THistory : ICouplingSource<TCoupling, THistory>
+public interface ICouplingSource<TCoupling, THistory> where THistory : ICouplingSource<TCoupling, THistory>
 {
-    TCoupling CalculateCouplingTo(THistory otherHistory, int totalCommits);
+  TCoupling CalculateCouplingTo(THistory otherHistory, int totalCommits);
 }

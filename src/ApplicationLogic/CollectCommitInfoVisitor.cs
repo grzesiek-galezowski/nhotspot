@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NHotSpot.ApplicationLogic;
 
-public class CollectCommittInfoVisitor : ICollectCommittInfoVisitor
+public class CollectCommitInfoVisitor : ICollectCommittInfoVisitor
 {
   private readonly Dictionary<string, int> _committCountPerAuthor = new();
   private int _totalContributions = 0;

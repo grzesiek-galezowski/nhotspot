@@ -1,19 +1,10 @@
 ﻿namespace NHotSpot.ResultRendering.HtmlGeneration;
 
-public class HtmlAttribute
+public class HtmlAttribute(string name, string content)
 {
-  private readonly string _name;
-  private readonly string _content;
-
-  public HtmlAttribute(string name, string content)
-  {
-    _name = name;
-    _content = content;
-  }
-
   public string Render()
   {
-    return $"{_name}=\"{_content}\"";
+    return $"{name}=\"{content}\"";
   }
 
   public override string ToString()

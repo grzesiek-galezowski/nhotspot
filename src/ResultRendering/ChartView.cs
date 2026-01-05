@@ -1,21 +1,14 @@
-using NHotSpot.ResultRendering.HtmlGeneration;
+﻿using NHotSpot.ResultRendering.HtmlGeneration;
 
 namespace NHotSpot.ResultRendering;
 
-public class ChartView
+public class ChartView(string id)
 {
-    private readonly string _id;
-
-    public ChartView(string id)
-    {
-        _id = id;
-    }
-
-    //bug pass arrays instead of strings
-    public string ChartScript(string labelsString, string dataString, string description)
-    {
-        var script = @"
-              var ctx = document.getElementById('"+ _id + @"').getContext('2d');
+  //bug pass arrays instead of strings
+  public string ChartScript(string labelsString, string dataString, string description)
+  {
+    var script = @"
+              var ctx = document.getElementById('" + id + @"').getContext('2d');
               var chart = new Chart(ctx, {
                   // The type of chart we want to create
                   type: 'line',
@@ -38,13 +31,13 @@ public class ChartView
                   },
       
               });";
-        return script;
-    }
+    return script;
+  }
 
-    public IHtmlContent ChartDiv(int height)
-    {
-        return Html.Tag("div", Html.Attribute("class", "container"),
-            Html.Tag("canvas", Html.Attributes(("id", _id), ("height", height.ToString())))
-        );
-    }
+  public IHtmlContent ChartDiv(int height)
+  {
+    return Html.Tag("div", Html.Attribute("class", "container"),
+        Html.Tag("canvas", Html.Attributes(("id", _id: id), ("height", height.ToString())))
+    );
+  }
 }

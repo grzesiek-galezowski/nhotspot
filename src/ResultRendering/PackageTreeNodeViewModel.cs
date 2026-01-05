@@ -7,31 +7,22 @@ using Core.NullableReferenceTypesExtensions;
 
 namespace NHotSpot.ResultRendering;
 
-public class PackageTreeNodeViewModel
+public class PackageTreeNodeViewModel(
+  double hotSpotRating,
+  string pathOfCurrentVersion,
+  Maybe<PackageTreeNodeViewModel> parent)
 {
-    private readonly double _hotSpotRating;
+  public List<PackageTreeNodeViewModel> Children { get; } = new();
+  public Maybe<PackageTreeNodeViewModel> Parent { get; } = parent;
+  public string Name { get; } = Path.GetFileName(pathOfCurrentVersion).OrThrow();
 
-    public PackageTreeNodeViewModel(
-        double hotSpotRating,
-        string pathOfCurrentVersion, 
-        Maybe<PackageTreeNodeViewModel> parent)
-    {
-        Name = Path.GetFileName(pathOfCurrentVersion).OrThrow();
-        _hotSpotRating = hotSpotRating;
-        Parent = parent;
-    }
+  public double HotSpotRating =>
+      hotSpotRating + Children.Sum(c => c.HotSpotRating);
 
-    public List<PackageTreeNodeViewModel> Children { get; } = new();
-    public Maybe<PackageTreeNodeViewModel> Parent { get; }
-    public string Name { get; }
-
-    public double HotSpotRating => 
-        _hotSpotRating + Children.Sum(c => c.HotSpotRating);
-
-    public static PackageTreeNodeViewModel From(IPackageHistoryNode packageTree)
-    {
-        var packageNodeViewModelVisitor = new PackageNodeViewModelVisitor();
-        packageTree.Accept(packageNodeViewModelVisitor);
-        return packageNodeViewModelVisitor.ToPackageNodeViewModel();
-    }
+  public static PackageTreeNodeViewModel From(IPackageHistoryNode packageTree)
+  {
+    var packageNodeViewModelVisitor = new PackageNodeViewModelVisitor();
+    packageTree.Accept(packageNodeViewModelVisitor);
+    return packageNodeViewModelVisitor.ToPackageNodeViewModel();
+  }
 }

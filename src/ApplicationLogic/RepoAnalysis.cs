@@ -4,28 +4,17 @@ using Core.Maybe;
 
 namespace NHotSpot.ApplicationLogic;
 
-public class RepoAnalysis
+public class RepoAnalysis(IClock clock, int minChangeCount, Maybe<RelativeDirectoryPath> subfolder)
 {
-  private readonly IClock _clock;
-  private readonly int _minChangeCount;
-  private readonly Maybe<RelativeDirectoryPath> _subfolder;
-
-  public RepoAnalysis(IClock clock, int minChangeCount, Maybe<RelativeDirectoryPath> subfolder)
-  {
-    _clock = clock;
-    _minChangeCount = minChangeCount;
-    _subfolder = subfolder;
-  }
-
   public AnalysisResult ExecuteOn(ISourceControlRepository sourceControlRepository)
   {
-    var treeVisitor = new CollectFileChangeRateFromCommitVisitor(_clock, _minChangeCount, _subfolder);
-    var committVisitor = new CollectCommittInfoVisitor();
+    var treeVisitor = new CollectFileChangeRateFromCommitVisitor(clock, minChangeCount, subfolder);
+    var commitVisitor = new CollectCommitInfoVisitor();
     sourceControlRepository.CollectResults(treeVisitor);
-    sourceControlRepository.CollectResults(committVisitor);
+    sourceControlRepository.CollectResults(commitVisitor);
     var analysisResult = CreateAnalysisResult(
       treeVisitor.Result(),
-      committVisitor.TotalContributions(),
+      commitVisitor.TotalContributions(),
       sourceControlRepository.Path,
       sourceControlRepository.TotalCommits);
     return analysisResult;
@@ -33,7 +22,7 @@ public class RepoAnalysis
 
   private static AnalysisResult CreateAnalysisResult(
     IEnumerable<IFileHistory> fileHistories,
-    List<Contribution> totalContributions, 
+    List<Contribution> totalContributions,
     string repositoryPath,
     int totalCommits)
   {

@@ -4,15 +4,8 @@ using NHotSpot.ResultRendering.HtmlGeneration;
 
 namespace NHotSpot.ResultRendering;
 
-public class ContributionsView
+public class ContributionsView(string title)
 {
-  private readonly string _title;
-
-  public ContributionsView(string title)
-  {
-    _title = title;
-  }
-
   public IEnumerable<IHtmlContent> ContributionRows(IEnumerable<ContributionViewModel> contributionViewModels)
   {
     return Html.Tag("tr",
@@ -31,7 +24,7 @@ public class ContributionsView
 
   public IHtmlContent Render(IEnumerable<ContributionViewModel> contributionViewModels)
   {
-    return Html.UnrollableTable(_title, 
+    return Html.UnrollableTable(title,
       ContributionRows(contributionViewModels));
   }
 }
