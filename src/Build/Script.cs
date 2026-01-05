@@ -17,7 +17,7 @@ Target("clean", () =>
   //Run("rm", $"-r {outputPath}");
 });
 
-Target("build", DependsOn("clean"), () =>
+Target("build", ["clean"], () =>
   DotNet(
     $"build {consoleAppPath} ",
     $"-p:VersionPrefix={version} ",
@@ -26,10 +26,10 @@ Target("build", DependsOn("clean"), () =>
   )
 );
 
-Target("test", DependsOn("build"), () =>
+Target("test", ["build"], () =>
   DotNet($"test {slnPath}"));
 
-Target("pack", DependsOn("test"), () =>
+Target("pack", ["test"], () =>
   DotNet(
     $"pack {consoleAppPath}",
     "--include-symbols",
@@ -39,13 +39,13 @@ Target("pack", DependsOn("test"), () =>
     $"-o {outputPath} ")
 );
 
-Target("push", DependsOn("pack"), () =>
+Target("push", ["pack"], () =>
 {
   var absoluteFilePath = outputPath.AddFileName($"TddXt.{consoleAppName}.{version}.nupkg");
   Run("dotnet", Args($"nuget push {absoluteFilePath}", "--source https://api.nuget.org/v3/index.json"));
 });
 
-Target("default", DependsOn("test"));
+Target("default", ["test"]);
 
 await RunTargetsAndExitAsync(args);
 

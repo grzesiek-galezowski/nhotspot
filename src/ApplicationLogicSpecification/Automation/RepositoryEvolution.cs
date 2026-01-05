@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using AtmaFileSystem;
 using NHotSpot.ApplicationLogic;
 
@@ -51,7 +51,8 @@ public class RepositoryEvolution : IRepositoryEvolution
 
     public void Commit(Action<DirProxy> action)
     {
-        var dirProxy = new DirProxy(RelativeDirectoryPath.Value(""), this, new CommitContext());
+      var relativeDirectoryPath = RelativeDirectoryPath.Value("");
+      var dirProxy = new DirProxy(relativeDirectoryPath, this, new CommitContext());
         action(dirProxy);
         this.CommitChanges();
     }

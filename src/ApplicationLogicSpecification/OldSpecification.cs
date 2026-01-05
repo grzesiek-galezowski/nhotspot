@@ -1,14 +1,8 @@
-using System;
-using System.Linq;
+﻿using System.Linq;
 using ApplicationLogicSpecification.Automation;
-using AtmaFileSystem;
 using FluentAssertions;
-using Core.Maybe;
-using NHotSpot.ApplicationLogic;
 using NUnit.Framework;
-using TddXt.AnyRoot.Strings;
 using static AtmaFileSystem.AtmaFileSystemPaths;
-using static TddXt.AnyRoot.Root;
 using PackagePathsWithNesting = System.Collections.Generic.List<(int nesting, AtmaFileSystem.RelativeDirectoryPath path)>;
 
 namespace ApplicationLogicSpecification;
@@ -102,44 +96,6 @@ public class OldSpecification
         testNodeVisitor.PackagesByPath[csharpProject1].Files.Count().Should().Be(1);
         testNodeVisitor.PackagesByPath[csharpProject2].Files.Count().Should().Be(1);
     }
-
-    [Test, Explicit] 
-    public void METHOD()
-    {
-        string file1 = Any.String();
-        var changeDate1 = Any.Instance<DateTimeOffset>();
-        var clock = Any.Instance<IClock>();
-        var repoPath = "REPO";
-        var change1 = new ChangeBuilder
-        {
-            Path = file1,
-            ChangeDate = changeDate1,
-        }.Build();
-
-        var analysisResult = new RepoAnalysis(clock, 200, Maybe<RelativeDirectoryPath>.Nothing)
-            .ExecuteOn(new MockSourceControlRepository(repoPath, v =>
-            {
-                v.Add(change1);
-                v.CommitChanges();
-            }));
-
-        analysisResult.PathToRepository.Should().Be(repoPath);
-        analysisResult.EntriesByDiminishingActivityPeriod().Should().HaveCount(1);
-        var fileChangeLog = analysisResult.EntriesByDiminishingActivityPeriod().Single();
-        fileChangeLog.ActivityPeriod().Should().Be(TimeSpan.Zero);
-        fileChangeLog.CreationDate().Should().Be(changeDate1);
-        fileChangeLog.LastChangeDate().Should().Be(changeDate1);
-        fileChangeLog.TimeSinceLastChange().Should().Be(clock.Now() - changeDate1);
-        fileChangeLog.ChangesCount().Should().Be(1);
-        fileChangeLog.ComplexityOfCurrentVersion().Should().Be(0);
-        fileChangeLog.HotSpotRating().Should().Be((1 + 2) / 2d);
-        fileChangeLog.Entries.Should().HaveCount(1);
-        fileChangeLog.Entries.Should().BeEquivalentTo(new [] {change1});
-        fileChangeLog.Age().Should().Be(clock.Now() - changeDate1);
-        fileChangeLog.PathOfCurrentVersion().Should().Be(RelativeFilePath(file1));
-        fileChangeLog.LatestPackagePath().Should().Be(string.Empty);
-    }
-
 
     //TODO test package tree
 }
