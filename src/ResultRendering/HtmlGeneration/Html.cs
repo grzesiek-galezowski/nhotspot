@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -132,5 +132,5 @@ public static class Html
     );
   }
 
-  public static readonly HtmlAttribute[] TdAttributes = Attribute("style", "border-bottom: 1pt solid gray;");
+  public static readonly HtmlAttribute[] TdAttributes = Html.Attribute("style", "border-bottom: 1pt solid gray;");
 }

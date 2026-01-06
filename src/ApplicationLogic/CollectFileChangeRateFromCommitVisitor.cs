@@ -22,14 +22,9 @@ public class CollectFileChangeRateFromCommitVisitor(
   : ITreeVisitor
 {
   private Dictionary<RelativeFilePath, FileHistoryBuilder> AnalysisMetadata { get; } = new();
-  private HashSet<RelativeFilePath> RemovedFiles { get; } = new();
 
   public void OnModified(Change change)
   {
-    if (!AnalysisMetadata.ContainsKey(change.Path) || RemovedFiles.Contains(change.Path))
-    {
-      return;
-    }
     AddChange(change);
   }
 
@@ -40,10 +35,6 @@ public class CollectFileChangeRateFromCommitVisitor(
 
   public void OnRenamed(RelativeFilePath oldPath, Change change)
   {
-    if (!AnalysisMetadata.ContainsKey(oldPath) || RemovedFiles.Contains(oldPath))
-    {
-      return;
-    }
     RenameFile(oldPath, change.Path);
     AddChange(change);
   }
@@ -62,11 +53,7 @@ public class CollectFileChangeRateFromCommitVisitor(
 
   public void OnRemoved(RelativeFilePath removedEntryPath)
   {
-    // When processing backward, OnRemoved is called when a file is "added" in forward time.
-    // This means the file didn't exist in older commits, so we should stop processing it.
-    // We keep it in AnalysisMetadata to preserve its history, but mark it as removed
-    // so we don't try to process further changes in older commits.
-    RemovedFiles.Add(removedEntryPath);
+    AnalysisMetadata.Remove(removedEntryPath);
   }
 
   private void RenameFile(RelativeFilePath oldPath, RelativeFilePath newPath)

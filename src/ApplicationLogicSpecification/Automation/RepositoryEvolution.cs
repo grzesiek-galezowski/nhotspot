@@ -48,6 +48,6 @@ public class RepositoryEvolution(ITreeVisitor visitor) : IRepositoryEvolution
     var relativeDirectoryPath = RelativeDirectoryPath.Value("");
     var dirProxy = new DirProxy(relativeDirectoryPath, this, new CommitContext());
     action(dirProxy);
-    CommitChanges();
+    this.CommitChanges();
   }
 }
