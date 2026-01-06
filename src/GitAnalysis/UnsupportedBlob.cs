@@ -23,6 +23,11 @@ public class UnsupportedBlob : IBlob
   {
   }
 
+  public void OnRenamedBackward(ITreeVisitor treeVisitor, string oldPath, string newPath,
+      DateTimeOffset changeDate, string authorName, string id)
+  {
+  }
+
   public void OnCopied(ITreeVisitor treeVisitor, string treeEntryPath, DateTimeOffset changeDate,
       string authorName, string id)
   {

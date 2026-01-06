@@ -42,6 +42,21 @@ public class SupportedBlob(Lazy<string> blobContent) : IBlob
             id));
   }
 
+  public void OnRenamedBackward(ITreeVisitor treeVisitor, string oldPath, string newPath,
+      DateTimeOffset changeDate, string authorName, string id)
+  {
+    // Going backward: file was renamed from oldPath to newPath going forward.
+    // We need to "unrename" it: track under oldPath instead of newPath.
+    treeVisitor.OnRenamed(
+        RelativeFilePath(newPath),  // the name we're tracking it under currently
+        ChangeFactory.CreateChange(
+            oldPath,                 // the name it had in older commits
+            blobContent,
+            authorName,
+            changeDate,
+            id));
+  }
+
   public void OnCopied(ITreeVisitor treeVisitor, string treeEntryPath,
       DateTimeOffset changeDate, string authorName, string id)
   {

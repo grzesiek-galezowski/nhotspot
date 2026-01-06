@@ -40,10 +40,24 @@ public class FileProxy(RelativeFilePath fileName, RepositoryEvolution context, C
     return this;
   }
 
-  public FileProxy By(string name)
-  {
-    _author = name;
-    return this;
-  }
+    public FileProxy By(string name)
+    {
+      _author = name;
+      return this;
+    }
 
-}
+    public void RenamedTo(string newPath)
+    {
+      var newFilePath = RelativeFilePath.Value(newPath);
+      var change = new ChangeBuilder
+      {
+        Path = newFilePath.ToString(),
+        AuthorName = _author,
+        FileText = string.Join(NewLine, Repeat(" a", _complexity)),
+        ChangeDate = commitContext.Date,
+        Id = commitContext.ChangeId
+      }.Build();
+      context.Rename(fileName, change);
+    }
+
+  }
