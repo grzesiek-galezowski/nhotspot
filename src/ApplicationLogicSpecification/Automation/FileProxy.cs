@@ -21,6 +21,11 @@ public class FileProxy(RelativeFilePath fileName, RepositoryEvolution context, C
     context.Modify(Change());
   }
 
+  public void Removed()
+  {
+    context.Remove(fileName);
+  }
+
   private Change Change()
   {
     return new ChangeBuilder
