@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Core.Maybe" Version="7.0.0" />
-    <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
+    <PackageReference Include="Core.Maybe" Version="8.0.0" />
+    <PackageReference Include="LibGit2Sharp" Version="0.32.0" />
   </ItemGroup>
 
   <ItemGroup>

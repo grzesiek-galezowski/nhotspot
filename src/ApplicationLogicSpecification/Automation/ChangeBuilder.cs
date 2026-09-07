@@ -1,7 +1,4 @@
-﻿using System;
-using NHotSpot.ApplicationLogic;
-using TddXt.AnyRoot.Strings;
-using static TddXt.AnyRoot.Root;
+﻿using TddXt.AnyRoot.Strings;
 
 namespace ApplicationLogicSpecification.Automation;
 

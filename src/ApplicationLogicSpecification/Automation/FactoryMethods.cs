@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using NHotSpot.ApplicationLogic;
-
-namespace ApplicationLogicSpecification.Automation;
+﻿namespace ApplicationLogicSpecification.Automation;
 
 static internal class FactoryMethods
 {

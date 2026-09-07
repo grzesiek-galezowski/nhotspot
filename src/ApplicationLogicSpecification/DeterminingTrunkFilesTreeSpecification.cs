@@ -1,11 +1,4 @@
-﻿using System;
-using System.Linq;
-using ApplicationLogicSpecification.Automation;
-using FluentAssertions;
-using NHotSpot.ApplicationLogic;
-using NUnit.Framework;
-
-namespace ApplicationLogicSpecification;
+﻿namespace ApplicationLogicSpecification;
 
 public class DeterminingTrunkFilesTreeSpecification
 {

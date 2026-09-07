@@ -1,7 +1,4 @@
-﻿using System;
-using NHotSpot.ApplicationLogic;
-
-namespace ApplicationLogicSpecification.Automation;
+﻿namespace ApplicationLogicSpecification.Automation;
 
 public interface IRepositoryEvolution
 {

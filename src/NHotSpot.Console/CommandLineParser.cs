@@ -10,7 +10,7 @@ namespace NHotSpot.Console;
 
 public static class CommandLineParser
 {
-  public static Either<AnalysisConfig, ICommandLineParserResult> Parse(string[] args)
+  public static Result<AnalysisConfig, ICommandLineParserResult> Parse(string[] args)
   {
     var analysisConfig = new AnalysisConfig();
     var parser = CreateCliParser(analysisConfig);
@@ -24,7 +24,8 @@ public static class CommandLineParser
       //bug this shouldn't be an error!
       return commandLineParserResult.ToError<AnalysisConfig, ICommandLineParserResult>();
     }
-    return analysisConfig.ToResult<AnalysisConfig, ICommandLineParserResult>();
+
+    return analysisConfig.ToValue<AnalysisConfig, ICommandLineParserResult>();
   }
 
   private static FluentCommandLineParser CreateCliParser(AnalysisConfig inputArguments)

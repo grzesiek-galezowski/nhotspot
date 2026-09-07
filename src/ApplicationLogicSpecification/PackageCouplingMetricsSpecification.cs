@@ -1,9 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
-using ApplicationLogicSpecification.Automation;
-using AtmaFileSystem;
-using FluentAssertions;
-using NUnit.Framework;
 
 namespace ApplicationLogicSpecification;
 

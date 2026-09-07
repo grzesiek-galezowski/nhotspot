@@ -1,7 +1,4 @@
-﻿using System;
-using NHotSpot.ApplicationLogic;
-using TddXt.AnyRoot;
-using TddXt.AnyRoot.Strings;
+﻿using TddXt.AnyRoot.Strings;
 
 namespace ApplicationLogicSpecification.Automation;
 
@@ -9,7 +6,7 @@ public class MockSourceControlRepository(string path, Action<IRepositoryEvolutio
 {
   public static MockSourceControlRepository Default(Action<IRepositoryEvolution> action)
   {
-    return new MockSourceControlRepository(Root.Any.String(), action);
+    return new MockSourceControlRepository(Any.String(), action);
   }
 
   public void CollectResults(ITreeVisitor visitor)

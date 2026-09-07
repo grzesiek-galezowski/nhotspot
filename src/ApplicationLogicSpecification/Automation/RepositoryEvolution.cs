@@ -1,8 +1,4 @@
-﻿using System;
-using AtmaFileSystem;
-using NHotSpot.ApplicationLogic;
-
-namespace ApplicationLogicSpecification.Automation;
+﻿namespace ApplicationLogicSpecification.Automation;
 
 public class RepositoryEvolution(ITreeVisitor visitor) : IRepositoryEvolution
 {

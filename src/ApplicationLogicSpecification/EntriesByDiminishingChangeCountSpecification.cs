@@ -1,10 +1,4 @@
-﻿using System.Linq;
-using ApplicationLogicSpecification.Automation;
-using AtmaFileSystem;
-using FluentAssertions;
-using NUnit.Framework;
-
-namespace ApplicationLogicSpecification;
+﻿namespace ApplicationLogicSpecification;
 
 public class EntriesByDiminishingChangeCountSpecification
 {

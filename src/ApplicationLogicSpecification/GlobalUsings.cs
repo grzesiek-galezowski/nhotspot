@@ -1,0 +1,10 @@
+﻿global using System;
+global using System.Linq;
+global using ApplicationLogicSpecification.Automation;
+global using AtmaFileSystem;
+global using AwesomeAssertions;
+global using AwesomeAssertions.Extensions;
+global using NHotSpot.ApplicationLogic;
+global using NSubstitute;
+global using NUnit.Framework;
+global using TddXt.AnyRoot;
