@@ -36,13 +36,15 @@ public class ImmutableFileHistory(
   IReadOnlyList<Change> entries)
   : IFileHistory
 {
+  private readonly HashSet<string> _changeIds = changeIds.ToHashSet();
+
   public RelativeFilePath PathOfCurrentVersion() => pathOfCurrentVersion;
   public double HotSpotRating() => hotSpotRating;
   public int ChangesCount() => changesCount;
   public double ComplexityOfCurrentVersion() => complexityOfCurrentVersion;
   public DateTimeOffset LastChangeDate() => lastChangedDate;
   public TimeSpan ActivityPeriod() => activityPeriod;
-  public IEnumerable<string> ChangeIds() => changeIds;
+  public IEnumerable<string> ChangeIds() => _changeIds;
   public DateTimeOffset CreationDate() => creationDate;
   public TimeSpan TimeSinceLastChange() => timeSinceLastChange;
   public TimeSpan Age() => age;
@@ -50,12 +52,36 @@ public class ImmutableFileHistory(
   public IEnumerable<Contribution> Contributions() => contributions;
   public Maybe<RelativeDirectoryPath> LatestPackagePath() => latestPackagePath;
 
+  public int CalculateCouplingCountTo(IFileHistory otherHistory)
+  {
+    if (otherHistory is ImmutableFileHistory immutableOtherHistory)
+    {
+      var smaller = _changeIds.Count <= immutableOtherHistory._changeIds.Count
+        ? _changeIds
+        : immutableOtherHistory._changeIds;
+      var larger = ReferenceEquals(smaller, _changeIds)
+        ? immutableOtherHistory._changeIds
+        : _changeIds;
+      var couplingCount = 0;
+      foreach (var changeId in smaller)
+      {
+        if (larger.Contains(changeId))
+        {
+          couplingCount++;
+        }
+      }
+
+      return couplingCount;
+    }
+
+    return _changeIds.Intersect(otherHistory.ChangeIds()).Count();
+  }
+
   public CouplingBetweenFiles CalculateCouplingTo(
       IFileHistory otherHistory,
-      int totalCommits)
+      int totalCommits,
+      int couplingCount)
   {
-    //performance-critical fragment
-    var couplingCount = ChangeIds().Intersect(otherHistory.ChangeIds()).Count();
     return new CouplingBetweenFiles(
         PathOfCurrentVersion(),
         otherHistory.PathOfCurrentVersion(),

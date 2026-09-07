@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -68,21 +67,35 @@ public static class ComplexityMetrics
       where THistory : ICouplingSource<TCoupling, THistory>
       where TPath : notnull
   {
-    var couplingMetric = new ConcurrentBag<TCoupling>();
     var historiesAsList = histories.ToList();
+    var couplingMetric = new List<TCoupling>();
     Console.WriteLine("Calculating coupling");
     var stopwatch = new Stopwatch();
     stopwatch.Start();
-    Parallel.For(0, historiesAsList.Count, i =>
-    {
-      var currentHistory = historiesAsList[i];
-      foreach (var coupling in historiesAsList.Skip(i + 1)
-                       .Select(otherHistory => currentHistory.CalculateCouplingTo(otherHistory, totalCommits))
-                       .Where(c => c.CouplingCount > ArbitraryLimit))
+    Parallel.For(0, historiesAsList.Count,
+      () => new List<TCoupling>(),
+      (i, _, localCouplings) =>
       {
-        couplingMetric.Add(coupling);
-      }
-    });
+        var currentHistory = historiesAsList[i];
+        for (var j = historiesAsList.Count - 1; j > i; j--)
+        {
+          var otherHistory = historiesAsList[j];
+          var couplingCount = currentHistory.CalculateCouplingCountTo(otherHistory);
+          if (couplingCount > ArbitraryLimit)
+          {
+            localCouplings.Add(currentHistory.CalculateCouplingTo(otherHistory, totalCommits, couplingCount));
+          }
+        }
+
+        return localCouplings;
+      },
+      localCouplings =>
+      {
+        lock (couplingMetric)
+        {
+          couplingMetric.AddRange(localCouplings);
+        }
+      });
     stopwatch.Stop();
     Console.WriteLine("Calculating coupling finished " + stopwatch.ElapsedMilliseconds);
     return couplingMetric.OrderByDescending(c => c.CouplingCount);

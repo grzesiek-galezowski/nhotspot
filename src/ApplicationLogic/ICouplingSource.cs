@@ -2,5 +2,6 @@
 
 public interface ICouplingSource<TCoupling, THistory> where THistory : ICouplingSource<TCoupling, THistory>
 {
-  TCoupling CalculateCouplingTo(THistory otherHistory, int totalCommits);
+  int CalculateCouplingCountTo(THistory otherHistory);
+  TCoupling CalculateCouplingTo(THistory otherHistory, int totalCommits, int couplingCount);
 }

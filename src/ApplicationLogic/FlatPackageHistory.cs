@@ -22,9 +22,36 @@ public class FlatPackageHistory(RelativeDirectoryPath packagePath) : IFlatPackag
   }
 
   //bug may be commonalized with IFileHistory
-  public CouplingBetweenPackages CalculateCouplingTo(IFlatPackageHistory otherHistory, int totalCommits)
+  public int CalculateCouplingCountTo(IFlatPackageHistory otherHistory)
   {
-    var couplingCount = ChangeIds().Intersect(otherHistory.ChangeIds()).Count();
+    if (otherHistory is FlatPackageHistory flatPackageHistory)
+    {
+      var smaller = _changeIds.Count <= flatPackageHistory._changeIds.Count
+        ? _changeIds
+        : flatPackageHistory._changeIds;
+      var larger = ReferenceEquals(smaller, _changeIds)
+        ? flatPackageHistory._changeIds
+        : _changeIds;
+      var couplingCount = 0;
+      foreach (var changeId in smaller)
+      {
+        if (larger.Contains(changeId))
+        {
+          couplingCount++;
+        }
+      }
+
+      return couplingCount;
+    }
+
+    return _changeIds.Intersect(otherHistory.ChangeIds()).Count();
+  }
+
+  public CouplingBetweenPackages CalculateCouplingTo(
+      IFlatPackageHistory otherHistory,
+      int totalCommits,
+      int couplingCount)
+  {
     return new CouplingBetweenPackages(
         packagePath,
         otherHistory.PathOfCurrentVersion(),
